@@ -1,0 +1,6694 @@
+{
+  "entries": [
+    {
+      "ticker": "NU",
+      "score": 56,
+      "confidence": 62,
+      "date": "2026-01-24T23:28:21.665846+00:00"
+    },
+    {
+      "ticker": "TSMC",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-24T23:29:19.696974+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 60,
+      "confidence": 75,
+      "date": "2026-01-24T23:29:31.493685+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 47,
+      "confidence": 75,
+      "date": "2026-01-24T23:29:46.035096+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 50,
+      "confidence": 75,
+      "date": "2026-01-24T23:54:47.169969+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 72,
+      "confidence": 85,
+      "date": "2026-01-25T11:58:53.349691+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "confidence": 75,
+      "date": "2026-01-25T11:59:03.410443+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-01-25T12:08:38.643134+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 91,
+      "date": "2026-01-25T12:08:39.950600+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-25T12:08:40.351007+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-25T12:08:40.691392+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 91,
+      "date": "2026-01-25T12:08:40.915181+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-25T12:42:41.685984+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-01-26T10:26:43.757346+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 91,
+      "date": "2026-01-26T10:26:44.076997+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-26T10:26:44.215160+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-26T10:26:44.667841+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 91,
+      "date": "2026-01-26T10:26:45.191322+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-26T10:40:03.326604+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-26T10:48:46.231893+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 26,
+      "confidence": 59,
+      "date": "2026-01-26T10:52:20.406258+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-26T10:53:26.033419+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 48,
+      "confidence": 91,
+      "date": "2026-01-26T10:59:11.807450+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 35,
+      "confidence": 62,
+      "date": "2026-01-26T11:31:17.541418+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:26.981864+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-01-27T11:50:27.009555+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 60,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:27.023768+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:27.035136+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 26,
+      "confidence": 59,
+      "date": "2026-01-27T11:50:28.089754+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:28.102149+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:28.112505+00:00"
+    },
+    {
+      "ticker": "002594",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-27T11:50:28.213920+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-27T11:50:28.962404+00:00"
+    },
+    {
+      "ticker": "ZOE",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-27T11:50:29.099603+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 52,
+      "confidence": 91,
+      "date": "2026-01-27T11:50:29.114996+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:45.283514+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-01-27T11:55:45.416277+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:45.487222+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 60,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:45.530208+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:45.747891+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-01-27T11:55:45.772679+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 26,
+      "confidence": 59,
+      "date": "2026-01-27T11:55:45.785770+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:45.797570+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 52,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:46.061100+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 41,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:46.694887+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 74,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:46.758511+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 59,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:46.798665+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 51,
+      "confidence": 91,
+      "date": "2026-01-27T11:55:47.193651+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 49,
+      "confidence": 91,
+      "date": "2026-01-27T12:06:55.880028+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 35,
+      "confidence": 62,
+      "date": "2026-01-27T12:06:55.916976+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 35,
+      "confidence": 62,
+      "date": "2026-01-27T12:07:41.205789+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 49,
+      "confidence": 91,
+      "date": "2026-01-27T12:07:41.326027+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 36,
+      "confidence": 84,
+      "date": "2026-01-27T12:07:42.075907+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 56,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:04.524111+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-02-04T17:23:04.559560+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 73,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:04.571377+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 51,
+      "confidence": 87,
+      "date": "2026-02-04T17:23:04.584702+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-04T17:23:05.485450+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:05.547737+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 30,
+      "confidence": 62,
+      "date": "2026-02-04T17:23:05.593415+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 87,
+      "date": "2026-02-04T17:23:05.611178+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 76,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:06.522429+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 61,
+      "confidence": 87,
+      "date": "2026-02-04T17:23:06.545255+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:06.601828+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 44,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:06.629137+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 41,
+      "confidence": 87,
+      "date": "2026-02-04T17:23:07.625084+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 64,
+      "date": "2026-02-04T17:23:35.675250+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 37,
+      "confidence": 87,
+      "date": "2026-02-04T17:23:35.716645+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 50,
+      "confidence": 92,
+      "date": "2026-02-04T17:23:36.038205+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 92,
+      "date": "2026-02-04T18:22:12.249741+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 73,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:46.262400+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 52,
+      "confidence": 87,
+      "date": "2026-02-04T19:14:46.310937+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 56,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:46.321917+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 58,
+      "confidence": 72,
+      "date": "2026-02-04T19:14:46.437108+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:47.230826+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-04T19:14:47.305784+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 30,
+      "confidence": 62,
+      "date": "2026-02-04T19:14:47.336183+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 87,
+      "date": "2026-02-04T19:14:47.348533+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 61,
+      "confidence": 87,
+      "date": "2026-02-04T19:14:48.232054+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 44,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:48.271315+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 76,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:48.294656+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 92,
+      "date": "2026-02-04T19:14:48.421252+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 41,
+      "confidence": 87,
+      "date": "2026-02-04T19:14:49.182884+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 37,
+      "confidence": 87,
+      "date": "2026-02-05T22:33:58.951035+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 51,
+      "confidence": 92,
+      "date": "2026-02-05T22:33:59.025380+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 92,
+      "date": "2026-02-05T22:33:59.034469+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 64,
+      "date": "2026-02-05T22:33:59.184007+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 57,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:12.227466+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 56,
+      "confidence": 72,
+      "date": "2026-02-05T22:34:12.359572+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:12.367722+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 50,
+      "confidence": 87,
+      "date": "2026-02-05T22:34:12.379503+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:13.481103+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 30,
+      "confidence": 62,
+      "date": "2026-02-05T22:34:13.640163+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-05T22:34:13.648640+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 82,
+      "date": "2026-02-05T22:34:13.906297+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 44,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:14.898393+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:14.918402+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 62,
+      "confidence": 87,
+      "date": "2026-02-05T22:34:14.993276+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 76,
+      "confidence": 92,
+      "date": "2026-02-05T22:34:15.143627+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 43,
+      "confidence": 87,
+      "date": "2026-02-05T22:34:16.187473+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 37,
+      "confidence": 87,
+      "date": "2026-02-05T22:44:36.284244+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 64,
+      "date": "2026-02-05T22:44:36.358152+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 92,
+      "date": "2026-02-05T22:44:36.440946+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 51,
+      "confidence": 92,
+      "date": "2026-02-05T22:44:36.489358+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 37,
+      "confidence": 87,
+      "date": "2026-02-05T22:47:30.755149+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 51,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:30.833332+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:30.858122+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 64,
+      "date": "2026-02-05T22:47:30.865949+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 57,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:41.764692+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 50,
+      "confidence": 87,
+      "date": "2026-02-05T22:47:41.848041+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:41.873091+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 56,
+      "confidence": 72,
+      "date": "2026-02-05T22:47:41.945683+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:43.119577+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-05T22:47:43.134849+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 82,
+      "date": "2026-02-05T22:47:43.144385+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 30,
+      "confidence": 62,
+      "date": "2026-02-05T22:47:43.177380+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 44,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:44.398599+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 76,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:44.443545+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 92,
+      "date": "2026-02-05T22:47:44.451803+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 62,
+      "confidence": 87,
+      "date": "2026-02-05T22:47:44.464755+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 43,
+      "confidence": 87,
+      "date": "2026-02-05T22:47:45.706597+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 36,
+      "confidence": 92,
+      "date": "2026-02-05T22:51:30.960670+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 33,
+      "confidence": 92,
+      "date": "2026-02-05T22:56:22.522647+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 92,
+      "date": "2026-02-05T23:12:26.271556+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 37,
+      "confidence": 87,
+      "date": "2026-02-05T23:12:26.493486+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 36,
+      "confidence": 92,
+      "date": "2026-02-05T23:12:26.589138+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 33,
+      "confidence": 92,
+      "date": "2026-02-05T23:12:26.730964+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 51,
+      "confidence": 92,
+      "date": "2026-02-05T23:12:26.939523+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 64,
+      "date": "2026-02-05T23:12:26.989060+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 44,
+      "confidence": 68,
+      "date": "2026-02-07T15:05:29.210031+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 41,
+      "confidence": 89,
+      "date": "2026-02-07T15:05:29.222834+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 60,
+      "confidence": 93,
+      "date": "2026-02-07T15:05:29.232398+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-07T15:05:29.241270+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 40,
+      "confidence": 93,
+      "date": "2026-02-07T15:05:32.487892+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 34,
+      "confidence": 93,
+      "date": "2026-02-07T15:05:33.698988+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 75,
+      "date": "2026-02-07T15:06:30.137485+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 70,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:30.159850+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 52,
+      "confidence": 89,
+      "date": "2026-02-07T15:06:30.269803+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 60,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:30.287310+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 50,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:33.463644+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 36,
+      "confidence": 66,
+      "date": "2026-02-07T15:06:33.518476+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 5,
+      "date": "2026-02-07T15:06:33.561666+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 54,
+      "confidence": 89,
+      "date": "2026-02-07T15:06:33.595105+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 60,
+      "confidence": 89,
+      "date": "2026-02-07T15:06:36.874350+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 74,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:36.907727+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 47,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:36.955292+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 93,
+      "date": "2026-02-07T15:06:36.994861+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 43,
+      "confidence": 89,
+      "date": "2026-02-07T15:06:40.237598+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 60,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:51.264306+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 75,
+      "date": "2026-02-08T17:50:51.277600+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 52,
+      "confidence": 89,
+      "date": "2026-02-08T17:50:51.286053+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 70,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:51.300112+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 5,
+      "date": "2026-02-08T17:50:52.225887+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 54,
+      "confidence": 89,
+      "date": "2026-02-08T17:50:52.288367+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 36,
+      "confidence": 66,
+      "date": "2026-02-08T17:50:52.356248+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 50,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:52.401934+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 47,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:53.309557+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:53.325096+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 60,
+      "confidence": 89,
+      "date": "2026-02-08T17:50:53.382697+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 74,
+      "confidence": 93,
+      "date": "2026-02-08T17:50:53.471108+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 43,
+      "confidence": 89,
+      "date": "2026-02-08T17:50:54.409043+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-14T19:12:06.192640+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 47,
+      "confidence": 73,
+      "date": "2026-02-14T19:12:06.235920+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 57,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:06.252581+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:06.264390+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 78,
+      "date": "2026-02-14T19:12:07.222329+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 42,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:07.235382+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 71,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:07.245146+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 41,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:07.577423+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 62,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:08.212370+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 90,
+      "date": "2026-02-14T19:12:08.262512+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 90,
+      "date": "2026-02-14T19:12:08.293380+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 90,
+      "date": "2026-02-14T19:12:08.773680+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 71,
+      "date": "2026-02-14T19:12:09.179760+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 60,
+      "confidence": 90,
+      "date": "2026-02-14T19:12:09.303140+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 4,
+      "date": "2026-02-14T19:12:09.434666+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 50,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:09.698853+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 58,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:10.430690+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 40,
+      "confidence": 86,
+      "date": "2026-02-14T19:12:10.442790+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 71,
+      "confidence": 94,
+      "date": "2026-02-14T19:12:11.306766+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 73,
+      "date": "2026-02-15T13:51:45.086539+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-15T13:51:45.132767+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 59,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:45.153994+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:45.167028+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:46.111768+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 66,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:46.120371+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 78,
+      "date": "2026-02-15T13:51:46.185768+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:46.382950+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 57,
+      "confidence": 90,
+      "date": "2026-02-15T13:51:47.139128+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 57,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:47.151974+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 51,
+      "confidence": 90,
+      "date": "2026-02-15T13:51:47.162629+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 58,
+      "confidence": 90,
+      "date": "2026-02-15T13:51:47.293997+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 71,
+      "date": "2026-02-15T13:51:48.052628+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 4,
+      "date": "2026-02-15T13:51:48.069457+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 55,
+      "confidence": 90,
+      "date": "2026-02-15T13:51:48.100446+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:48.373936+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 69,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:49.031600+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 61,
+      "confidence": 94,
+      "date": "2026-02-15T13:51:49.062779+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 42,
+      "confidence": 86,
+      "date": "2026-02-15T13:51:49.080430+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 59,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:14.105635+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 73,
+      "date": "2026-02-15T13:56:14.178865+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-15T13:56:14.192914+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:14.216828+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:15.074128+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 71,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:15.167564+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 78,
+      "date": "2026-02-15T13:56:15.234629+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:15.481890+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 60,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:16.027277+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 57,
+      "confidence": 90,
+      "date": "2026-02-15T13:56:16.090012+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 51,
+      "confidence": 90,
+      "date": "2026-02-15T13:56:16.159438+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 58,
+      "confidence": 90,
+      "date": "2026-02-15T13:56:16.268596+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 71,
+      "date": "2026-02-15T13:56:16.936909+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 4,
+      "date": "2026-02-15T13:56:16.947273+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 55,
+      "confidence": 90,
+      "date": "2026-02-15T13:56:17.187588+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:17.475956+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 74,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:17.947091+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 61,
+      "confidence": 94,
+      "date": "2026-02-15T13:56:17.979893+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 42,
+      "confidence": 86,
+      "date": "2026-02-15T13:56:18.154898+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:11.243093+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 43,
+      "confidence": 73,
+      "date": "2026-02-15T14:01:11.294555+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 60,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:11.377213+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 90,
+      "date": "2026-02-15T14:01:11.495977+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:12.230717+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 78,
+      "date": "2026-02-15T14:01:12.354565+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:12.491771+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 43,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:12.585650+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 61,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:13.092823+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 57,
+      "confidence": 90,
+      "date": "2026-02-15T14:01:13.374837+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 51,
+      "confidence": 90,
+      "date": "2026-02-15T14:01:13.452777+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 90,
+      "date": "2026-02-15T14:01:13.574769+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 71,
+      "date": "2026-02-15T14:01:14.040004+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 4,
+      "date": "2026-02-15T14:01:14.314752+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 55,
+      "confidence": 90,
+      "date": "2026-02-15T14:01:14.454047+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:14.501578+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 75,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:14.612629+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 61,
+      "confidence": 94,
+      "date": "2026-02-15T14:01:15.005812+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 42,
+      "confidence": 86,
+      "date": "2026-02-15T14:01:15.459946+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 43,
+      "confidence": 73,
+      "date": "2026-02-16T19:22:08.620035+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 90,
+      "date": "2026-02-16T19:22:08.674316+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 55,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:08.714393+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 60,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:08.734660+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:09.636333+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 59,
+      "confidence": 78,
+      "date": "2026-02-16T19:22:09.778196+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:09.827552+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 43,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:10.088787+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 61,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:10.631973+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 57,
+      "confidence": 90,
+      "date": "2026-02-16T19:22:10.723340+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-16T19:22:10.779902+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 90,
+      "date": "2026-02-16T19:22:11.013310+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 4,
+      "date": "2026-02-16T19:22:11.632864+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 71,
+      "date": "2026-02-16T19:22:11.649001+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 55,
+      "confidence": 90,
+      "date": "2026-02-16T19:22:11.909657+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:12.202271+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 59,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:12.548991+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 75,
+      "confidence": 94,
+      "date": "2026-02-16T19:22:12.635710+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 86,
+      "date": "2026-02-16T19:22:12.868138+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 45,
+      "confidence": 78,
+      "date": "2026-02-16T19:25:46.653560+00:00"
+    },
+    {
+      "ticker": "TYO: 8031",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-16T19:27:32.643786+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 94,
+      "date": "2026-02-16T19:28:24.182282+00:00"
+    },
+    {
+      "ticker": "WDC",
+      "score": 48,
+      "confidence": 86,
+      "date": "2026-02-16T19:31:06.149980+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 45,
+      "confidence": 71,
+      "date": "2026-02-16T19:32:48.738535+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 45,
+      "confidence": 71,
+      "date": "2026-02-16T19:32:56.904503+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-20T16:49:37.904344+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-20T16:49:37.925060+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-20T16:49:37.941589+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 65,
+      "confidence": 88,
+      "date": "2026-02-20T16:49:37.953872+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-20T16:49:38.863377+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 85,
+      "date": "2026-02-20T16:49:38.935025+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-20T16:49:38.951011+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-20T16:49:38.992079+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 54,
+      "confidence": 82,
+      "date": "2026-02-20T16:49:39.941796+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 71,
+      "confidence": 88,
+      "date": "2026-02-20T16:49:39.988231+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-20T16:49:40.003052+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 52,
+      "confidence": 88,
+      "date": "2026-02-20T16:49:40.018184+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-20T16:49:40.934043+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:19.426238+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-20T16:50:19.493773+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 68,
+      "date": "2026-02-20T16:50:19.579333+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:19.606722+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 43,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:20.388780+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 65,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:20.623632+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-20T16:50:20.636986+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 42,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:20.788660+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:21.425933+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-20T16:50:21.693245+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 85,
+      "date": "2026-02-20T16:50:21.724000+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-20T16:50:21.754311+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-20T16:50:22.601075+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-20T16:50:22.612303+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 52,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:22.758439+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 54,
+      "confidence": 82,
+      "date": "2026-02-20T16:50:22.779396+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 71,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:23.570687+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:23.629241+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-20T16:50:23.762080+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 44,
+      "confidence": 76,
+      "date": "2026-02-20T16:50:24.076574+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-20T16:50:24.895305+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-20T16:50:24.957122+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 52,
+      "confidence": 59,
+      "date": "2026-02-20T16:52:41.931041+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 45,
+      "confidence": 85,
+      "date": "2026-02-20T17:00:46.887430+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-20T17:02:20.490471+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 68,
+      "date": "2026-02-21T23:39:15.213636+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-21T23:39:15.233762+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-21T23:39:15.254955+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:15.269109+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:16.267100+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-21T23:39:16.287599+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:16.446708+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 42,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:16.546096+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-21T23:39:17.240855+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 57,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:17.337040+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-21T23:39:17.580589+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:39:17.612273+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-21T23:39:18.221883+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-21T23:39:18.265696+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:18.566179+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-21T23:39:18.593142+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 70,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:19.149888+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:19.160815+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 46,
+      "confidence": 79,
+      "date": "2026-02-21T23:39:19.529427+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-21T23:39:19.555849+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-21T23:39:20.447758+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:39:20.457875+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-21T23:39:20.514705+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 46,
+      "confidence": 85,
+      "date": "2026-02-21T23:39:20.539987+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-21T23:39:21.368990+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:18.334336+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-21T23:43:18.450989+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-21T23:43:18.461838+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 68,
+      "date": "2026-02-21T23:43:18.472758+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-21T23:43:19.357969+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:19.418483+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:19.494648+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 42,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:19.745985+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 58,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:20.349116+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:43:20.393071+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-21T23:43:20.408674+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-21T23:43:20.765006+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-21T23:43:21.265088+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-21T23:43:21.282864+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-21T23:43:21.380496+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:21.765154+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 70,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:22.212835+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:22.264724+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 46,
+      "confidence": 79,
+      "date": "2026-02-21T23:43:22.382889+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-21T23:43:22.722522+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-21T23:43:23.424287+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:43:23.465300+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-21T23:43:23.577534+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 46,
+      "confidence": 85,
+      "date": "2026-02-21T23:43:23.751784+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-21T23:43:24.351604+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:26.426058+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 68,
+      "date": "2026-02-21T23:53:26.469683+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-21T23:53:26.505088+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-21T23:53:26.709190+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:27.362339+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-21T23:53:27.421917+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 43,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:27.662199+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:27.723817+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 58,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:28.319693+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-21T23:53:28.380753+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:53:28.622316+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-21T23:53:28.696312+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-21T23:53:29.246284+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-21T23:53:29.261216+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:29.622214+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-21T23:53:29.768613+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 71,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:30.226783+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:30.259331+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 46,
+      "confidence": 79,
+      "date": "2026-02-21T23:53:30.602090+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-21T23:53:30.638542+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-21T23:53:31.473038+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:53:31.505484+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-21T23:53:31.612723+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 46,
+      "confidence": 85,
+      "date": "2026-02-21T23:53:31.623484+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-21T23:53:32.405516+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-21T23:56:03.301439+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-21T23:56:03.385530+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 68,
+      "date": "2026-02-21T23:56:03.489978+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:03.508741+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:04.329521+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:04.437048+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:04.491309+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-21T23:56:04.504232+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:05.288158+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-21T23:56:05.404820+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:56:05.421760+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-21T23:56:05.465657+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-21T23:56:06.210323+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-21T23:56:06.270156+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-21T23:56:06.380755+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:06.479812+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:07.176992+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:07.188621+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 46,
+      "confidence": 79,
+      "date": "2026-02-21T23:56:07.328767+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-21T23:56:07.479770+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-21T23:56:08.283025+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-21T23:56:08.294058+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:56:08.397353+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 46,
+      "confidence": 85,
+      "date": "2026-02-21T23:56:08.433831+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 39,
+      "confidence": 69,
+      "date": "2026-02-21T23:56:09.268270+00:00"
+    },
+    {
+      "ticker": "EPA: CS",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-21T23:57:37.973107+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:58:48.076591+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-21T23:59:23.173595+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:23.249313+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 39,
+      "confidence": 68,
+      "date": "2026-02-21T23:59:23.263649+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-21T23:59:23.347666+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:24.143548+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-21T23:59:24.205199+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:24.321987+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:24.604541+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-21T23:59:25.206640+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:25.223442+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-21T23:59:25.292578+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-21T23:59:25.496864+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-21T23:59:26.140783+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-21T23:59:26.188898+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-21T23:59:26.330343+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:26.435145+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:27.086467+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:27.100257+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-21T23:59:27.269383+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-21T23:59:27.433965+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 52,
+      "confidence": 69,
+      "date": "2026-02-21T23:59:28.215790+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-21T23:59:28.292643+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-21T23:59:28.337793+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 47,
+      "confidence": 85,
+      "date": "2026-02-21T23:59:28.475679+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-21T23:59:29.166676+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-21T23:59:29.219770+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T00:00:58.817821+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 68,
+      "date": "2026-02-22T00:00:58.888149+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:00:58.904871+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T00:00:59.015833+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:00:59.811784+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T00:00:59.989198+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T00:01:00.057892+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:00.072388+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:00.788515+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:01:00.984669+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T00:01:01.048578+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:01:01.079990+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-22T00:01:01.704035+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-22T00:01:01.858622+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T00:01:02.055027+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:02.253468+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:02.733378+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:02.885618+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T00:01:03.022894+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-22T00:01:03.413286+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T00:01:03.967129+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T00:01:04.079266+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T00:01:04.132492+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 47,
+      "confidence": 85,
+      "date": "2026-02-22T00:01:04.435668+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T00:01:04.947026+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T00:01:04.997022+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T00:02:31.169649+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:24.882610+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:24.916350+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:24.967851+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 68,
+      "date": "2026-02-22T00:03:24.987834+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:25.893569+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 70,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:25.990863+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T00:03:26.015049+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:26.189965+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:26.892082+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:26.967292+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:27.034491+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:27.164128+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-22T00:03:27.860452+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:27.928043+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:28.034256+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:28.111881+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:28.771758+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:28.905200+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T00:03:28.945591+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-22T00:03:29.068861+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:29.970320+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 47,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:30.070156+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:30.156354+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:30.209222+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:30.891549+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:30.984280+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T00:03:31.163628+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:34.592893+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 68,
+      "date": "2026-02-22T00:03:35.111099+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:35.174546+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:35.212333+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T00:03:36.065328+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:36.408587+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:37.095882+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:37.440277+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:38.016455+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:38.907319+00:00"
+    },
+    {
+      "ticker": "AXA",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-22T00:03:39.780010+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:40.760410+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:41.710231+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:42.568123+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:42.751790+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:42.918529+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 70,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:43.230108+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:43.279090+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T00:03:43.683812+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-22T00:03:43.953036+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:44.507630+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T00:03:44.623021+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:44.670271+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 47,
+      "confidence": 85,
+      "date": "2026-02-22T00:03:44.920939+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T00:03:45.538428+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T00:03:45.553389+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T00:03:45.604252+00:00"
+    },
+    {
+      "ticker": "VISA",
+      "score": 25,
+      "confidence": 0,
+      "date": "2026-02-22T00:04:22.270829+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T00:04:48.043013+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T00:09:12.088722+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:09:12.108011+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T00:09:12.146801+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:12.166720+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:13.073919+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:13.170608+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T00:09:13.205508+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:13.242816+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 58,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:13.955216+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T00:09:14.121097+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T00:09:14.136597+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T00:09:14.199984+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-22T00:09:14.875084+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T00:09:15.059308+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:15.148395+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:15.201093+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:15.908037+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T00:09:16.071617+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T00:09:16.192016+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:16.644837+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T00:09:17.003891+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T00:09:17.105977+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 48,
+      "confidence": 85,
+      "date": "2026-02-22T00:09:17.175051+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T00:09:17.619798+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T00:09:17.918028+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T00:09:18.056359+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T00:09:18.144869+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T13:16:01.014076+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T13:16:01.071496+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:16:01.093249+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:01.108646+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:01.973967+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:02.048604+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T13:16:02.067096+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:02.334577+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 58,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:02.958455+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:16:02.994111+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T13:16:03.057279+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T13:16:03.377107+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:03.911988+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 42,
+      "confidence": 69,
+      "date": "2026-02-22T13:16:03.957380+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T13:16:04.023568+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:04.351059+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:04.832769+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T13:16:04.924731+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T13:16:05.019653+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:05.770030+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T13:16:05.908554+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 48,
+      "confidence": 85,
+      "date": "2026-02-22T13:16:06.100881+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T13:16:06.117028+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T13:16:06.833604+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T13:16:06.848489+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T13:16:07.022085+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T13:16:07.175165+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:19:25.476336+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T13:19:25.557383+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:25.606371+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T13:19:25.629033+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:25.817136+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:26.476059+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T13:19:26.747217+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:26.768622+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:26.892329+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:19:27.405936+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T13:19:27.810541+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T13:19:27.862494+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "confidence": 82,
+      "date": "2026-02-22T13:19:27.917687+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-22T13:19:28.332370+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:28.822124+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:28.880669+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:28.915054+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 48,
+      "confidence": 79,
+      "date": "2026-02-22T13:19:29.263815+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T13:19:29.812346+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T13:19:29.997101+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:30.118674+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T13:19:30.179390+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T13:19:30.970447+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 48,
+      "confidence": 85,
+      "date": "2026-02-22T13:19:31.055425+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T13:19:31.070683+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T13:19:31.134825+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:19:31.990770+00:00"
+    },
+    {
+      "ticker": "AMZ",
+      "score": 26,
+      "confidence": 3,
+      "date": "2026-02-22T13:20:14.749708+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:20:35.347037+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:04.896883+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T13:30:04.965087+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:04.980214+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:05.025099+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:05.875946+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T13:30:05.920081+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:05.980789+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:06.242552+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:06.806800+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:06.926297+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "confidence": 82,
+      "date": "2026-02-22T13:30:06.989698+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:07.282426+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T13:30:07.828202+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:07.858047+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:08.252253+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 48,
+      "confidence": 79,
+      "date": "2026-02-22T13:30:08.796880+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:08.862036+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T13:30:09.208236+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T13:30:10.012521+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:10.044098+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T13:30:10.109306+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 48,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:11.017771+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T13:30:11.051325+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T13:30:11.071797+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T13:30:11.941254+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:30:12.006072+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:30:12.050312+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-22T13:30:18.367892+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:49.390944+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:49.425979+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:49.495791+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T13:33:49.684308+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:50.367023+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T13:33:50.522673+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:50.692081+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:50.705805+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:51.327010+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:51.482439+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:51.629534+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T13:33:51.881185+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T13:33:52.210543+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:52.578626+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-22T13:33:52.592479+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:52.895626+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:53.180455+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T13:33:53.511885+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T13:33:53.590259+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 45,
+      "confidence": 69,
+      "date": "2026-02-22T13:33:54.307963+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:54.321432+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T13:33:54.499195+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 48,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:54.611995+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T13:33:55.185903+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T13:33:55.224516+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T13:33:55.365993+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T13:33:55.628054+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:33:56.164997+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:15.585852+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:39:15.607912+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T13:39:15.633326+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T13:39:15.651413+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:16.823440+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:16.844031+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T13:39:16.857043+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 39,
+      "confidence": 72,
+      "date": "2026-02-22T13:39:17.352936+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:18.006721+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T13:39:18.282645+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 48,
+      "confidence": 68,
+      "date": "2026-02-22T13:39:18.298307+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T13:39:18.725707+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T13:39:19.504092+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-22T13:39:19.781283+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:19.795171+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:20.309997+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:20.982886+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T13:39:21.297190+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 42,
+      "confidence": 62,
+      "date": "2026-02-22T13:39:21.551187+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:22.001820+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 46,
+      "confidence": 69,
+      "date": "2026-02-22T13:39:22.547553+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T13:39:22.878746+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 40,
+      "confidence": 72,
+      "date": "2026-02-22T13:39:22.895757+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 35,
+      "confidence": 57,
+      "date": "2026-02-22T13:39:23.194544+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T13:39:23.731852+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T13:39:24.264722+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T13:39:24.293203+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T13:39:24.305593+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T13:41:19.764785+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 50,
+      "confidence": 88,
+      "date": "2026-02-22T13:41:30.971195+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-22T13:41:55.150028+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:07.881029+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 68,
+      "date": "2026-02-22T14:07:07.897660+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:07:08.213314+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T14:07:08.249797+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:09.308056+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:09.592575+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:09.618357+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:07:09.631288+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:07:10.706863+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:10.721679+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:07:11.101221+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T14:07:11.119047+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 51,
+      "confidence": 82,
+      "date": "2026-02-22T14:07:11.887270+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:07:11.910106+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:12.446242+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T14:07:12.878242+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:07:13.371579+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:13.391503+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 43,
+      "confidence": 76,
+      "date": "2026-02-22T14:07:13.806850+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 69,
+      "date": "2026-02-22T14:07:14.676462+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 41,
+      "confidence": 59,
+      "date": "2026-02-22T14:07:14.692564+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 40,
+      "confidence": 53,
+      "date": "2026-02-22T14:07:15.000560+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 37,
+      "confidence": 56,
+      "date": "2026-02-22T14:07:15.286417+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 35,
+      "confidence": 57,
+      "date": "2026-02-22T14:07:16.054984+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:07:16.068990+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 26,
+      "confidence": 47,
+      "date": "2026-02-22T14:07:16.082606+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:16.727498+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:17.387385+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:07:17.402327+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 51,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:17.415388+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-22T14:07:18.592588+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:08:47.669630+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:24:44.180856+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:29:38.046465+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T14:29:38.061506+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 68,
+      "date": "2026-02-22T14:29:38.349134+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:38.368936+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:39.372085+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:29:39.689331+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:39.701417+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 34,
+      "confidence": 33,
+      "date": "2026-02-22T14:29:39.962980+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:40.753419+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:29:41.326470+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 49,
+      "confidence": 68,
+      "date": "2026-02-22T14:29:41.447783+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 44,
+      "confidence": 56,
+      "date": "2026-02-22T14:29:41.477023+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:29:42.035447+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:42.697387+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:42.710402+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T14:29:43.058843+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 56,
+      "confidence": 72,
+      "date": "2026-02-22T14:29:43.335453+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 43,
+      "confidence": 76,
+      "date": "2026-02-22T14:29:43.802269+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:29:43.826460+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:44.949969+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 44,
+      "confidence": 69,
+      "date": "2026-02-22T14:29:44.981111+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 54,
+      "confidence": 69,
+      "date": "2026-02-22T14:29:45.001154+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 25,
+      "confidence": 17,
+      "date": "2026-02-22T14:29:45.285816+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 69,
+      "date": "2026-02-22T14:29:46.154500+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 46,
+      "confidence": 76,
+      "date": "2026-02-22T14:29:46.381863+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:29:46.411832+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T14:29:46.424739+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 50,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:47.613273+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:29:47.770842+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:47.794824+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:29:48.143679+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:29:49.220846+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:29:49.242047+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:33:09.602896+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T14:33:09.905343+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:09.924663+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 68,
+      "date": "2026-02-22T14:33:10.243197+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:11.037664+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:33:11.078891+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:11.636908+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:11.666746+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T14:33:12.537098+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:12.550318+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:33:13.077647+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 55,
+      "confidence": 85,
+      "date": "2026-02-22T14:33:13.095246+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:33:13.701414+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 82,
+      "date": "2026-02-22T14:33:14.082700+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T14:33:14.512011+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 47,
+      "confidence": 72,
+      "date": "2026-02-22T14:33:14.528002+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 65,
+      "confidence": 76,
+      "date": "2026-02-22T14:33:15.044399+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:33:15.549016+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 42,
+      "confidence": 76,
+      "date": "2026-02-22T14:33:15.902333+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:15.924289+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 45,
+      "confidence": 69,
+      "date": "2026-02-22T14:33:16.502978+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 54,
+      "confidence": 69,
+      "date": "2026-02-22T14:33:17.007050+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:33:17.043427+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:33:17.057029+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:18.059101+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T14:33:18.074957+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T14:33:18.088511+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 33,
+      "confidence": 29,
+      "date": "2026-02-22T14:33:18.367609+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:19.453462+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 51,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:19.467753+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:33:19.616916+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:33:20.050022+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 45,
+      "confidence": 68,
+      "date": "2026-02-22T14:33:20.819902+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:36:59.266567+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 52,
+      "confidence": 85,
+      "date": "2026-02-22T14:36:59.281329+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T14:36:59.514521+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 34,
+      "confidence": 29,
+      "date": "2026-02-22T14:36:59.544267+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:00.712651+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:00.733169+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:37:00.755647+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 37,
+      "confidence": 33,
+      "date": "2026-02-22T14:37:01.057739+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 53,
+      "confidence": 76,
+      "date": "2026-02-22T14:37:01.733586+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-22T14:37:02.288116+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 42,
+      "confidence": 56,
+      "date": "2026-02-22T14:37:02.306116+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 36,
+      "confidence": 53,
+      "date": "2026-02-22T14:37:02.774994+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:37:02.998072+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:03.475328+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 48,
+      "confidence": 82,
+      "date": "2026-02-22T14:37:03.839437+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:04.340277+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:04.368088+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:37:05.183490+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 42,
+      "confidence": 76,
+      "date": "2026-02-22T14:37:05.199145+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 46,
+      "confidence": 69,
+      "date": "2026-02-22T14:37:05.747339+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:06.073511+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 30,
+      "confidence": 25,
+      "date": "2026-02-22T14:37:06.665590+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:37:06.684216+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T14:37:07.234360+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:37:07.254414+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:08.133561+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T14:37:08.148681+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 51,
+      "confidence": 76,
+      "date": "2026-02-22T14:37:08.591813+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 50,
+      "confidence": 85,
+      "date": "2026-02-22T14:37:08.631937+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:09.688547+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:37:09.701906+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:37:10.040545+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:37:10.150179+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 52,
+      "confidence": 85,
+      "date": "2026-02-22T14:41:21.621756+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-22T14:41:21.639451+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:21.865407+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 33,
+      "confidence": 26,
+      "date": "2026-02-22T14:41:21.885040+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:23.009073+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:41:23.210763+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:23.237777+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 69,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:23.264126+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:41:24.401577+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:41:24.416845+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 60,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:24.430462+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T14:41:24.947721+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:25.680227+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 48,
+      "confidence": 82,
+      "date": "2026-02-22T14:41:25.724191+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:41:25.740388+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:26.376916+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 66,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:26.947212+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 42,
+      "confidence": 76,
+      "date": "2026-02-22T14:41:26.975471+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:41:26.989183+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 54,
+      "confidence": 69,
+      "date": "2026-02-22T14:41:27.942749+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:27.956681+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 31,
+      "confidence": 29,
+      "date": "2026-02-22T14:41:28.234301+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 47,
+      "confidence": 69,
+      "date": "2026-02-22T14:41:28.516909+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:41:29.261200+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T14:41:29.280459+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T14:41:29.766439+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:29.946499+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:30.330927+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:41:30.497907+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 52,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:31.098606+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:41:31.742595+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:41:31.758787+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 56,
+      "confidence": 88,
+      "date": "2026-02-22T14:41:31.773413+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-22T14:46:10.878180+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 52,
+      "confidence": 85,
+      "date": "2026-02-22T14:46:11.135176+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-22T14:46:11.163513+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:11.177657+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:12.129636+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 48,
+      "confidence": 65,
+      "date": "2026-02-22T14:46:12.453114+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 53,
+      "confidence": 72,
+      "date": "2026-02-22T14:46:12.478868+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 34,
+      "confidence": 33,
+      "date": "2026-02-22T14:46:12.742489+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 60,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:13.505315+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:46:13.807444+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:46:13.824262+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 50,
+      "confidence": 68,
+      "date": "2026-02-22T14:46:14.189272+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:46:14.536074+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:46:14.947330+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 48,
+      "confidence": 69,
+      "date": "2026-02-22T14:46:14.991687+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 46,
+      "confidence": 76,
+      "date": "2026-02-22T14:46:15.544426+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 66,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:16.024493+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 42,
+      "confidence": 76,
+      "date": "2026-02-22T14:46:16.303178+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:46:16.322554+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:17.293057+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 41,
+      "confidence": 72,
+      "date": "2026-02-22T14:46:17.722257+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 46,
+      "confidence": 69,
+      "date": "2026-02-22T14:46:17.745562+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 50,
+      "confidence": 53,
+      "date": "2026-02-22T14:46:17.768227+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 46,
+      "confidence": 82,
+      "date": "2026-02-22T14:46:18.788155+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 57,
+      "date": "2026-02-22T14:46:18.992883+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:19.019978+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:46:19.036558+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:19.964206+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 45,
+      "confidence": 72,
+      "date": "2026-02-22T14:46:20.359529+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 42,
+      "confidence": 68,
+      "date": "2026-02-22T14:46:20.377451+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 88,
+      "date": "2026-02-22T14:46:20.931233+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:46:21.401943+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:46:21.416261+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:49:59.536566+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 42,
+      "confidence": 68,
+      "date": "2026-02-22T14:49:59.555208+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T14:49:59.841100+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 34,
+      "confidence": 29,
+      "date": "2026-02-22T14:49:59.858558+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 44,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:00.803370+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:01.074222+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 67,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:01.394296+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:01.413951+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 61,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:02.223403+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:02.569575+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:50:02.593180+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 46,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:02.608867+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:50:03.316748+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 49,
+      "confidence": 82,
+      "date": "2026-02-22T14:50:04.007465+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:04.044215+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 47,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:04.059102+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 61,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:04.736337+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 34,
+      "confidence": 63,
+      "date": "2026-02-22T14:50:05.357461+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 34,
+      "confidence": 49,
+      "date": "2026-02-22T14:50:05.530660+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 46,
+      "confidence": 69,
+      "date": "2026-02-22T14:50:06.118563+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 44,
+      "confidence": 76,
+      "date": "2026-02-22T14:50:06.145483+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 48,
+      "confidence": 53,
+      "date": "2026-02-22T14:50:06.801692+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 41,
+      "confidence": 72,
+      "date": "2026-02-22T14:50:06.818508+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:50:07.381076+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:50:07.411311+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 35,
+      "confidence": 57,
+      "date": "2026-02-22T14:50:08.030659+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:08.050858+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:08.498249+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:50:08.814007+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 52,
+      "confidence": 88,
+      "date": "2026-02-22T14:50:09.270078+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 34,
+      "confidence": 46,
+      "date": "2026-02-22T14:50:10.053935+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 45,
+      "confidence": 69,
+      "date": "2026-02-22T14:50:10.190902+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:50:10.691830+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 68,
+      "date": "2026-02-22T14:53:39.775417+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:39.804462+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 51,
+      "confidence": 85,
+      "date": "2026-02-22T14:53:39.821063+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 34,
+      "confidence": 29,
+      "date": "2026-02-22T14:53:40.001813+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:41.001297+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:53:41.016437+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 45,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:41.303908+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T14:53:41.616406+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 61,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:42.297503+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 54,
+      "confidence": 85,
+      "date": "2026-02-22T14:53:42.558808+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:53:43.041737+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 56,
+      "confidence": 85,
+      "date": "2026-02-22T14:53:43.056797+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 69,
+      "date": "2026-02-22T14:53:43.611499+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 48,
+      "confidence": 82,
+      "date": "2026-02-22T14:53:44.308339+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:44.328142+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:44.644185+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 68,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:45.042090+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 42,
+      "confidence": 76,
+      "date": "2026-02-22T14:53:45.449088+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-22T14:53:45.730249+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 46,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:46.264284+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 47,
+      "confidence": 69,
+      "date": "2026-02-22T14:53:46.967128+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 52,
+      "confidence": 69,
+      "date": "2026-02-22T14:53:46.988957+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:53:47.018491+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:53:47.590908+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 35,
+      "confidence": 57,
+      "date": "2026-02-22T14:53:48.164026+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 47,
+      "confidence": 82,
+      "date": "2026-02-22T14:53:48.195186+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:48.212689+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 49,
+      "confidence": 85,
+      "date": "2026-02-22T14:53:48.742442+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 59,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:49.329053+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 53,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:49.345961+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 54,
+      "confidence": 88,
+      "date": "2026-02-22T14:53:49.882339+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 47,
+      "confidence": 76,
+      "date": "2026-02-22T14:53:50.150196+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 52,
+      "confidence": 81,
+      "date": "2026-02-22T14:53:50.766236+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 56,
+      "confidence": 93,
+      "date": "2026-02-22T14:57:48.598118+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-22T14:57:48.629784+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 61,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:48.657355+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:49.025265+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 39,
+      "confidence": 84,
+      "date": "2026-02-22T14:57:49.796166+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 43,
+      "confidence": 49,
+      "date": "2026-02-22T14:57:50.167675+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 68,
+      "confidence": 84,
+      "date": "2026-02-22T14:57:50.185226+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 37,
+      "confidence": 84,
+      "date": "2026-02-22T14:57:50.205110+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 49,
+      "confidence": 80,
+      "date": "2026-02-22T14:57:51.374518+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 48,
+      "confidence": 80,
+      "date": "2026-02-22T14:57:51.395926+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 77,
+      "date": "2026-02-22T14:57:51.428107+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 66,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:51.454642+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:52.554990+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-22T14:57:52.576127+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:52.944195+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 48,
+      "confidence": 87,
+      "date": "2026-02-22T14:57:53.690315+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 73,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:53.723021+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 37,
+      "confidence": 68,
+      "date": "2026-02-22T14:57:54.193723+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 77,
+      "date": "2026-02-22T14:57:54.324676+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 50,
+      "confidence": 77,
+      "date": "2026-02-22T14:57:55.222690+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 49,
+      "confidence": 68,
+      "date": "2026-02-22T14:57:55.244416+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:55.290543+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-22T14:57:55.813985+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T14:57:56.371430+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 61,
+      "date": "2026-02-22T14:57:56.524204+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-22T14:57:56.903927+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 58,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:57.182742+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 64,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:57.637754+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-22T14:57:57.662416+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 54,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:58.602970+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 55,
+      "confidence": 89,
+      "date": "2026-02-22T14:57:59.024512+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 56,
+      "confidence": 96,
+      "date": "2026-02-22T14:57:59.048363+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 49,
+      "confidence": 80,
+      "date": "2026-02-22T14:57:59.063080+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 40,
+      "confidence": 76,
+      "date": "2026-02-22T15:01:50.961824+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 55,
+      "confidence": 93,
+      "date": "2026-02-22T15:01:50.979292+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 61,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:51.280327+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:51.295824+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:52.274940+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 56,
+      "confidence": 79,
+      "date": "2026-02-22T15:01:52.682363+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 48,
+      "confidence": 65,
+      "date": "2026-02-22T15:01:52.702868+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:53.025349+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 66,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:53.469158+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-22T15:01:54.044840+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 48,
+      "confidence": 80,
+      "date": "2026-02-22T15:01:54.073098+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 93,
+      "date": "2026-02-22T15:01:54.535799+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 39,
+      "confidence": 70,
+      "date": "2026-02-22T15:01:54.847673+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:55.219583+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 49,
+      "confidence": 90,
+      "date": "2026-02-22T15:01:55.240233+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:55.882730+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 73,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:56.423807+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 40,
+      "confidence": 74,
+      "date": "2026-02-22T15:01:56.442837+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 44,
+      "confidence": 80,
+      "date": "2026-02-22T15:01:56.771806+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 50,
+      "confidence": 77,
+      "date": "2026-02-22T15:01:57.692245+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 77,
+      "date": "2026-02-22T15:01:58.003737+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-22T15:01:58.020448+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-22T15:01:58.325288+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-22T15:01:59.166428+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T15:01:59.480574+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 61,
+      "date": "2026-02-22T15:01:59.775213+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 53,
+      "confidence": 79,
+      "date": "2026-02-22T15:01:59.809805+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 51,
+      "confidence": 93,
+      "date": "2026-02-22T15:02:00.508183+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 64,
+      "confidence": 96,
+      "date": "2026-02-22T15:02:00.782888+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 54,
+      "confidence": 96,
+      "date": "2026-02-22T15:02:01.096258+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T15:02:01.614453+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 55,
+      "confidence": 89,
+      "date": "2026-02-22T15:02:02.130609+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 49,
+      "confidence": 80,
+      "date": "2026-02-22T15:02:02.145767+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 55,
+      "confidence": 93,
+      "date": "2026-02-22T15:30:29.206190+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 61,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:29.509043+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-22T15:30:29.527629+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:29.839868+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:30.708197+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:30.973475+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 52,
+      "confidence": 72,
+      "date": "2026-02-22T15:30:30.993495+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 32,
+      "confidence": 20,
+      "date": "2026-02-22T15:30:31.410855+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 48,
+      "confidence": 80,
+      "date": "2026-02-22T15:30:32.277565+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 44,
+      "confidence": 77,
+      "date": "2026-02-22T15:30:32.462340+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 66,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:32.479269+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 57,
+      "confidence": 93,
+      "date": "2026-02-22T15:30:32.878881+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:33.591428+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-22T15:30:33.622513+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 77,
+      "date": "2026-02-22T15:30:33.639855+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:34.235187+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 44,
+      "confidence": 80,
+      "date": "2026-02-22T15:30:34.806036+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 49,
+      "confidence": 87,
+      "date": "2026-02-22T15:30:34.831699+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 73,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:34.847919+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-22T15:30:36.025894+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:36.041706+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 49,
+      "confidence": 77,
+      "date": "2026-02-22T15:30:36.376715+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 77,
+      "date": "2026-02-22T15:30:36.409728+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-22T15:30:37.115025+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-22T15:30:37.408154+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 61,
+      "date": "2026-02-22T15:30:37.748287+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 58,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:37.777960+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 64,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:38.531061+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 51,
+      "confidence": 93,
+      "date": "2026-02-22T15:30:38.888092+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:39.343037+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-22T15:30:39.358843+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 49,
+      "confidence": 80,
+      "date": "2026-02-22T15:30:40.129554+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 55,
+      "confidence": 89,
+      "date": "2026-02-22T15:30:40.145482+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 41,
+      "confidence": 76,
+      "date": "2026-02-23T21:47:09.561875+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 62,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:09.580978+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:09.595600+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 56,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:09.623446+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 53,
+      "confidence": 72,
+      "date": "2026-02-23T21:47:14.341824+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:14.373361+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 46,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:14.388663+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:16.705021+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 56,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:18.809840+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 49,
+      "confidence": 90,
+      "date": "2026-02-23T21:47:18.824695+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 67,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:18.849353+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 58,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:22.142942+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:23.757108+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-23T21:47:23.773421+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:26.000004+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 39,
+      "confidence": 74,
+      "date": "2026-02-23T21:47:28.553965+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 49,
+      "confidence": 84,
+      "date": "2026-02-23T21:47:28.569517+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 58,
+      "confidence": 67,
+      "date": "2026-02-23T21:47:30.511086+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 38,
+      "confidence": 65,
+      "date": "2026-02-23T21:47:32.567431+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:34.796129+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 50,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:34.835848+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 24,
+      "confidence": 15,
+      "date": "2026-02-23T21:47:36.588233+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 41,
+      "confidence": 69,
+      "date": "2026-02-23T21:47:39.798042+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 43,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:39.816531+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 31,
+      "confidence": 54,
+      "date": "2026-02-23T21:47:41.281964+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 35,
+      "confidence": 33,
+      "date": "2026-02-23T21:47:41.297160+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 45,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:45.298649+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 56,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:45.315543+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 69,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:45.330656+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 49,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:45.533976+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 62,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:51.662196+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:51.691527+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 33,
+      "confidence": 26,
+      "date": "2026-02-23T21:47:51.806697+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 56,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:51.844749+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:53.031008+00:00"
+    },
+    {
+      "ticker": "7974.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:53.211079+00:00"
+    },
+    {
+      "ticker": "NU",
+      "score": 53,
+      "confidence": 72,
+      "date": "2026-02-23T21:47:53.253451+00:00"
+    },
+    {
+      "ticker": "TSM",
+      "score": 72,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:53.284727+00:00"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "confidence": 90,
+      "date": "2026-02-23T21:47:54.535844+00:00"
+    },
+    {
+      "ticker": "UBER",
+      "score": 59,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:54.695617+00:00"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 56,
+      "confidence": 84,
+      "date": "2026-02-23T21:47:54.718219+00:00"
+    },
+    {
+      "ticker": "MELI",
+      "score": 56,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:54.742815+00:00"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 57,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:55.894804+00:00"
+    },
+    {
+      "ticker": "SNAP",
+      "score": 43,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:55.915535+00:00"
+    },
+    {
+      "ticker": "1211.HK",
+      "score": 55,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:56.226318+00:00"
+    },
+    {
+      "ticker": "VLO",
+      "score": 50,
+      "confidence": 90,
+      "date": "2026-02-23T21:47:56.245127+00:00"
+    },
+    {
+      "ticker": "GRAB",
+      "score": 39,
+      "confidence": 74,
+      "date": "2026-02-23T21:47:57.183475+00:00"
+    },
+    {
+      "ticker": "ASR",
+      "score": 74,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:57.504918+00:00"
+    },
+    {
+      "ticker": "HOOD",
+      "score": 37,
+      "confidence": 68,
+      "date": "2026-02-23T21:47:57.836752+00:00"
+    },
+    {
+      "ticker": "8031.T",
+      "score": 47,
+      "confidence": 96,
+      "date": "2026-02-23T21:47:58.143254+00:00"
+    },
+    {
+      "ticker": "KLAR",
+      "score": 53,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:59.104352+00:00"
+    },
+    {
+      "ticker": "285A.T",
+      "score": 49,
+      "confidence": 77,
+      "date": "2026-02-23T21:47:59.118968+00:00"
+    },
+    {
+      "ticker": "COIN",
+      "score": 52,
+      "confidence": 93,
+      "date": "2026-02-23T21:47:59.135047+00:00"
+    },
+    {
+      "ticker": "SOFI",
+      "score": 40,
+      "confidence": 62,
+      "date": "2026-02-23T21:47:59.488750+00:00"
+    },
+    {
+      "ticker": "FIG",
+      "score": 34,
+      "confidence": 61,
+      "date": "2026-02-23T21:48:00.362135+00:00"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 49,
+      "confidence": 90,
+      "date": "2026-02-23T21:48:00.389934+00:00"
+    },
+    {
+      "ticker": "V",
+      "score": 36,
+      "confidence": 33,
+      "date": "2026-02-23T21:48:00.705642+00:00"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 51,
+      "confidence": 93,
+      "date": "2026-02-23T21:48:01.007625+00:00"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 69,
+      "confidence": 96,
+      "date": "2026-02-23T21:48:02.064599+00:00"
+    },
+    {
+      "ticker": "AAPL",
+      "score": 56,
+      "confidence": 96,
+      "date": "2026-02-23T21:48:02.312483+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 50,
+      "confidence": 80,
+      "date": "2026-02-23T21:48:02.332685+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 47,
+      "confidence": 79,
+      "date": "2026-02-23T21:48:02.775530+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 55,
+      "confidence": 89,
+      "date": "2026-02-23T21:48:03.611040+00:00"
+    },
+    {
+      "ticker": "VEEV",
+      "score": 41,
+      "confidence": 65,
+      "date": "2026-02-23T21:48:03.868444+00:00"
+    },
+    {
+      "ticker": "INTU",
+      "score": 45,
+      "confidence": 67,
+      "date": "2026-02-23T21:48:03.908393+00:00"
+    },
+    {
+      "ticker": "6758.T",
+      "score": 41,
+      "confidence": 68,
+      "date": "2026-02-23T21:48:04.273143+00:00"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 48,
+      "confidence": 64,
+      "date": "2026-02-24T20:02:34.164471+00:00"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 45,
+      "confidence": 77,
+      "date": "2026-02-24T20:02:42.869986+00:00"
+    },
+    {
+      "ticker": "COST",
+      "score": 45,
+      "confidence": 96,
+      "date": "2026-02-24T20:02:42.887012+00:00"
+    },
+    {
+      "ticker": "SNDK",
+      "score": 35,
+      "confidence": 45,
+      "date": "2026-02-24T20:02:48.029575+00:00"
+    },
+    {
+      "ticker": "RIO.AX",
+      "score": 37,
+      "confidence": 33,
+      "date": "2026-02-24T20:02:55.271165+00:00"
+    }
+  ]
+}

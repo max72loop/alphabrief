@@ -1,0 +1,65 @@
+<div class="section-content">
+    <h3 class="section-title">Identité</h3>
+    {% set ident = card.get('identity', {}) %}
+
+    {% if ident.get('description') %}
+    <p class="company-description">{{ ident.get('description') }}</p>
+    {% endif %}
+
+    <div class="kv-grid">
+        <div class="kv-item">
+            <span class="kv-label">Secteur</span>
+            <span class="kv-value">{{ ident.get('sector') or '—' }}</span>
+        </div>
+        <div class="kv-item">
+            <span class="kv-label">Industrie</span>
+            <span class="kv-value">{{ ident.get('industry') or '—' }}</span>
+        </div>
+        <div class="kv-item">
+            <span class="kv-label">Bourse</span>
+            <span class="kv-value">{{ ident.get('exchange') or '—' }}</span>
+        </div>
+        <div class="kv-item">
+            <span class="kv-label">Devise</span>
+            <span class="kv-value">{{ ident.get('currency') or '—' }}</span>
+        </div>
+        <div class="kv-item">
+            <span class="kv-label">Capitalisation</span>
+            {% set mcap = ident.get('market_cap') %}
+            <span class="kv-value">
+                {% if mcap %}
+                    {% if mcap >= 1000000000000 %}
+                        {{ "%.1fT"|format(mcap / 1000000000000) }}
+                    {% elif mcap >= 1000000000 %}
+                        {{ "%.1fB"|format(mcap / 1000000000) }}
+                    {% elif mcap >= 1000000 %}
+                        {{ "%.0fM"|format(mcap / 1000000) }}
+                    {% else %}
+                        {{ mcap }}
+                    {% endif %}
+                {% else %}
+                    —
+                {% endif %}
+            </span>
+        </div>
+        <div class="kv-item">
+            <span class="kv-label">Employés</span>
+            {% set employees = ident.get('employees') %}
+            <span class="kv-value">
+                {% if employees %}
+                    {{ "{:,}".format(employees) }}
+                {% else %}
+                    —
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    {% if ident.get('website') %}
+    <div class="company-website">
+        <a href="{{ ident.get('website') }}" target="_blank" rel="noopener" class="btn btn-sm btn-muted">
+            Site web
+        </a>
+    </div>
+    {% endif %}
+</div>

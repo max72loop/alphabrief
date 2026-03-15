@@ -1,0 +1,159 @@
+{
+  "as_of": "2026-02-16",
+  "identity": {
+    "ticker": "MC.PA",
+    "name": "LVMH",
+    "exchange": "PAR",
+    "currency": "EUR",
+    "sector": "Consumer Cyclical",
+    "industry": "Luxury Goods",
+    "market_cap": 257222590464,
+    "description": "LVMH Moët Hennessy - Louis Vuitton, Société Européenne, together with its subsidiaries, operates as a luxury goods company worldwide. It offers wine and spirit products under the Ao Yun, Ardbeg, Armand de Brignac, Belvedere, Bodega Numanthia, Chandon, Cheval des Andes, Château Cheval Blanc, Châte...",
+    "website": "https://www.lvmh.com",
+    "employees": 196647
+  },
+  "business_snapshot": {
+    "one_liner": "",
+    "segments": [],
+    "geographies": [],
+    "moat_tags": [],
+    "top_competitors": []
+  },
+  "financials": {
+    "revenue_cagr_3y": 0.6790272105436479,
+    "revenue_yoy_rates": [
+      8.802394453354887,
+      -1.707427483662786,
+      -4.575942939467655
+    ],
+    "ebit_margin": null,
+    "gross_margin": 66.24178598388754,
+    "fcf_margin": 17.57892261809002,
+    "roe": 16.236,
+    "roic": null,
+    "net_debt_to_ebitda": 1.129790645791995,
+    "interest_coverage": null,
+    "share_dilution_3y": -0.9351713531259291,
+    "payout_ratio": 59.5,
+    "fcf_absolute": 14205000000.0,
+    "net_income": 10878000000.0
+  },
+  "valuation": {
+    "pe_ttm": 23.720823,
+    "ev_ebitda_ttm": 13.6,
+    "ev_sales_ttm": 3.465,
+    "fcf_yield_ttm": 5.522454297025705,
+    "pb_ratio": 3.813132,
+    "forward_pe": 19.25931
+  },
+  "market": {
+    "beta": 0.864,
+    "volatility_1y": null,
+    "drawdown_1y": null,
+    "avg_volume_3m": 396657,
+    "momentum_12m": -24.343567740302497,
+    "analyst_target_mean": 644.76294,
+    "analyst_target_low": 434.6,
+    "analyst_target_high": 825.0,
+    "analyst_count": 27,
+    "analyst_recommendation": "buy",
+    "current_price": 518.3,
+    "previous_close": 514.2,
+    "change_pct": 0.797355114741328,
+    "volume": 270417,
+    "fifty_two_week_low": 436.55,
+    "fifty_two_week_high": 710.3,
+    "dividend_yield": 0.0253
+  },
+  "technicals": {
+    "rsi_14": 27.747805717474478,
+    "sma_50": 598.3859997558594,
+    "sma_200": 536.9370629882812,
+    "macd_line": -23.788248622020774,
+    "macd_signal": -22.750930384211735,
+    "macd_histogram": -1.037318237809039,
+    "volatility_1y": 31.910965118622425,
+    "max_drawdown_1y": -36.758388368371214
+  },
+  "events": {
+    "next_earnings_date": null,
+    "catalysts": [],
+    "key_risks": []
+  },
+  "scores": {
+    "potential_score": 50,
+    "importance_ranked_items": [
+      {
+        "label": "Excellente génération de cash",
+        "importance_score": 80,
+        "why_it_matters": "FCF margin ~17.6% : très forte conversion en cash.",
+        "direction": "positive"
+      },
+      {
+        "label": "Bénéfices de haute qualité",
+        "importance_score": 80,
+        "why_it_matters": "FCF/Net Income ~1.3x : profits bien convertis en cash.",
+        "direction": "positive"
+      },
+      {
+        "label": "RSI survendu (opportunité)",
+        "importance_score": 80,
+        "why_it_matters": "RSI ~28 : potentiel de rebond technique.",
+        "direction": "positive"
+      },
+      {
+        "label": "Marge brute très élevée",
+        "importance_score": 75,
+        "why_it_matters": "Gross margin ~66.2% : fort pouvoir de pricing.",
+        "direction": "positive"
+      },
+      {
+        "label": "Croissance en décélération",
+        "importance_score": 75,
+        "why_it_matters": "CA YoY en baisse chaque année (dernier : -4.6%) : ralentissement.",
+        "direction": "negative"
+      },
+      {
+        "label": "PEG élevé",
+        "importance_score": 75,
+        "why_it_matters": "PEG ~34.93 : surévalué vs croissance.",
+        "direction": "negative"
+      },
+      {
+        "label": "Momentum très négatif (12m)",
+        "importance_score": 75,
+        "why_it_matters": "Perf 12m ~-24.3% : tendance baissière marquée.",
+        "direction": "negative"
+      },
+      {
+        "label": "Croissance erratique",
+        "importance_score": 70,
+        "why_it_matters": "CV ~5.75 : revenus imprévisibles, risque accru.",
+        "direction": "negative"
+      },
+      {
+        "label": "Upside analystes modéré",
+        "importance_score": 70,
+        "why_it_matters": "Target moyen 645 vs prix 518 : +24% d'upside (27 analystes).",
+        "direction": "positive"
+      },
+      {
+        "label": "Croissance du CA faible (3 ans)",
+        "importance_score": 65,
+        "why_it_matters": "CAGR CA ~0.7% : croissance limitée.",
+        "direction": "neutral"
+      }
+    ],
+    "confidence_score": 92
+  },
+  "sources": [
+    {
+      "name": "stub",
+      "fetched_at": "2026-02-16T19:46:55.579790+00:00"
+    },
+    {
+      "name": "yfinance",
+      "fetched_at": "2026-02-16T19:46:56.117661+00:00"
+    }
+  ]
+}

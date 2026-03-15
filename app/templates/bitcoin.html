@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %}Bitcoin Analysis - MyTrader{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h1>Analyse Bitcoin</h1>
+    <span class="badge-count">{{ result.indicators_available }}/{{ result.indicators_total }} indicateurs</span>
+    <a href="{{ url_for('bitcoin.index') }}" class="btn btn-accent" style="margin-left: auto;">Rafraichir</a>
+</div>
+
+{% if result.score is not none %}
+<!-- Score Principal -->
+<div class="signal-zone zone-{{ 'strong-buy' if result.recommendation == 'ACHAT FORT' else ('buy' if result.recommendation == 'ACHAT' else ('neutral' if result.recommendation == 'NEUTRE' else ('sell' if result.recommendation == 'PRUDENCE' else 'strong-sell'))) }}">
+    <div class="zone-indicator">
+        <span class="zone-label">{{ result.recommendation }}</span>
+    </div>
+    <p class="zone-desc">{{ result.recommendation_message }}</p>
+
+    <div class="signal-gauge">
+        <span class="gauge-label gauge-sell">EVITER</span>
+        <div class="gauge-track">
+            <div class="gauge-marker" style="left: {{ result.score }}%;"></div>
+        </div>
+        <span class="gauge-label gauge-buy">ACHAT</span>
+    </div>
+
+    <div class="zone-score">
+        <span class="buy-score">Score: {{ result.score }}/100</span>
+    </div>
+
+    {% if result.confidence is defined %}
+    <div class="zone-confidence" style="margin-top: 0.5rem; opacity: 0.85; font-size: 0.85rem;">
+        Confiance: {{ result.confidence }}% - {{ result.confidence_desc }}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Grille des indicateurs -->
+<div class="card">
+    <div class="section-title">Indicateurs Detailles</div>
+    <div class="signals-categories">
+        <!-- Indicateurs On-Chain -->
+        <div class="signal-category">
+            <div class="category-title">On-Chain & Valorisation</div>
+
+            {% if result.indicators.mvrv %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.mvrv.score >= 60 else ('signal-sell' if result.indicators.mvrv.score < 40 else '') }} {{ 'signal-strong' if result.indicators.mvrv.score >= 80 or result.indicators.mvrv.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.mvrv.score >= 80 else ('+' if result.indicators.mvrv.score >= 60 else ('--' if result.indicators.mvrv.score < 20 else ('-' if result.indicators.mvrv.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">MVRV Z-Score</span>
+                    <span class="signal-desc">{{ result.indicators.mvrv.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.mvrv.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.stock_to_flow %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.stock_to_flow.score >= 60 else ('signal-sell' if result.indicators.stock_to_flow.score < 40 else '') }} {{ 'signal-strong' if result.indicators.stock_to_flow.score >= 80 or result.indicators.stock_to_flow.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.stock_to_flow.score >= 80 else ('+' if result.indicators.stock_to_flow.score >= 60 else ('--' if result.indicators.stock_to_flow.score < 20 else ('-' if result.indicators.stock_to_flow.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Stock-to-Flow</span>
+                    <span class="signal-desc">{{ result.indicators.stock_to_flow.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.stock_to_flow.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.puell %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.puell.score >= 60 else ('signal-sell' if result.indicators.puell.score < 40 else '') }} {{ 'signal-strong' if result.indicators.puell.score >= 80 or result.indicators.puell.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.puell.score >= 80 else ('+' if result.indicators.puell.score >= 60 else ('--' if result.indicators.puell.score < 20 else ('-' if result.indicators.puell.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Puell Multiple</span>
+                    <span class="signal-desc">{{ result.indicators.puell.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.puell.score) }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Indicateurs de Cycle -->
+        <div class="signal-category">
+            <div class="category-title">Cycle de Marche</div>
+
+            {% if result.indicators.pi_cycle %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.pi_cycle.score >= 60 else ('signal-sell' if result.indicators.pi_cycle.score < 40 else '') }} {{ 'signal-strong' if result.indicators.pi_cycle.score >= 80 or result.indicators.pi_cycle.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.pi_cycle.score >= 80 else ('+' if result.indicators.pi_cycle.score >= 60 else ('--' if result.indicators.pi_cycle.score < 20 else ('-' if result.indicators.pi_cycle.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Pi Cycle Top</span>
+                    <span class="signal-desc">{{ result.indicators.pi_cycle.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.pi_cycle.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.rainbow %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.rainbow.score >= 60 else ('signal-sell' if result.indicators.rainbow.score < 40 else '') }} {{ 'signal-strong' if result.indicators.rainbow.score >= 80 or result.indicators.rainbow.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.rainbow.score >= 80 else ('+' if result.indicators.rainbow.score >= 60 else ('--' if result.indicators.rainbow.score < 20 else ('-' if result.indicators.rainbow.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Rainbow Bands</span>
+                    <span class="signal-desc">{{ result.indicators.rainbow.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.rainbow.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators['200wma'] %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators['200wma'].score >= 60 else ('signal-sell' if result.indicators['200wma'].score < 40 else '') }} {{ 'signal-strong' if result.indicators['200wma'].score >= 80 or result.indicators['200wma'].score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators['200wma'].score >= 80 else ('+' if result.indicators['200wma'].score >= 60 else ('--' if result.indicators['200wma'].score < 20 else ('-' if result.indicators['200wma'].score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">200 WMA Heatmap</span>
+                    <span class="signal-desc">{{ result.indicators['200wma'].signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators['200wma'].score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.golden_ratio %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.golden_ratio.score >= 60 else ('signal-sell' if result.indicators.golden_ratio.score < 40 else '') }} {{ 'signal-strong' if result.indicators.golden_ratio.score >= 80 or result.indicators.golden_ratio.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.golden_ratio.score >= 80 else ('+' if result.indicators.golden_ratio.score >= 60 else ('--' if result.indicators.golden_ratio.score < 20 else ('-' if result.indicators.golden_ratio.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Golden Ratio Multiplier</span>
+                    <span class="signal-desc">{{ result.indicators.golden_ratio.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.golden_ratio.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.halving_cycle %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.halving_cycle.score >= 60 else ('signal-sell' if result.indicators.halving_cycle.score < 40 else '') }} {{ 'signal-strong' if result.indicators.halving_cycle.score >= 80 or result.indicators.halving_cycle.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.halving_cycle.score >= 80 else ('+' if result.indicators.halving_cycle.score >= 60 else ('--' if result.indicators.halving_cycle.score < 20 else ('-' if result.indicators.halving_cycle.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Halving Cycle</span>
+                    <span class="signal-desc">{{ result.indicators.halving_cycle.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.halving_cycle.score) }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Indicateurs Techniques & Sentiment -->
+        <div class="signal-category">
+            <div class="category-title">Technique & Sentiment</div>
+
+            {% if result.indicators.rsi_multi %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.rsi_multi.score >= 60 else ('signal-sell' if result.indicators.rsi_multi.score < 40 else '') }} {{ 'signal-strong' if result.indicators.rsi_multi.score >= 80 or result.indicators.rsi_multi.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.rsi_multi.score >= 80 else ('+' if result.indicators.rsi_multi.score >= 60 else ('--' if result.indicators.rsi_multi.score < 20 else ('-' if result.indicators.rsi_multi.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">RSI Multi-Timeframe</span>
+                    <span class="signal-desc">{{ result.indicators.rsi_multi.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.rsi_multi.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.fear_greed %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.fear_greed.score >= 60 else ('signal-sell' if result.indicators.fear_greed.score < 40 else '') }} {{ 'signal-strong' if result.indicators.fear_greed.score >= 80 or result.indicators.fear_greed.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.fear_greed.score >= 80 else ('+' if result.indicators.fear_greed.score >= 60 else ('--' if result.indicators.fear_greed.score < 20 else ('-' if result.indicators.fear_greed.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Fear & Greed Index</span>
+                    <span class="signal-desc">{{ result.indicators.fear_greed.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.fear_greed.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.macd %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.macd.score >= 60 else ('signal-sell' if result.indicators.macd.score < 40 else '') }} {{ 'signal-strong' if result.indicators.macd.score >= 80 or result.indicators.macd.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.macd.score >= 80 else ('+' if result.indicators.macd.score >= 60 else ('--' if result.indicators.macd.score < 20 else ('-' if result.indicators.macd.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">MACD Multi-TF</span>
+                    <span class="signal-desc">{{ result.indicators.macd.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.macd.score) }}</span>
+            </div>
+            {% endif %}
+
+            {% if result.indicators.volatility %}
+            <div class="signal-item {{ 'signal-buy' if result.indicators.volatility.score >= 60 else ('signal-sell' if result.indicators.volatility.score < 40 else '') }} {{ 'signal-strong' if result.indicators.volatility.score >= 80 or result.indicators.volatility.score < 20 else '' }}">
+                <span class="signal-dot">{{ '++' if result.indicators.volatility.score >= 80 else ('+' if result.indicators.volatility.score >= 60 else ('--' if result.indicators.volatility.score < 20 else ('-' if result.indicators.volatility.score < 40 else '~'))) }}</span>
+                <div class="signal-info">
+                    <span class="signal-label">Volatilite (ATR)</span>
+                    <span class="signal-desc">{{ result.indicators.volatility.signal }}</span>
+                </div>
+                <span class="signal-value">{{ "%.0f"|format(result.indicators.volatility.score) }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <p class="signal-disclaimer">
+        Ces indicateurs sont fournis a titre informatif uniquement. Ils ne constituent pas des conseils financiers.
+        Faites toujours vos propres recherches avant d'investir.
+    </p>
+</div>
+
+<!-- Resume des scores -->
+<div class="card">
+    <div class="section-title">Resume</div>
+    <div class="kv-grid">
+        {% for name, data in result.indicators.items() %}
+        <div class="kv-item">
+            <span class="kv-label">{{ name|replace('_', ' ')|title }}</span>
+            <span class="kv-value {{ 'text-success' if data.score >= 60 else ('text-danger' if data.score < 40 else '') }}">
+                {{ "%.0f"|format(data.score) }}/100
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<div class="card empty-state">
+    <p>Erreur lors de l'analyse: {{ result.recommendation_message }}</p>
+    <a href="{{ url_for('bitcoin.index') }}" class="btn btn-primary" style="margin-top: 1rem;">Reessayer</a>
+</div>
+{% endif %}
+{% endblock %}

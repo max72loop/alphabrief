@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyTrader{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tooltip.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="{{ url_for('landing.index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='logo.svg') }}" alt="MyTrader Generator" height="48">
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('portfolio.index') }}"  class="nav-link {% if current_endpoint == 'portfolio.index' %}nav-link--active{% endif %}">Portfolio</a>
+            <a href="{{ url_for('watchlist.index') }}"  class="nav-link {% if current_endpoint in ('watchlist.index', 'detail.show') %}nav-link--active{% endif %}">Watchlist</a>
+            <a href="{{ url_for('screener.index') }}"   class="nav-link {% if current_endpoint == 'screener.index' %}nav-link--active{% endif %}">Screener</a>
+            <a href="{{ url_for('compare.index') }}"   class="nav-link {% if current_endpoint == 'compare.index' %}nav-link--active{% endif %}">Comparer</a>
+            <a href="{{ url_for('algorithm.index') }}"  class="nav-link {% if current_endpoint == 'algorithm.index' %}nav-link--active{% endif %}">Algorithme</a>
+            <a href="{{ url_for('scoring.history') }}"  class="nav-link {% if current_endpoint == 'scoring.history' %}nav-link--active{% endif %}">Historique</a>
+            <a href="{{ url_for('bitcoin.index') }}"    class="nav-link {% if current_endpoint == 'bitcoin.index' %}nav-link--active{% endif %}">Bitcoin</a>
+            <a href="{{ url_for('cycle.index') }}"      class="nav-link {% if current_endpoint == 'cycle.index' %}nav-link--active{% endif %}">Cycle</a>
+            <a href="{{ url_for('marche.index') }}"     class="nav-link {% if current_endpoint == 'marche.index' %}nav-link--active{% endif %}">Marché</a>
+            <a href="{{ url_for('pools.index') }}"      class="nav-link {% if current_endpoint == 'pools.index' %}nav-link--active{% endif %}">Pools</a>
+            <a href="{{ url_for('alerts.index') }}"     class="nav-link nav-alerts {% if current_endpoint == 'alerts.index' %}nav-link--active{% endif %}">
+                Alertes{% if unread_alerts_count %}<span class="alert-badge">{{ unread_alerts_count }}</span>{% endif %}
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}" data-autohide="{{ 'false' if category == 'error' else 'true' }}">
+                        <span class="flash-text">{{ message }}</span>
+                        <button class="flash-close" aria-label="Fermer">×</button>
+                        {% if category != 'error' %}
+                        <div class="flash-progress"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block page_content %}{% endblock %}
+    </main>
+
+    <!-- Overlay de scoring -->
+    <div id="scoring-overlay" class="scoring-overlay" aria-hidden="true">
+        <div class="scoring-overlay-box">
+            <div class="scoring-spinner"></div>
+            <p class="scoring-msg" id="scoring-msg">Préparation…</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scoring.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

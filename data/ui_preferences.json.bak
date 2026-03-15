@@ -1,0 +1,10 @@
+{
+  "layouts": {
+    "GOOG": [
+      "identity",
+      "score",
+      "fundamentals",
+      "technicals"
+    ]
+  }
+}

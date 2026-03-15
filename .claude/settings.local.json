@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m mytrader_generator.generator:*)",
+      "Bash(wc:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(python -c:*)",
+      "Bash(pip install:*)",
+      "Bash(start python -m streamlit run mytrader_generator/ui/app.py)",
+      "Bash(cd:*)",
+      "Skill(bmad:bmm:workflows:research)",
+      "Skill(bmad:bmm:workflows:research:*)",
+      "Skill(bmad:bmm:workflows:create-architecture)",
+      "Skill(bmad:bmm:workflows:create-architecture:*)",
+      "Skill(bmad:bmm:workflows:prd)",
+      "Skill(bmad:bmm:workflows:prd:*)",
+      "Skill(bmad:bmm:workflows:generate-project-context)",
+      "Skill(bmad:bmm:workflows:generate-project-context:*)",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(ping:*)",
+      "Bash(netstat:*)",
+      "Bash(pip show:*)",
+      "Bash(python3:*)",
+      "Read(//c/Users/Max/**)"
+    ]
+  }
+}

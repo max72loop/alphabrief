@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% block title %}Screener - MyTrader{% endblock %}
+
+{% block head %}
+<style>
+.screener-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.filter-group label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.filter-group input,
+.filter-group select {
+    padding: 0.45rem 0.75rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+    min-width: 110px;
+    transition: border-color 0.2s;
+}
+.filter-group input:focus,
+.filter-group select:focus { border-color: var(--border-focus); }
+
+.screener-table-wrap { overflow-x: auto; }
+
+.screener-table th {
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+}
+.screener-table th:hover { color: var(--primary-light); }
+.screener-table th .sort-icon {
+    display: inline-block;
+    margin-left: 4px;
+    opacity: 0.4;
+    font-size: 0.7rem;
+}
+.screener-table th.sorted-asc .sort-icon::after  { content: "▲"; opacity: 1; }
+.screener-table th.sorted-desc .sort-icon::after { content: "▼"; opacity: 1; }
+.screener-table th .sort-icon::after { content: "⬍"; }
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+.mom-pos { color: var(--success); }
+.mom-neg { color: var(--danger); }
+
+.rsi-hot  { color: var(--danger); }
+.rsi-cold { color: var(--info); }
+
+.row-hidden { display: none; }
+
+.result-count {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Screener</h1>
+    <span class="badge-count" id="result-count">{{ rows|length }} action(s)</span>
+</div>
+
+{% if not rows %}
+<div class="card empty-state">
+    <p>Aucune card générée. Scorez des tickers depuis la Watchlist pour alimenter le screener.</p>
+</div>
+{% else %}
+
+<div class="card">
+    <div class="screener-filters">
+        <div class="filter-group">
+            <label>Recherche</label>
+            <input type="text" id="f-search" placeholder="Ticker ou nom…" oninput="applyFilters()">
+        </div>
+        <div class="filter-group">
+            <label>Secteur</label>
+            <select id="f-sector" onchange="applyFilters()">
+                <option value="">Tous</option>
+                {% for s in sectors %}
+                <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Score min</label>
+            <input type="number" id="f-score-min" min="0" max="100" placeholder="0" oninput="applyFilters()" style="width:80px">
+        </div>
+        <div class="filter-group">
+            <label>RSI max</label>
+            <input type="number" id="f-rsi-max" min="0" max="100" placeholder="100" oninput="applyFilters()" style="width:80px">
+        </div>
+        <div class="filter-group">
+            <label>Mom 3m min (%)</label>
+            <input type="number" id="f-mom-min" placeholder="-999" oninput="applyFilters()" style="width:100px">
+        </div>
+    </div>
+</div>
+
+<div class="card screener-table-wrap">
+    <table class="table screener-table" id="screener-table">
+        <thead>
+            <tr>
+                <th data-col="ticker">Titre<span class="sort-icon"></span></th>
+                <th data-col="sector">Secteur<span class="sort-icon"></span></th>
+                <th data-col="score" class="text-center sorted-desc">Score<span class="sort-icon"></span></th>
+                <th class="text-center">Signal</th>
+                <th data-col="confidence" class="text-center">Conf.<span class="sort-icon"></span></th>
+                <th data-col="rsi" class="text-right">RSI<span class="sort-icon"></span></th>
+                <th data-col="mom_3m" class="text-right">Mom 3m<span class="sort-icon"></span></th>
+                <th data-col="mom_12m" class="text-right">Mom 12m<span class="sort-icon"></span></th>
+                <th data-col="pe" class="text-right">P/E<span class="sort-icon"></span></th>
+                <th data-col="ev_ebitda" class="text-right">EV/EBITDA<span class="sort-icon"></span></th>
+                <th data-col="gross_margin" class="text-right">Marge brute<span class="sort-icon"></span></th>
+                <th data-col="market_cap_b" class="text-right">Mkt Cap (Md)<span class="sort-icon"></span></th>
+                <th data-col="as_of" class="text-center">Mis à jour<span class="sort-icon"></span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr class="screener-row"
+                data-ticker="{{ r.ticker }}"
+                data-name="{{ r.name }}"
+                data-sector="{{ r.sector }}"
+                data-score="{{ r.score if r.score is not none else '' }}"
+                data-rsi="{{ r.rsi if r.rsi is not none else '' }}"
+                data-mom3m="{{ r.mom_3m if r.mom_3m is not none else '' }}"
+            >
+                <td>
+                    <a href="{{ url_for('detail.show', ticker=r.ticker) }}" class="ticker-link">
+                        {% if r.name %}
+                            {{ r.name }}
+                            <span class="currency-tag">{{ r.ticker }}</span>
+                        {% else %}
+                            {{ r.ticker }}
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="text-muted" style="font-size:0.82rem">{{ r.sector or '—' }}</td>
+                <td class="text-center">
+                    {% if r.score is not none %}
+                    <span class="score-pill score-{{ 'high' if r.score >= 70 else ('mid' if r.score >= 50 else 'low') }}">
+                        {{ r.score }}
+                    </span>
+                    {% else %}
+                    <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if r.score is not none %}
+                        {% if r.score >= 65 %}
+                        <span class="signal-badge signal-acheter">Acheter</span>
+                        {% elif r.score >= 40 %}
+                        <span class="signal-badge signal-observer">Observer</span>
+                        {% else %}
+                        <span class="signal-badge signal-eviter">Éviter</span>
+                        {% endif %}
+                    {% else %}
+                    <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center text-muted" style="font-size:0.85rem">
+                    {{ r.confidence ~ '%' if r.confidence is not none else '—' }}
+                </td>
+                <td class="text-right">
+                    {% if r.rsi is not none %}
+                    <span class="{{ 'rsi-hot' if r.rsi|float > 70 else ('rsi-cold' if r.rsi|float < 30 else '') }}">
+                        {{ r.rsi }}
+                    </span>
+                    {% else %}—{% endif %}
+                </td>
+                <td class="text-right">
+                    {% if r.mom_3m is not none %}
+                    <span class="{{ 'mom-pos' if r.mom_3m|float > 0 else 'mom-neg' }}">
+                        {{ '%+.1f'|format(r.mom_3m|float) }}%
+                    </span>
+                    {% else %}—{% endif %}
+                </td>
+                <td class="text-right">
+                    {% if r.mom_12m is not none %}
+                    <span class="{{ 'mom-pos' if r.mom_12m|float > 0 else 'mom-neg' }}">
+                        {{ '%+.1f'|format(r.mom_12m|float) }}%
+                    </span>
+                    {% else %}—{% endif %}
+                </td>
+                <td class="text-right text-muted">{{ r.pe ~ 'x' if r.pe is not none else '—' }}</td>
+                <td class="text-right text-muted">{{ r.ev_ebitda ~ 'x' if r.ev_ebitda is not none else '—' }}</td>
+                <td class="text-right text-muted">{{ r.gross_margin ~ '%' if r.gross_margin is not none else '—' }}</td>
+                <td class="text-right text-muted">{{ r.market_cap_b if r.market_cap_b is not none else '—' }}</td>
+                <td class="text-center text-muted" style="font-size:0.8rem">{{ r.as_of or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    // ── Filtering ──────────────────────────────────────────────────────────────
+    function applyFilters() {
+        const search   = document.getElementById('f-search').value.trim().toLowerCase();
+        const sector   = document.getElementById('f-sector').value;
+        const scoreMin = parseFloat(document.getElementById('f-score-min').value) || 0;
+        const rsiMax   = parseFloat(document.getElementById('f-rsi-max').value);
+        const momMin   = parseFloat(document.getElementById('f-mom-min').value);
+
+        let visible = 0;
+        document.querySelectorAll('.screener-row').forEach(function (row) {
+            const ticker = row.dataset.ticker.toLowerCase();
+            const name   = row.dataset.name.toLowerCase();
+            const sec    = row.dataset.sector;
+            const score  = parseFloat(row.dataset.score);
+            const rsi    = parseFloat(row.dataset.rsi);
+            const mom3m  = parseFloat(row.dataset.mom3m);
+
+            let show = true;
+            if (search && !ticker.includes(search) && !name.includes(search)) show = false;
+            if (sector && sec !== sector) show = false;
+            if (!isNaN(scoreMin) && scoreMin > 0 && (isNaN(score) || score < scoreMin)) show = false;
+            if (!isNaN(rsiMax) && (isNaN(rsi) || rsi > rsiMax)) show = false;
+            if (!isNaN(momMin) && (isNaN(mom3m) || mom3m < momMin)) show = false;
+
+            row.classList.toggle('row-hidden', !show);
+            if (show) visible++;
+        });
+        document.getElementById('result-count').textContent = visible + ' action(s)';
+    }
+    window.applyFilters = applyFilters;
+
+    // ── Sorting ────────────────────────────────────────────────────────────────
+    let _sortCol = 'score';
+    let _sortAsc  = false;
+
+    document.querySelectorAll('.screener-table th[data-col]').forEach(function (th) {
+        th.addEventListener('click', function () {
+            const col = th.dataset.col;
+            if (_sortCol === col) {
+                _sortAsc = !_sortAsc;
+            } else {
+                _sortCol = col;
+                _sortAsc = false;
+            }
+            document.querySelectorAll('.screener-table th').forEach(function (h) {
+                h.classList.remove('sorted-asc', 'sorted-desc');
+            });
+            th.classList.add(_sortAsc ? 'sorted-asc' : 'sorted-desc');
+            sortTable();
+        });
+    });
+
+    function cellValue(row, col) {
+        const td = row.querySelectorAll('td');
+        const cols = ['ticker','sector','score','_signal','confidence','rsi','mom_3m','mom_12m','pe','ev_ebitda','gross_margin','market_cap_b','as_of'];
+        const idx  = cols.indexOf(col);
+        if (idx < 0) return '';
+        const text = (td[idx] || {}).textContent || '';
+        return text.replace(/[+%x]/g, '').trim();
+    }
+
+    function sortTable() {
+        const tbody = document.querySelector('.screener-table tbody');
+        const rows  = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort(function (a, b) {
+            let av = cellValue(a, _sortCol);
+            let bv = cellValue(b, _sortCol);
+            const an = parseFloat(av);
+            const bn = parseFloat(bv);
+            let cmp;
+            if (!isNaN(an) && !isNaN(bn)) {
+                cmp = an - bn;
+            } else {
+                cmp = av.localeCompare(bv);
+            }
+            return _sortAsc ? cmp : -cmp;
+        });
+        rows.forEach(function (r) { tbody.appendChild(r); });
+    }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,450 @@
+{% extends "base.html" %}
+
+{% block title %}Algorithme Trading - MyTrader{% endblock %}
+
+{% block head %}
+<style>
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        background: var(--bg-card-hover);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .stat-strong-buy { color: #34d399; }
+    .stat-buy { color: var(--success); }
+    .stat-watch { color: var(--warning); }
+    .stat-sell { color: var(--danger); }
+    .stat-strong-sell { color: #f87171; }
+    .stat-up { color: var(--info); }
+    .stat-down { color: var(--accent); }
+
+    /* Add Form */
+    .add-form {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-row-multi {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .form-row-multi .input-ticker {
+        flex: 1;
+    }
+
+    /* Evolution Cell */
+    .evolution-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .evolution-value {
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .evolution-up {
+        color: var(--success);
+    }
+
+    .evolution-down {
+        color: var(--danger);
+    }
+
+    .evolution-stable {
+        color: var(--text-muted);
+    }
+
+    .trend-indicator {
+        display: inline-block;
+        width: 0;
+        height: 0;
+    }
+
+    .trend-up {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 6px solid var(--success);
+    }
+
+    .trend-down {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 6px solid var(--danger);
+    }
+
+    .trend-stable {
+        width: 6px;
+        height: 2px;
+        background: var(--text-muted);
+        border-radius: 1px;
+    }
+
+    /* Action Badges */
+    .action-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .action-strong_buy {
+        background: rgba(16, 185, 129, 0.25);
+        color: #34d399;
+        border: 2px solid rgba(16, 185, 129, 0.5);
+        font-weight: 700;
+    }
+
+    .action-buy {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .action-watch {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .action-sell {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .action-strong_sell {
+        background: rgba(239, 68, 68, 0.25);
+        color: #f87171;
+        border: 2px solid rgba(239, 68, 68, 0.5);
+        font-weight: 700;
+    }
+
+    /* Confidence Bar */
+    .confidence-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .confidence-value {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        min-width: 35px;
+    }
+
+    .confidence-track {
+        flex: 1;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+        overflow: hidden;
+        max-width: 100px;
+    }
+
+    .confidence-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--success));
+        transition: width 0.3s;
+        border-radius: 3px;
+    }
+
+    /* Score Cell */
+    .score-cell {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    /* Guide Section */
+    .guide-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .guide-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .guide-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .guide-item {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.2s;
+    }
+
+    .guide-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .guide-item strong {
+        font-size: 0.95rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .guide-item p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>🎯 Algorithme de Trading</h1>
+    <span class="badge-count">{{ stats.total }} entreprise(s)</span>
+    <form method="POST" action="{{ url_for('algorithm.add_portfolio') }}" class="inline-form" style="margin-left: auto;">
+        <button type="submit" class="btn btn-secondary">📁 Ajouter mon portefeuille</button>
+    </form>
+    {% if algorithms_data %}
+    <form method="POST" action="{{ url_for('algorithm.refresh_all') }}" class="inline-form">
+        <button type="submit" class="btn btn-accent">Rafraîchir tout</button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- Statistiques -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Entreprises</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-strong-buy">{{ stats.strong_buy_count }}</div>
+        <div class="stat-label">Achat Fort (≥65)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-buy">{{ stats.buy_count }}</div>
+        <div class="stat-label">Acheter (50-65)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-watch">{{ stats.watch_count }}</div>
+        <div class="stat-label">Observer (40-50)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-sell">{{ stats.sell_count }}</div>
+        <div class="stat-label">Vendre (30-40)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-strong-sell">{{ stats.strong_sell_count }}</div>
+        <div class="stat-label">Vente Forte (&lt;30)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-up">{{ stats.trending_up }}</div>
+        <div class="stat-label">En hausse ↑</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value stat-down">{{ stats.trending_down }}</div>
+        <div class="stat-label">En baisse ↓</div>
+    </div>
+</div>
+
+<!-- Formulaire d'ajout -->
+<div class="card add-form">
+    <form method="POST" action="{{ url_for('algorithm.add_ticker') }}">
+        <div class="form-row-multi">
+            <input type="text" name="ticker" placeholder="Ticker (ex: AAPL, TSLA...)" class="input-ticker" required>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+    </form>
+</div>
+
+<!-- Tableau des entreprises -->
+{% if algorithms_data %}
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Note actuelle</th>
+                <th>Évolution</th>
+                <th>Tendance</th>
+                <th>Confiance</th>
+                <th>Action</th>
+                <th>Dernière MAJ</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for algo in algorithms_data %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('detail.show', ticker=algo.ticker) }}" class="ticker-link">{{ algo.ticker }}</a>
+                </td>
+                <td class="text-center">
+                    <span class="score-cell
+                        {% if algo.current_score >= 65 %}stat-strong-buy
+                        {% elif algo.current_score > 50 %}stat-buy
+                        {% elif algo.current_score >= 40 %}stat-watch
+                        {% elif algo.current_score >= 30 %}stat-sell
+                        {% else %}stat-strong-sell{% endif %}">
+                        {{ algo.current_score }}
+                    </span>
+                    <span class="text-muted" style="font-size: 0.85rem;">/100</span>
+                </td>
+                <td class="text-center">
+                    <div class="evolution-cell">
+                        {% if algo.evolution is not none %}
+                            {% if algo.evolution > 0 %}
+                                <span class="trend-indicator trend-up"></span>
+                                <span class="evolution-value evolution-up">+{{ algo.evolution }}</span>
+                            {% elif algo.evolution < 0 %}
+                                <span class="trend-indicator trend-down"></span>
+                                <span class="evolution-value evolution-down">{{ algo.evolution }}</span>
+                            {% else %}
+                                <span class="trend-indicator trend-stable"></span>
+                                <span class="evolution-value evolution-stable">0</span>
+                            {% endif %}
+                            {% if algo.evolution_percent is not none %}
+                                <span style="font-size: 0.75rem; color: #9ca3af;">
+                                    ({{ "%.1f"|format(algo.evolution_percent) }}%)
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                </td>
+                <td class="text-center">
+                    {% if algo.trend == 'up' %}
+                        <span class="text-success" style="font-weight: 600;">↑ Hausse</span>
+                    {% elif algo.trend == 'down' %}
+                        <span class="text-danger" style="font-weight: 600;">↓ Baisse</span>
+                    {% else %}
+                        <span class="text-muted">→ Stable</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <div class="confidence-bar">
+                        <span class="confidence-value">{{ algo.confidence }}%</span>
+                        <div class="confidence-track">
+                            <div class="confidence-fill" style="width: {{ algo.confidence }}%"></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="action-badge action-{{ algo.action }}">
+                        {% if algo.action == 'strong_buy' %}
+                            🟢🟢 Achat Fort
+                        {% elif algo.action == 'buy' %}
+                            🟢 Acheter
+                        {% elif algo.action == 'watch' %}
+                            🟡 Observer
+                        {% elif algo.action == 'sell' %}
+                            🔴 Vendre
+                        {% else %}
+                            🔴🔴 Vente Forte
+                        {% endif %}
+                    </span>
+                </td>
+                <td class="text-center text-muted" style="font-size: 0.8rem;">
+                    {% if algo.last_update %}
+                        {{ algo.last_update[:10] }}<br>
+                        <span style="font-size: 0.75rem;">{{ algo.last_update[11:19] }}</span>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td class="actions-cell">
+                    <form method="POST" action="{{ url_for('algorithm.refresh_score', ticker=algo.ticker) }}" class="inline-form">
+                        <button type="submit" class="btn btn-secondary btn-sm">↻</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('algorithm.remove_ticker', ticker=algo.ticker) }}" class="inline-form">
+                        <button type="submit" class="btn btn-danger btn-sm">✕</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card empty-state">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+    <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Aucune entreprise suivie</strong></p>
+    <p>Ajoutez votre première entreprise pour commencer à analyser l'évolution des notes.</p>
+</div>
+{% endif %}
+
+<!-- Légende -->
+<div class="guide-section">
+    <h3 class="guide-title">📖 Guide de l'algorithme</h3>
+    <div class="guide-grid">
+        <div class="guide-item">
+            <strong style="color: #34d399;">🟢🟢 Achat Fort (Note ≥ 65)</strong>
+            <p>Signal d'achat fort. L'entreprise excelle sur tous les critères. Forte conviction pour entrer en position.</p>
+        </div>
+        <div class="guide-item">
+            <strong style="color: #10b981;">🟢 Acheter (Note 50-65)</strong>
+            <p>Période favorable pour l'achat. L'entreprise montre un bon potentiel selon notre analyse. Envisagez d'entrer en position.</p>
+        </div>
+        <div class="guide-item">
+            <strong style="color: #f59e0b;">🟡 Observer (Note 40-50)</strong>
+            <p>Zone de surveillance active. Surveillez les mouvements et attendez une confirmation avant d'agir. Restez vigilant.</p>
+        </div>
+        <div class="guide-item">
+            <strong style="color: #ef4444;">🔴 Vendre (Note 30-40)</strong>
+            <p>Signal de vente détecté. Le potentiel de l'entreprise diminue. Considérez une sortie de position ou évitez d'entrer.</p>
+        </div>
+        <div class="guide-item">
+            <strong style="color: #f87171;">🔴🔴 Vente Forte (Note &lt; 30)</strong>
+            <p>Signal de vente fort. L'entreprise montre des signaux très négatifs. Sortez de position rapidement ou évitez absolument.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

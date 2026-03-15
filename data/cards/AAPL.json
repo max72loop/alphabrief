@@ -1,0 +1,159 @@
+{
+  "as_of": "2026-02-16",
+  "identity": {
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "exchange": "NMS",
+    "currency": "USD",
+    "sector": "Technology",
+    "industry": "Consumer Electronics",
+    "market_cap": 3759435415552,
+    "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; and wearables, home, and accessories comprising...",
+    "website": "https://www.apple.com",
+    "employees": 150000
+  },
+  "business_snapshot": {
+    "one_liner": "",
+    "segments": [],
+    "geographies": [],
+    "moat_tags": [],
+    "top_competitors": []
+  },
+  "financials": {
+    "revenue_cagr_3y": 1.8125357434793932,
+    "revenue_yoy_rates": [
+      -2.8004605303199366,
+      2.021994077514121,
+      6.425511782832738
+    ],
+    "ebit_margin": null,
+    "gross_margin": 46.90516410716045,
+    "fcf_margin": 23.732882225869314,
+    "roe": 152.02099,
+    "roic": null,
+    "net_debt_to_ebitda": 0.15436031600455918,
+    "interest_coverage": null,
+    "share_dilution_3y": -7.339483203891259,
+    "payout_ratio": 13.04,
+    "fcf_absolute": 98767000000.0,
+    "net_income": 112010000000.0
+  },
+  "valuation": {
+    "pe_ttm": 32.377216,
+    "ev_ebitda_ttm": 24.714,
+    "ev_sales_ttm": 8.674,
+    "fcf_yield_ttm": 2.6271763997174022,
+    "pb_ratio": 42.644215,
+    "forward_pe": 27.538435
+  },
+  "market": {
+    "beta": 1.107,
+    "volatility_1y": null,
+    "drawdown_1y": null,
+    "avg_volume_3m": 48641162,
+    "momentum_12m": 5.026495967367528,
+    "analyst_target_mean": 292.14624,
+    "analyst_target_low": 205.0,
+    "analyst_target_high": 350.0,
+    "analyst_count": 40,
+    "analyst_recommendation": "buy",
+    "current_price": 255.78,
+    "previous_close": 261.73,
+    "change_pct": -2.273335116341274,
+    "volume": 56290673,
+    "fifty_two_week_low": 169.21,
+    "fifty_two_week_high": 288.62,
+    "dividend_yield": 0.0040999999999999995
+  },
+  "technicals": {
+    "rsi_14": 39.58549446303281,
+    "sma_50": 267.25022888183594,
+    "sma_200": 239.6023812866211,
+    "macd_line": 1.1845422909779018,
+    "macd_signal": 1.1966514393847991,
+    "macd_histogram": -0.012109148406897363,
+    "volatility_1y": 32.17036581736513,
+    "max_drawdown_1y": -30.222575849967676
+  },
+  "events": {
+    "next_earnings_date": null,
+    "catalysts": [],
+    "key_risks": []
+  },
+  "scores": {
+    "potential_score": 51,
+    "importance_ranked_items": [
+      {
+        "label": "Excellente génération de cash",
+        "importance_score": 80,
+        "why_it_matters": "FCF margin ~23.7% : très forte conversion en cash.",
+        "direction": "positive"
+      },
+      {
+        "label": "Croissance en accélération",
+        "importance_score": 80,
+        "why_it_matters": "CA YoY en hausse chaque année (dernier : 6.4%) : dynamique forte.",
+        "direction": "positive"
+      },
+      {
+        "label": "Rachats d'actions massifs",
+        "importance_score": 80,
+        "why_it_matters": "Dilution 3Y ~-7.3% : retour de cash aux actionnaires.",
+        "direction": "positive"
+      },
+      {
+        "label": "ROE excellent",
+        "importance_score": 75,
+        "why_it_matters": "ROE ~152.0% : très bonne rentabilité des capitaux.",
+        "direction": "positive"
+      },
+      {
+        "label": "PEG élevé",
+        "importance_score": 75,
+        "why_it_matters": "PEG ~17.86 : surévalué vs croissance.",
+        "direction": "negative"
+      },
+      {
+        "label": "Croissance erratique",
+        "importance_score": 70,
+        "why_it_matters": "CV ~2.00 : revenus imprévisibles, risque accru.",
+        "direction": "negative"
+      },
+      {
+        "label": "EV/EBITDA élevé",
+        "importance_score": 70,
+        "why_it_matters": "EV/EBITDA ~24.7x : prime importante.",
+        "direction": "negative"
+      },
+      {
+        "label": "Faible endettement",
+        "importance_score": 70,
+        "why_it_matters": "Net Debt/EBITDA ~0.2x : bilan solide.",
+        "direction": "positive"
+      },
+      {
+        "label": "Upside analystes modéré",
+        "importance_score": 70,
+        "why_it_matters": "Target moyen 292 vs prix 256 : +14% d'upside (40 analystes).",
+        "direction": "positive"
+      },
+      {
+        "label": "Croissance du CA faible (3 ans)",
+        "importance_score": 65,
+        "why_it_matters": "CAGR CA ~1.8% : croissance limitée.",
+        "direction": "neutral"
+      }
+    ],
+    "confidence_score": 92
+  },
+  "sources": [
+    {
+      "name": "stub",
+      "fetched_at": "2026-02-16T19:46:32.375166+00:00"
+    },
+    {
+      "name": "yfinance",
+      "fetched_at": "2026-02-16T19:46:32.904501+00:00"
+    }
+  ]
+}

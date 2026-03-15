@@ -1,0 +1,738 @@
+{% extends "base.html" %}
+
+{% block title %}Cycle Économique S&P 500 - MyTrader{% endblock %}
+
+{% block head %}
+<style>
+    /* ===== Phase Cards ===== */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+        .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .summary-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        font-family: inherit;
+        width: 100%;
+    }
+
+    .summary-card:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .summary-card.current-phase.recession { border-color: rgba(239,68,68,0.5); box-shadow: 0 0 0 1px rgba(239,68,68,0.12); }
+    .summary-card.current-phase.recovery  { border-color: rgba(16,185,129,0.5); box-shadow: 0 0 0 1px rgba(16,185,129,0.12); }
+    .summary-card.current-phase.expansion { border-color: rgba(99,102,241,0.5); box-shadow: 0 0 0 1px rgba(99,102,241,0.12); }
+    .summary-card.current-phase.slowdown  { border-color: rgba(245,158,11,0.5); box-shadow: 0 0 0 1px rgba(245,158,11,0.12); }
+
+    .summary-phase-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .summary-phase-icon { font-size: 1.1rem; }
+    .summary-phase-label { font-weight: 700; font-size: 0.9rem; }
+
+    .current-badge {
+        margin-left: auto;
+        font-size: 0.6rem;
+        background: rgba(99, 102, 241, 0.2);
+        color: #818cf8;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .summary-tops { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .summary-top-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    /* ===== Phase Header ===== */
+    .phase-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .phase-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+    }
+
+    .phase-badge-recession { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .phase-badge-recovery  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .phase-badge-expansion { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .phase-badge-slowdown  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+    .phase-badge-sm {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.72rem;
+    }
+
+    .phase-meta { font-size: 0.8rem; color: var(--text-muted); }
+
+    .next-phase {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+    /* ===== Description ===== */
+    .phase-description {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .phase-note {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    /* ===== Highlights ===== */
+    .highlights-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 620px) {
+        .highlights-grid { grid-template-columns: 1fr; }
+    }
+
+    .highlight-card {
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        border: 1px solid;
+    }
+
+    .highlight-positive {
+        background: rgba(16, 185, 129, 0.05);
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .highlight-negative {
+        background: rgba(239, 68, 68, 0.05);
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .highlight-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-secondary);
+        margin-bottom: 0.85rem;
+    }
+
+    .highlight-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.6rem;
+        flex-wrap: wrap;
+    }
+
+    .highlight-row:last-child { margin-bottom: 0; }
+
+    .highlight-rank { font-size: 0.7rem; color: var(--text-muted); width: 16px; flex-shrink: 0; }
+    .highlight-name { font-size: 0.85rem; color: var(--text-secondary); flex: 1; min-width: 100px; }
+    .highlight-tickers { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+    /* ===== Sector Bars ===== */
+    .sectors-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .sectors-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 1.25rem;
+    }
+
+    .sector-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .sector-row:last-child { margin-bottom: 0; }
+
+    .sector-label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: 200px;
+        flex-shrink: 0;
+    }
+
+    .sector-rank { font-size: 0.7rem; color: var(--text-muted); width: 16px; text-align: right; flex-shrink: 0; }
+    .sector-name { font-size: 0.85rem; color: var(--text-secondary); }
+
+    .bar-track {
+        flex: 1;
+        height: 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 3px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.6s ease;
+        min-width: 2px;
+    }
+
+    .bar-strong   { background: linear-gradient(90deg, #10b981, #34d399); }
+    .bar-positive { background: linear-gradient(90deg, #6366f1, #818cf8); }
+    .bar-moderate { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .bar-low      { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .bar-weak     { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .bar-neutral  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .bar-negative { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+    .sector-return {
+        font-size: 0.85rem;
+        font-weight: 700;
+        min-width: 48px;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    .return-strong   { color: #34d399; }
+    .return-positive { color: #818cf8; }
+    .return-moderate { color: #60a5fa; }
+    .return-low      { color: #fbbf24; }
+    .return-weak     { color: #f87171; }
+    .return-neutral  { color: #fbbf24; }
+    .return-negative { color: #f87171; }
+
+    .sector-tickers { display: flex; flex-wrap: wrap; gap: 0.3rem; min-width: 60px; }
+
+    .ticker-tag {
+        background: rgba(99, 102, 241, 0.15);
+        color: #818cf8;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.1rem 0.4rem;
+        text-decoration: none;
+        letter-spacing: 0.03em;
+        transition: background 0.15s;
+    }
+
+    .ticker-tag:hover { background: rgba(99, 102, 241, 0.28); }
+
+    .ticker-tag-warn {
+        background: rgba(239, 68, 68, 0.12);
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .ticker-tag-warn:hover { background: rgba(239, 68, 68, 0.22); }
+
+    /* ===== Watchlist Alignment ===== */
+    .watchlist-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+    }
+
+    .watchlist-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 1rem;
+    }
+
+    .alignment-group { margin-bottom: 1.1rem; }
+    .alignment-group:last-child { margin-bottom: 0; }
+
+    .alignment-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .alignment-label.favorable { color: #34d399; }
+    .alignment-label.neutral   { color: #fbbf24; }
+    .alignment-label.weak      { color: #f87171; }
+
+    .alignment-sectors { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .alignment-sector-block {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 0.75rem;
+        min-width: 140px;
+    }
+
+    .alignment-sector-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .alignment-sector-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+    .alignment-sector-return { font-size: 0.75rem; font-weight: 700; }
+    .alignment-ticker-list { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+    /* ===== Source ===== */
+    .source-note {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-align: center;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    /* ===== Auto-detection panel ===== */
+    .detection-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .detection-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.85rem;
+    }
+
+    .detection-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+    }
+
+    .detection-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 0.2rem 0.65rem;
+        border-radius: 20px;
+    }
+
+    .detection-confidence {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .detection-source-badge {
+        font-size: 0.65rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .detection-source-auto   { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .detection-source-manual { background: rgba(245,158,11,0.15);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+    .detection-refresh {
+        margin-left: auto;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        background: none;
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+        padding: 0.2rem 0.6rem;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s;
+        font-family: inherit;
+    }
+
+    .detection-refresh:hover { border-color: rgba(99,102,241,0.4); color: #818cf8; }
+
+    .detection-indicators {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .detection-indicator {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: var(--radius-sm);
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-subtle);
+        font-size: 0.75rem;
+    }
+
+    .di-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+    }
+    .di-dot.positive { background: #34d399; }
+    .di-dot.neutral  { background: #fbbf24; }
+    .di-dot.warning  { background: #f97316; }
+    .di-dot.negative { background: #f87171; }
+
+    .di-name   { color: var(--text-muted); flex: 1; }
+    .di-signal { font-weight: 600; }
+    .di-signal.positive { color: #34d399; }
+    .di-signal.neutral  { color: #fbbf24; }
+    .di-signal.warning  { color: #f97316; }
+    .di-signal.negative { color: #f87171; }
+
+    .detection-error {
+        font-size: 0.78rem;
+        color: #f87171;
+        padding: 0.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ current_data.icon }} Cycle Économique</h1>
+    <span class="badge-count">S&P 500 — depuis 1960</span>
+</div>
+
+<!-- ── Panneau de détection automatique ─────────────────────── -->
+<div class="detection-panel">
+    <div class="detection-header">
+        <span class="detection-title">🔍 Détection automatique</span>
+
+        {% if detection and detection.phase %}
+            <span class="phase-badge phase-badge-{{ detection.phase }} detection-badge">
+                {{ detection.phase == 'expansion' and '🚀' or
+                   detection.phase == 'slowdown'  and '🔄' or
+                   detection.phase == 'recession' and '📉' or '📈' }}
+                {{ detection.phase_label }}
+            </span>
+            <span class="detection-confidence">Confiance : <strong>{{ detection.confidence }} %</strong></span>
+        {% elif detection and detection.error %}
+            <span class="detection-error">⚠ {{ detection.error }}</span>
+        {% else %}
+            <span style="font-size:0.78rem;color:var(--text-muted);">Chargement des indicateurs…</span>
+        {% endif %}
+
+        <span class="detection-source-badge {% if phase_source == 'manual' %}detection-source-manual{% else %}detection-source-auto{% endif %}">
+            {% if phase_source == 'manual' %}Override manuel{% else %}Auto{% endif %}
+        </span>
+
+        <button class="detection-refresh" id="btn-refresh-detect" onclick="refreshDetection()">
+            🔄 Rafraîchir
+        </button>
+
+        <a href="{{ url_for('cycle.newsletter') }}" class="detection-refresh" style="text-decoration:none; margin-left:.25rem;">
+            📄 Newsletter
+        </a>
+    </div>
+
+    {% if detection and detection.indicators %}
+    <div class="detection-indicators">
+        {% for key, ind in detection.indicators.items() %}
+        <div class="detection-indicator">
+            <span class="di-dot {{ ind.signal_class }}"></span>
+            <span class="di-name">{{ ind.name }}</span>
+            <span class="di-signal {{ ind.signal_class }}">{{ ind.signal }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif detection and detection.error %}
+    {# error shown above #}
+    {% else %}
+    <div style="font-size:0.75rem;color:var(--text-muted);">
+        Aucun indicateur disponible. Cliquez sur Rafraîchir.
+    </div>
+    {% endif %}
+</div>
+
+<!-- Sélecteur : 4 cartes de phase -->
+<div class="summary-grid">
+    {% for key, summary in phases_summary.items() %}
+    <form method="POST" style="display:contents;">
+        <input type="hidden" name="phase" value="{{ key }}">
+        <button type="submit" class="summary-card {{ key }} {% if key == current_phase %}current-phase{% endif %}">
+            <div class="summary-phase-header">
+                <span class="summary-phase-icon">{{ summary.icon }}</span>
+                <span class="summary-phase-label">{{ summary.label }}</span>
+                {% if key == current_phase %}<span class="current-badge">Actuel</span>{% endif %}
+            </div>
+            <div class="summary-tops">
+                {% for s in summary.top3 %}
+                <div class="summary-top-item">
+                    <span>{{ loop.index }}. {{ s.name }}</span>
+                    <span class="return-{{ s.color }}">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+        </button>
+    </form>
+    {% endfor %}
+</div>
+
+<!-- En-tête de la phase active -->
+<div class="phase-header">
+    <span class="phase-badge phase-badge-{{ current_phase }}">{{ current_data.icon }} {{ current_data.label }}</span>
+    <span class="phase-meta">{{ current_data.periods }} périodes historiques</span>
+    <span class="next-phase">
+        Prochaine phase probable :
+        <span class="phase-badge phase-badge-{{ next_phase_info.key }} phase-badge-sm">
+            {{ next_phase_info.icon }} {{ next_phase_info.label }}
+        </span>
+    </span>
+</div>
+
+<!-- Description + note clé -->
+<div class="phase-description">
+    {{ current_data.description }}
+    <div class="phase-note">💡 {{ current_data.note }}</div>
+</div>
+
+<!-- Highlights : à privilégier / à sous-pondérer -->
+<div class="highlights-grid">
+    <div class="highlight-card highlight-positive">
+        <div class="highlight-title">✅ Secteurs à privilégier</div>
+        {% for s in top_sectors %}
+        <div class="highlight-row">
+            <span class="highlight-rank">{{ s.rank }}.</span>
+            <span class="highlight-name">{{ s.name }}</span>
+            <span class="return-{{ s.color }}">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+            {% if s.tickers %}
+            <div class="highlight-tickers">
+                {% for t in s.tickers %}
+                <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag">{{ t }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="highlight-card highlight-negative">
+        <div class="highlight-title">⚠️ Secteurs à sous-pondérer</div>
+        {% for s in worst_sectors %}
+        <div class="highlight-row">
+            <span class="highlight-rank">{{ s.rank }}.</span>
+            <span class="highlight-name">{{ s.name }}</span>
+            <span class="return-{{ s.color }}">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+            {% if s.tickers %}
+            <div class="highlight-tickers">
+                {% for t in s.tickers %}
+                <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag ticker-tag-warn">{{ t }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Graphique complet : tous les secteurs -->
+<div class="sectors-card">
+    <div class="sectors-title">Performance moyenne par secteur</div>
+
+    {% for sector in enriched_sectors %}
+    {% set pct = (sector.return | abs / max_abs * 100) | round(1) %}
+    <div class="sector-row">
+        <div class="sector-label">
+            <span class="sector-rank">{{ sector.rank }}.</span>
+            <span class="sector-name">{{ sector.name }}</span>
+        </div>
+        <div class="bar-track">
+            <div class="bar-fill bar-{{ sector.color }}" style="width: {{ pct }}%;"></div>
+        </div>
+        <span class="sector-return return-{{ sector.color }}">{% if sector.return > 0 %}+{% endif %}{{ sector.return }}%</span>
+        <div class="sector-tickers">
+            {% for t in sector.tickers %}
+            <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag">{{ t }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="source-note">
+        Source : SPDR Americas Research au 30 novembre 2019 — 10 des 11 secteurs S&P 500 (hors Communication Services)
+    </div>
+</div>
+
+<!-- Alignement de la watchlist (si elle existe) -->
+{% if watchlist_sectors %}
+<div class="watchlist-card">
+    <div class="watchlist-title">📋 Alignement de votre watchlist</div>
+
+    {% if watchlist_by_alignment.favorable %}
+    <div class="alignment-group">
+        <div class="alignment-label favorable">✅ Favorables — top secteurs de cette phase</div>
+        <div class="alignment-sectors">
+            {% for s in watchlist_by_alignment.favorable %}
+            <div class="alignment-sector-block">
+                <div class="alignment-sector-header">
+                    <span class="alignment-sector-name">{{ s.name }}</span>
+                    <span class="return-{{ s.color }} alignment-sector-return">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+                </div>
+                <div class="alignment-ticker-list">
+                    {% for t in s.tickers %}
+                    <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag">{{ t }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if watchlist_by_alignment.neutral %}
+    <div class="alignment-group">
+        <div class="alignment-label neutral">⚠️ Neutres — performance dans la moyenne</div>
+        <div class="alignment-sectors">
+            {% for s in watchlist_by_alignment.neutral %}
+            <div class="alignment-sector-block">
+                <div class="alignment-sector-header">
+                    <span class="alignment-sector-name">{{ s.name }}</span>
+                    <span class="return-{{ s.color }} alignment-sector-return">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+                </div>
+                <div class="alignment-ticker-list">
+                    {% for t in s.tickers %}
+                    <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag">{{ t }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if watchlist_by_alignment.weak %}
+    <div class="alignment-group">
+        <div class="alignment-label weak">❌ Défavorables — secteurs à sous-pondérer</div>
+        <div class="alignment-sectors">
+            {% for s in watchlist_by_alignment.weak %}
+            <div class="alignment-sector-block">
+                <div class="alignment-sector-header">
+                    <span class="alignment-sector-name">{{ s.name }}</span>
+                    <span class="return-{{ s.color }} alignment-sector-return">{% if s.return > 0 %}+{% endif %}{{ s.return }}%</span>
+                </div>
+                <div class="alignment-ticker-list">
+                    {% for t in s.tickers %}
+                    <a href="{{ url_for('detail.show', ticker=t) }}" class="ticker-tag ticker-tag-warn">{{ t }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const bars = document.querySelectorAll('.bar-fill');
+    bars.forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = w; }, 80);
+    });
+});
+
+function refreshDetection() {
+    const btn = document.getElementById('btn-refresh-detect');
+    btn.textContent = '⏳ Chargement…';
+    btn.disabled = true;
+    fetch('/cycle/api/detect')
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                location.reload();
+            } else {
+                btn.textContent = '⚠ Erreur';
+                btn.disabled = false;
+            }
+        })
+        .catch(() => {
+            btn.textContent = '⚠ Erreur';
+            btn.disabled = false;
+        });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+<div class="section-content">
+    <h3 class="section-title">Analyse IA</h3>
+    {% set biz = card.get('business_snapshot', {}) %}
+    {% set events = card.get('events', {}) %}
+
+    {% if biz.get('one_liner') %}
+    <p class="business-one-liner">{{ biz.get('one_liner') }}</p>
+    {% endif %}
+
+    {% if biz.get('moat_tags') %}
+    <div class="moat-tags">
+        {% for tag in biz.get('moat_tags') %}
+        <span class="moat-tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if biz.get('top_competitors') %}
+    <div class="business-block">
+        <span class="kv-label">Concurrents</span>
+        <span class="kv-value">{{ biz.get('top_competitors') | join(', ') }}</span>
+    </div>
+    {% endif %}
+
+    {% set catalysts = events.get('catalysts', []) %}
+    {% set risks = events.get('key_risks', []) %}
+
+    {% if catalysts %}
+    <div class="events-block">
+        <h4 class="events-title events-title--up">Catalyseurs</h4>
+        <ul class="events-list">
+            {% for c in catalysts %}
+            <li class="event-item event-item--catalyst">{{ c }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if risks %}
+    <div class="events-block">
+        <h4 class="events-title events-title--down">Risques</h4>
+        <ul class="events-list">
+            {% for r in risks %}
+            <li class="event-item event-item--risk">{{ r }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if not biz.get('one_liner') and not catalysts and not risks %}
+    <p class="text-muted">Analyse IA non disponible — configurez DEEPSEEK_API_KEY dans .env</p>
+    {% endif %}
+</div>

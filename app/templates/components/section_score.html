@@ -1,0 +1,90 @@
+<div class="section-content">
+    <h3 class="section-title">⚡ Score</h3>
+    {% if card.scores and card.scores.potential_score is not none %}
+    {% set s = card.scores.potential_score %}
+    {% set half_c = 169.65 %}
+    {% set offset = (half_c * (100 - s) / 100) | round(2) %}
+    {% set color = '#10b981' if s >= 70 else ('#f59e0b' if s >= 50 else '#ef4444') %}
+
+    <div class="gauge-wrap">
+        <svg viewBox="0 0 120 72" width="200" height="120" style="display:block;margin:0 auto">
+            <!-- Background arc -->
+            <circle cx="60" cy="70" r="54"
+                fill="none"
+                stroke="rgba(255,255,255,0.06)"
+                stroke-width="10"
+                stroke-dasharray="{{ half_c }} {{ half_c }}"
+                stroke-linecap="round"
+                transform="rotate(180, 60, 70)"
+            />
+            <!-- Foreground arc -->
+            <circle cx="60" cy="70" r="54"
+                fill="none"
+                stroke="{{ color }}"
+                stroke-width="10"
+                stroke-dasharray="{{ half_c }} {{ half_c }}"
+                stroke-dashoffset="{{ half_c }}"
+                stroke-linecap="round"
+                transform="rotate(180, 60, 70)"
+                class="gauge-arc"
+                data-offset="{{ offset }}"
+                style="transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)"
+            />
+            <!-- Score value -->
+            <text x="60" y="56"
+                text-anchor="middle"
+                fill="{{ color }}"
+                font-size="28" font-weight="700"
+                font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">{{ s }}</text>
+            <!-- /100 -->
+            <text x="60" y="68"
+                text-anchor="middle"
+                fill="rgba(248,250,252,0.35)"
+                font-size="9"
+                font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">/ 100</text>
+        </svg>
+        <div class="gauge-meta">
+            <span class="gauge-label" style="color:{{ color }}">{{ card.scores.score_label or '' }}</span>
+            <span class="gauge-confidence">
+                Confiance : {{ card.scores.confidence_score or 0 }}%
+                <button class="info-btn tip-right" data-tip="Indique combien de données financières sont disponibles pour calculer ce score. 100% = toutes les métriques présentes. &lt;60% = score moins fiable." aria-label="Info Confiance" style="margin-left:4px">i</button>
+            </span>
+            {% if card.scores.smoothed_score is defined and card.scores.smoothed_score is not none %}
+            <span class="gauge-smoothed" title="Moyenne des 5 dernières générations">
+                Moy. 5j : <strong>{{ card.scores.smoothed_score | int }}</strong>/100
+                <button class="info-btn" data-tip="Moyenne lissée des 5 dernières évaluations algorithmiques. Réduit les variations ponctuelles et reflète la tendance de fond du titre." aria-label="Info Score lissé" style="margin-left:4px">i</button>
+            </span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if card.scores.importance_ranked_items %}
+    <div class="importance-list">
+        <h4>
+            Facteurs clés
+            <button class="info-btn" data-tip="Les 5 critères ayant le plus d'impact sur le score final, classés par importance. ▲ = contribution positive, ▼ = contribution négative." aria-label="Info Facteurs clés" style="margin-left:6px">i</button>
+        </h4>
+        {% for item in card.scores.importance_ranked_items[:5] %}
+        <div class="imp-item">
+            <span class="imp-direction imp-{{ item.direction }}">
+                {% if item.direction == 'positive' %}▲{% elif item.direction == 'negative' %}▼{% else %}●{% endif %}
+            </span>
+            <div class="imp-body">
+                <div class="imp-header">
+                    <span class="imp-label">{{ item.label }}</span>
+                    <span class="imp-score">{{ item.importance_score }}</span>
+                </div>
+                <div class="imp-bar-track">
+                    <div class="imp-bar imp-bar-{{ item.direction }}"
+                         data-width="{{ item.importance_score }}%"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p class="text-muted">Score non disponible</p>
+    {% endif %}
+</div>

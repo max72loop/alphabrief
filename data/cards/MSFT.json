@@ -1,0 +1,176 @@
+{
+  "as_of": "2026-02-22",
+  "identity": {
+    "ticker": "MSFT",
+    "name": "Microsoft Corporation",
+    "exchange": "NMS",
+    "currency": "USD",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "market_cap": 2952363507712,
+    "description": "Microsoft Corporation develops and supports software, services, devices, and solutions worldwide. The Productivity and Business Processes segment offers Microsoft 365 commercial, enterprise mobility + security, windows commercial, power BI, exchange, sharepoint, Microsoft teams, security and comp...",
+    "website": "https://www.microsoft.com",
+    "employees": 228000
+  },
+  "business_snapshot": {
+    "one_liner": "",
+    "segments": [],
+    "geographies": [],
+    "moat_tags": [],
+    "top_competitors": []
+  },
+  "financials": {
+    "revenue_cagr_3y": 12.423114652863054,
+    "revenue_yoy_rates": [
+      6.882029555656428,
+      15.66996201307128,
+      14.93215623240672
+    ],
+    "ebit_margin": 44.728883588192694,
+    "gross_margin": 68.8237423861652,
+    "fcf_margin": 25.418849654271558,
+    "roe": 34.390998,
+    "roic": 14.860000000000001,
+    "net_debt_to_ebitda": 0.19294874431614215,
+    "interest_coverage": 52.835220125786165,
+    "share_dilution_3y": -0.39980365755627006,
+    "payout_ratio": 21.280001000000002,
+    "fcf_absolute": 71611000000.0,
+    "net_income": 101832000000.0,
+    "current_ratio": 1.386,
+    "eps_growth": 59.8,
+    "net_margin": 39.044000000000004,
+    "insider_ownership": 0.30899997999999995,
+    "short_interest": 0.7900001,
+    "gross_margin_trend": -0.09634349732584724,
+    "accruals_ratio": null,
+    "institutional_ownership": 76.015997,
+    "altman_z": null
+  },
+  "valuation": {
+    "pe_ttm": 24.873512,
+    "ev_ebitda_ttm": 17.023,
+    "ev_sales_ttm": 9.767,
+    "fcf_yield_ttm": 2.4255482027515147,
+    "pb_ratio": 7.549748,
+    "price_to_ocf": 18.39410018405536,
+    "forward_pe": 21.073668
+  },
+  "market": {
+    "beta": 1.084,
+    "volatility_1y": null,
+    "drawdown_1y": null,
+    "avg_volume_3m": 31280636,
+    "momentum_1m": -11.748754567253439,
+    "momentum_3m": -18.114258515808658,
+    "momentum_6m": -20.894445243954973,
+    "momentum_12m": -1.94481942958733,
+    "relative_momentum_1m": -8.99,
+    "relative_momentum_3m": -18.55,
+    "relative_momentum_12m": -22.66,
+    "analyst_target_mean": 595.99567,
+    "analyst_target_low": 392.0,
+    "analyst_target_high": 730.0,
+    "analyst_count": 53,
+    "analyst_recommendation": "strong_buy",
+    "current_price": 397.23,
+    "previous_close": 398.46,
+    "change_pct": -0.30868845053454835,
+    "volume": 31825617,
+    "fifty_two_week_low": 344.79,
+    "fifty_two_week_high": 555.45,
+    "dividend_yield": 0.0092
+  },
+  "technicals": {
+    "rsi_14": 32.35381404865768,
+    "sma_50": 453.1330682373047,
+    "sma_200": 484.8167105102539,
+    "macd_line": -17.596606611737798,
+    "macd_signal": -17.53966531146388,
+    "macd_histogram": -0.056941300273916085,
+    "volatility_1y": 26.389401896734572,
+    "max_drawdown_1y": -27.240608170324233
+  },
+  "events": {
+    "next_earnings_date": null,
+    "catalysts": [],
+    "key_risks": []
+  },
+  "scores": {
+    "potential_score": 60,
+    "score_label": "Modéré",
+    "importance_ranked_items": [
+      {
+        "label": "Marge EBIT très élevée",
+        "importance_score": 85,
+        "why_it_matters": "EBIT margin ~44.7% : forte capacité à générer du profit.",
+        "direction": "positive"
+      },
+      {
+        "label": "Fort upside analystes",
+        "importance_score": 85,
+        "why_it_matters": "Target moyen 596 vs prix 397 : +50% d'upside (53 analystes).",
+        "direction": "positive"
+      },
+      {
+        "label": "Excellente génération de cash",
+        "importance_score": 80,
+        "why_it_matters": "FCF margin ~25.4% : très forte conversion en cash.",
+        "direction": "positive"
+      },
+      {
+        "label": "Marge brute très élevée",
+        "importance_score": 75,
+        "why_it_matters": "Gross margin ~68.8% : fort pouvoir de pricing.",
+        "direction": "positive"
+      },
+      {
+        "label": "ROE excellent",
+        "importance_score": 75,
+        "why_it_matters": "ROE ~34.4% : très bonne rentabilité des capitaux.",
+        "direction": "positive"
+      },
+      {
+        "label": "Death cross + prix baissier",
+        "importance_score": 75,
+        "why_it_matters": "SMA50 < SMA200, prix en-dessous : tendance baissière confirmée.",
+        "direction": "negative"
+      },
+      {
+        "label": "Consensus Strong Buy",
+        "importance_score": 75,
+        "why_it_matters": "Recommendation : strong_buy (53 analystes).",
+        "direction": "positive"
+      },
+      {
+        "label": "PEG élevé",
+        "importance_score": 70,
+        "why_it_matters": "PEG ~2.00 (calc.) : valorisation tendue vs croissance.",
+        "direction": "negative"
+      },
+      {
+        "label": "EV/EBITDA élevé",
+        "importance_score": 70,
+        "why_it_matters": "EV/EBITDA ~17.0x : prime importante.",
+        "direction": "negative"
+      },
+      {
+        "label": "Faible endettement",
+        "importance_score": 70,
+        "why_it_matters": "Net Debt/EBITDA ~0.2x : bilan solide.",
+        "direction": "positive"
+      }
+    ],
+    "confidence_score": 96
+  },
+  "sources": [
+    {
+      "name": "stub",
+      "fetched_at": "2026-02-22T14:57:20.789544+00:00"
+    },
+    {
+      "name": "yfinance",
+      "fetched_at": "2026-02-22T14:57:21.244872+00:00"
+    }
+  ]
+}

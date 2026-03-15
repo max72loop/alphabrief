@@ -1,0 +1,71 @@
+{
+  "phase": "expansion",
+  "phase_label": "Expansion",
+  "confidence": 43,
+  "detected_at": "2026-02-28T23:13:15.084656",
+  "indicators": {
+    "yield_curve": {
+      "name": "Courbe des taux (10Y \u2212 3M)",
+      "vote": "slowdown",
+      "vote_label": "Ralentissement",
+      "value": 0.38,
+      "signal": "+0.38 %",
+      "signal_class": "neutral"
+    },
+    "spy_momentum": {
+      "name": "Momentum S&P 500 (12m)",
+      "vote": "expansion",
+      "vote_label": "Expansion",
+      "value": 18.6,
+      "signal": "+18.6 % / 12m",
+      "signal_class": "positive"
+    },
+    "vix": {
+      "name": "VIX \u2014 Indice de peur",
+      "vote": "slowdown",
+      "vote_label": "Ralentissement",
+      "value": 19.860000610351562,
+      "signal": "19.9 \u2014 mod\u00e9r\u00e9",
+      "signal_class": "neutral"
+    },
+    "copper_gold": {
+      "name": "Ratio Cuivre / Or (6m)",
+      "vote": "recession",
+      "vote_label": "R\u00e9cession",
+      "value": -11.7,
+      "signal": "-11.7 % / 6m",
+      "signal_class": "negative"
+    },
+    "credit": {
+      "name": "Cr\u00e9dit haut rendement HYG (3m)",
+      "vote": "slowdown",
+      "vote_label": "Ralentissement",
+      "value": -0.1,
+      "signal": "-0.1 % / 3m",
+      "signal_class": "neutral"
+    },
+    "eurostoxx_momentum": {
+      "name": "Momentum Euro Stoxx 50 (12m)",
+      "vote": "expansion",
+      "vote_label": "Expansion",
+      "value": 12.7,
+      "signal": "+12.7 % / 12m",
+      "signal_class": "positive"
+    },
+    "nikkei_momentum": {
+      "name": "Momentum Nikkei 225 (12m)",
+      "vote": "expansion",
+      "vote_label": "Expansion",
+      "value": 50.2,
+      "signal": "+50.2 % / 12m",
+      "signal_class": "positive"
+    }
+  },
+  "vote_breakdown": {
+    "expansion": 6,
+    "slowdown": 6,
+    "recession": 2,
+    "recovery": 0
+  },
+  "error": null
+}

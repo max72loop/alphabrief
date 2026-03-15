@@ -1,0 +1,568 @@
+{% extends "base.html" %}
+
+{% block title %}Marché Global — MyTrader{% endblock %}
+
+{% block head %}
+<style>
+    /* ===== Page header extra ===== */
+    .marche-subheader {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .marche-month {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .phase-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .phase-pill-expansion { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+    .phase-pill-slowdown  { background: rgba(245,158,11,0.15);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .phase-pill-recession { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .phase-pill-recovery  { background: rgba(16,185,129,0.15);  color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+
+    .conf-pill {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border-subtle);
+    }
+
+    /* ===== Hero recommendation ===== */
+    .hero-card {
+        border-radius: var(--radius);
+        padding: 1.5rem 1.75rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        opacity: 0.04;
+        pointer-events: none;
+    }
+
+    .hero-card.score-5 {
+        border-color: rgba(16,185,129,0.35);
+        background: linear-gradient(135deg, rgba(16,185,129,0.07) 0%, rgba(16,185,129,0.03) 100%);
+    }
+    .hero-card.score-4 {
+        border-color: rgba(99,102,241,0.35);
+        background: linear-gradient(135deg, rgba(99,102,241,0.07) 0%, rgba(99,102,241,0.03) 100%);
+    }
+    .hero-card.score-3 {
+        border-color: rgba(245,158,11,0.35);
+        background: linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(245,158,11,0.03) 100%);
+    }
+
+    .hero-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-main {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-icon {
+        font-size: 2.4rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .hero-info { flex: 1; min-width: 180px; }
+
+    .hero-name {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.15rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.6rem;
+    }
+
+    .hero-stars { display: flex; gap: 3px; margin-bottom: 0.5rem; }
+
+    .star-filled { color: #fbbf24; font-size: 1rem; }
+    .star-empty  { color: rgba(255,255,255,0.15); font-size: 1rem; }
+
+    .hero-label {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        padding: 0.2rem 0.65rem;
+        border-radius: 4px;
+    }
+
+    .label-buy-strong  { background: rgba(16,185,129,0.2);  color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+    .label-buy         { background: rgba(99,102,241,0.2);  color: #818cf8; border: 1px solid rgba(99,102,241,0.4); }
+    .label-neutral     { background: rgba(245,158,11,0.2);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+    .label-underweight { background: rgba(249,115,22,0.2);  color: #fb923c; border: 1px solid rgba(249,115,22,0.4); }
+    .label-avoid       { background: rgba(239,68,68,0.2);   color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+
+    .hero-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+        min-width: 120px;
+    }
+
+    .hero-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .hero-pct { font-size: 0.9rem; font-weight: 600; }
+
+    .hero-reason {
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.55;
+        padding-top: 0.85rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ===== Asset Grid ===== */
+    .section-title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
+    }
+
+    .asset-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 860px) {
+        .asset-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+        .asset-grid { grid-template-columns: 1fr; }
+    }
+
+    .asset-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1rem;
+        transition: border-color 0.2s, transform 0.15s;
+        position: relative;
+    }
+
+    .asset-card:hover {
+        border-color: rgba(99,102,241,0.25);
+        transform: translateY(-1px);
+    }
+
+    .asset-card.score-5 { border-left: 3px solid #10b981; }
+    .asset-card.score-4 { border-left: 3px solid #6366f1; }
+    .asset-card.score-3 { border-left: 3px solid #f59e0b; }
+    .asset-card.score-2 { border-left: 3px solid #f97316; }
+    .asset-card.score-1 { border-left: 3px solid #ef4444; }
+
+    .asset-card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .asset-card-icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+
+    .asset-card-names { flex: 1; }
+    .asset-card-name     { font-size: 0.88rem; font-weight: 700; color: var(--text-primary); }
+    .asset-card-subtitle { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+
+    .asset-card-stars {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 0.45rem;
+    }
+
+    .star-sm { font-size: 0.75rem; }
+
+    .asset-card-label {
+        display: inline-block;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.15rem 0.5rem;
+        border-radius: 3px;
+        margin-bottom: 0.6rem;
+    }
+
+    .asset-card-price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .asset-price     { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+    .asset-pct       { font-size: 0.8rem; font-weight: 600; }
+    .pct-pos         { color: #34d399; }
+    .pct-neg         { color: #f87171; }
+    .pct-flat        { color: var(--text-muted); }
+
+    .asset-card-reason {
+        font-size: 0.73rem;
+        color: var(--text-muted);
+        line-height: 1.45;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .asset-card-tickers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .asset-ticker-tag {
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        text-decoration: none;
+        letter-spacing: 0.03em;
+        transition: opacity 0.15s;
+    }
+    .asset-ticker-tag:hover { opacity: 0.75; }
+
+    .tag-buy     { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .tag-neutral { background: rgba(245,158,11,0.15);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .tag-warn    { background: rgba(239,68,68,0.12);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+    /* ===== Macro indicators panel ===== */
+    .macro-panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .macro-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .macro-refresh-btn {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        background: none;
+        border: 1px solid var(--border-subtle);
+        border-radius: 4px;
+        padding: 0.2rem 0.6rem;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s;
+        font-family: inherit;
+    }
+
+    .macro-refresh-btn:hover { border-color: rgba(99,102,241,0.4); color: #818cf8; }
+
+    .macro-indicators {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 0.6rem;
+    }
+
+    .macro-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+    }
+
+    .macro-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .macro-dot.positive { background: #34d399; }
+    .macro-dot.neutral  { background: #fbbf24; }
+    .macro-dot.warning  { background: #f97316; }
+    .macro-dot.negative { background: #f87171; }
+
+    .macro-name   { font-size: 0.73rem; color: var(--text-muted); flex: 1; }
+    .macro-signal { font-size: 0.73rem; font-weight: 600; }
+    .macro-signal.positive { color: #34d399; }
+    .macro-signal.neutral  { color: #fbbf24; }
+    .macro-signal.warning  { color: #f97316; }
+    .macro-signal.negative { color: #f87171; }
+
+    .macro-vote {
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0.1rem 0.35rem;
+        border-radius: 3px;
+    }
+    .macro-vote-expansion { background: rgba(99,102,241,0.15); color: #818cf8; }
+    .macro-vote-slowdown  { background: rgba(245,158,11,0.15);  color: #fbbf24; }
+    .macro-vote-recession { background: rgba(239,68,68,0.15);   color: #f87171; }
+    .macro-vote-recovery  { background: rgba(16,185,129,0.15);  color: #34d399; }
+
+    .macro-ts {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        text-align: right;
+        margin-top: 0.75rem;
+    }
+
+    /* ===== No detection placeholder ===== */
+    .no-detection-box {
+        background: rgba(245,158,11,0.05);
+        border: 1px solid rgba(245,158,11,0.2);
+        border-radius: var(--radius);
+        padding: 1rem 1.25rem;
+        font-size: 0.82rem;
+        color: #fbbf24;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>🌍 Marché Global</h1>
+    <span class="badge-count">Recommandations par cycle</span>
+</div>
+
+<!-- Sous-en-tête avec phase actuelle -->
+<div class="marche-subheader">
+    <span class="marche-month">📅 {{ current_month }}</span>
+    <span class="phase-pill phase-pill-{{ phase }}">{{ phase_icon }} {{ phase_label }}</span>
+    {% if detection and detection.confidence %}
+    <span class="conf-pill">Confiance : {{ detection.confidence }} %</span>
+    {% endif %}
+    {% if phase_meta.get('source') == 'manual' %}
+    <span style="font-size:0.68rem;color:#fbbf24;border:1px solid rgba(245,158,11,0.3);padding:0.1rem 0.4rem;border-radius:3px;">Override manuel</span>
+    {% endif %}
+</div>
+
+<!-- ── RECOMMANDATION PRINCIPALE ─────────────────────── -->
+{% if top_asset %}
+<div class="hero-eyebrow">🏆 Achat principal du mois</div>
+<div class="hero-card score-{{ top_asset.score }}">
+    <div class="hero-main">
+        <span class="hero-icon">{{ top_asset.icon }}</span>
+        <div class="hero-info">
+            <div class="hero-name">{{ top_asset.name }}</div>
+            <div class="hero-subtitle">{{ top_asset.subtitle }}</div>
+            <div class="hero-stars">
+                {% for i in range(1, 6) %}
+                    <span class="{% if i <= top_asset.score %}star-filled{% else %}star-empty{% endif %}">★</span>
+                {% endfor %}
+            </div>
+            <span class="hero-label label-{{ top_asset.score_class }}">{{ top_asset.score_label }}</span>
+        </div>
+        <div class="hero-right">
+            <span class="hero-price">{{ top_asset.price_fmt }}</span>
+            {% if top_asset.pct is not none %}
+            <span class="hero-pct {% if top_asset.pct > 0 %}pct-pos{% elif top_asset.pct < 0 %}pct-neg{% else %}pct-flat{% endif %}">
+                {% if top_asset.pct > 0 %}▲{% elif top_asset.pct < 0 %}▼{% endif %}
+                {{ top_asset.pct | abs | round(2) }} %
+            </span>
+            {% endif %}
+            <span style="font-size:0.68rem;color:var(--text-muted);">{{ top_asset.proxy_ticker }}</span>
+        </div>
+    </div>
+    {% if top_asset.reason %}
+    <div class="hero-reason">
+        {{ top_asset.reason }}
+        {% if top_asset.watchlist_tickers %}
+        <div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;">
+            <span style="font-size:0.72rem;color:var(--text-muted);margin-right:0.25rem;">Vos actions :</span>
+            {% for t in top_asset.watchlist_tickers %}
+            <a href="{{ url_for('detail.show', ticker=t) }}" class="asset-ticker-tag tag-buy">{{ t }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- ── TOUTES LES CLASSES D'ACTIFS ───────────────────── -->
+<div class="section-title">Toutes les classes d'actifs — classées par score</div>
+<div class="asset-grid">
+    {% for asset in scored_assets %}
+    <div class="asset-card score-{{ asset.score }}">
+        <div class="asset-card-header">
+            <span class="asset-card-icon">{{ asset.icon }}</span>
+            <div class="asset-card-names">
+                <div class="asset-card-name">{{ asset.name }}</div>
+                <div class="asset-card-subtitle">{{ asset.subtitle }}</div>
+            </div>
+        </div>
+
+        <div class="asset-card-stars">
+            {% for i in range(1, 6) %}
+                <span class="star-sm {% if i <= asset.score %}star-filled{% else %}star-empty{% endif %}">★</span>
+            {% endfor %}
+        </div>
+
+        <div class="asset-card-label label-{{ asset.score_class }}">{{ asset.score_label }}</div>
+
+        <div class="asset-card-price-row">
+            <span class="asset-price">{{ asset.price_fmt }}</span>
+            {% if asset.pct is not none %}
+            <span class="asset-pct {% if asset.pct > 0 %}pct-pos{% elif asset.pct < 0 %}pct-neg{% else %}pct-flat{% endif %}">
+                {% if asset.pct > 0 %}+{% endif %}{{ asset.pct }}%
+            </span>
+            {% else %}
+            <span class="asset-pct pct-flat">—</span>
+            {% endif %}
+        </div>
+
+        <div class="asset-card-reason">{{ asset.reason }}</div>
+
+        {% if asset.watchlist_tickers %}
+        <div class="asset-card-tickers">
+            {% for t in asset.watchlist_tickers %}
+            <a href="{{ url_for('detail.show', ticker=t) }}" class="asset-ticker-tag {% if asset.score >= 4 %}tag-buy{% elif asset.score == 3 %}tag-neutral{% else %}tag-warn{% endif %}">{{ t }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ── INDICATEURS MACRO EN DIRECT ───────────────────── -->
+{% if detection %}
+<div class="macro-panel">
+    <div class="macro-header">
+        <span class="section-title" style="margin-bottom:0;">📊 Indicateurs macro en direct</span>
+        <button class="macro-refresh-btn" id="btn-macro-refresh" onclick="refreshMacro()">🔄 Rafraîchir la détection</button>
+    </div>
+
+    {% if detection.indicators %}
+    <div class="macro-indicators">
+        {% for key, ind in detection.indicators.items() %}
+        <div class="macro-row">
+            <span class="macro-dot {{ ind.signal_class }}"></span>
+            <span class="macro-name">{{ ind.name }}</span>
+            <span class="macro-signal {{ ind.signal_class }}">{{ ind.signal }}</span>
+            <span class="macro-vote macro-vote-{{ ind.vote }}">{{ ind.vote_label }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if detection.detected_at %}
+    <div class="macro-ts">
+        Dernière mise à jour : {{ detection.detected_at[:16] | replace('T', ' à ') }}
+        &nbsp;·&nbsp;
+        Cache 24 h
+        &nbsp;·&nbsp;
+        <a href="{{ url_for('cycle.index') }}" style="color:var(--text-muted);">Voir l'analyse détaillée →</a>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div style="font-size:0.78rem;color:var(--text-muted);">
+        {% if detection.error %}
+        ⚠ {{ detection.error }}
+        {% else %}
+        Cliquez sur Rafraîchir pour charger les indicateurs.
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="no-detection-box">
+    ⚠ Indicateurs macro non disponibles — visitez <a href="{{ url_for('cycle.index') }}" style="color:inherit;text-decoration:underline;">la page Cycle</a> pour lancer la détection.
+</div>
+{% endif %}
+
+<!-- ── LÉGENDE DES SCORES ─────────────────────────────── -->
+<div style="display:flex;flex-wrap:wrap;gap:0.5rem;font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border-subtle);">
+    <span class="hero-label label-buy-strong"  style="font-size:0.65rem;">★★★★★ Acheter fort</span>
+    <span class="hero-label label-buy"          style="font-size:0.65rem;">★★★★☆ Acheter</span>
+    <span class="hero-label label-neutral"      style="font-size:0.65rem;">★★★☆☆ Neutre</span>
+    <span class="hero-label label-underweight"  style="font-size:0.65rem;">★★☆☆☆ Sous-pondérer</span>
+    <span class="hero-label label-avoid"        style="font-size:0.65rem;">★☆☆☆☆ Éviter</span>
+    <span style="flex:1;text-align:right;">Source : analyse cycle économique S&P 500 — SPDR Americas Research</span>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshMacro() {
+    const btn = document.getElementById('btn-macro-refresh');
+    btn.textContent = '⏳ Chargement…';
+    btn.disabled = true;
+    fetch('/marche/api/refresh')
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                location.reload();
+            } else {
+                btn.textContent = '⚠ Erreur';
+                btn.disabled = false;
+            }
+        })
+        .catch(() => {
+            btn.textContent = '⚠ Erreur';
+            btn.disabled = false;
+        });
+}
+</script>
+{% endblock %}

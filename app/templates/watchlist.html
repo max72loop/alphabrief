@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Watchlist - MyTrader{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h1>Ma Watchlist</h1>
+    <span class="badge-count">{{ tickers|length }} ticker(s)</span>
+</div>
+
+<div class="card add-form">
+    <form method="POST" action="{{ url_for('watchlist.add') }}">
+        <div class="form-row">
+            <input type="text" name="ticker" placeholder="Ex: AAPL, HKG:9961, MC.PA" class="input-ticker" required>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+    </form>
+</div>
+
+{% if tickers %}
+<div class="card">
+    <div class="card-header">
+        <span>Tickers suivis</span>
+        <form method="POST" action="{{ url_for('scoring.score_batch') }}" class="inline-form">
+            <button type="submit" class="btn btn-sm btn-accent">Scorer tout</button>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th class="text-center">Score</th>
+                <th class="text-center">Évolution</th>
+                <th class="actions-col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticker in tickers %}
+            {% set info = scores.get(ticker) %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('detail.show', ticker=ticker) }}" class="ticker-link">
+                        {% if names.get(ticker) %}
+                            {{ names[ticker] }}
+                            <span class="currency-tag">{{ ticker }}</span>
+                        {% else %}
+                            {{ ticker }}
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="text-center">
+                    {% if info %}
+                        <span class="score-pill score-{{ 'high' if info.score >= 70 else ('mid' if info.score >= 50 else 'low') }}">
+                            {{ info.score }}
+                        </span>
+                        <br>
+                        {% if info.score >= 65 %}
+                        <span class="signal-badge signal-acheter">Acheter</span>
+                        {% elif info.score >= 40 %}
+                        <span class="signal-badge signal-observer">Observer</span>
+                        {% else %}
+                        <span class="signal-badge signal-eviter">Éviter</span>
+                        {% endif %}
+                        <br><span class="score-date">{{ info.date }}</span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if info and info.spark %}
+                        {% set stroke = '#10b981' if info.trend == 'up' else ('#ef4444' if info.trend == 'down' else '#6366f1') %}
+                        <svg width="60" height="20" viewBox="0 0 60 20" style="overflow:visible;vertical-align:middle">
+                            <polyline
+                                points="{{ info.spark }}"
+                                fill="none"
+                                stroke="{{ stroke }}"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    {% else %}
+                        <span class="text-muted" style="font-size:0.75rem">pas de données</span>
+                    {% endif %}
+                </td>
+                <td class="actions-cell">
+                    <form method="POST" action="{{ url_for('scoring.score_single', ticker=ticker) }}" class="inline-form">
+                        <button type="submit" class="btn btn-sm btn-accent">Scorer</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('portfolio.transfer', ticker=ticker) }}" class="inline-form">
+                        <button type="submit" class="btn btn-sm btn-secondary">Portfolio</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('watchlist.remove', ticker=ticker) }}" class="inline-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card empty-state">
+    <p>Votre watchlist est vide. Ajoutez des tickers ci-dessus.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+{% block title %}Newsletter — MyTrader{% endblock %}
+
+{% block head %}
+<style>
+  /* ── Layout ───────────────────────────── */
+  .nl-page {
+    max-width: 760px;
+    margin: 2rem auto;
+    font-family: inherit;
+  }
+
+  /* ── Header ───────────────────────────── */
+  .nl-header {
+    border: 1px solid #374151;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    background: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nl-header-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f9fafb;
+    margin: 0 0 .25rem 0;
+  }
+  .nl-header-subtitle {
+    font-size: .85rem;
+    color: #6b7280;
+  }
+  .nl-header-actions {
+    display: flex;
+    gap: .75rem;
+  }
+  .btn-print {
+    background: #374151;
+    color: #e5e7eb;
+    border: none;
+    border-radius: 8px;
+    padding: .5rem 1.1rem;
+    font-size: .85rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-print:hover { background: #4b5563; }
+  .btn-back {
+    background: transparent;
+    color: #818cf8;
+    border: 1px solid #4f46e5;
+    border-radius: 8px;
+    padding: .5rem 1.1rem;
+    font-size: .85rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-back:hover { background: #1e1b4b; }
+
+  /* ── Section cards ────────────────────── */
+  .nl-section {
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    background: #111827;
+  }
+  .nl-section-title {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 1rem 0;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid #1f2937;
+  }
+
+  /* ── Phase banner ─────────────────────── */
+  .nl-phase-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nl-phase-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  .nl-phase-label {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #f9fafb;
+  }
+  .nl-phase-confidence {
+    font-size: .9rem;
+    color: #9ca3af;
+    margin-top: .2rem;
+  }
+  .nl-phase-source {
+    margin-left: auto;
+    font-size: .75rem;
+    color: #4b5563;
+    text-align: right;
+  }
+  .nl-phase-desc {
+    margin-top: 1rem;
+    font-size: .875rem;
+    color: #9ca3af;
+    line-height: 1.6;
+  }
+
+  /* ── Indicators table ─────────────────── */
+  .nl-indicators {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875rem;
+  }
+  .nl-indicators th {
+    text-align: left;
+    color: #4b5563;
+    font-weight: 600;
+    padding: .4rem .5rem;
+    border-bottom: 1px solid #1f2937;
+  }
+  .nl-indicators td {
+    padding: .6rem .5rem;
+    border-bottom: 1px solid #111827;
+    color: #d1d5db;
+  }
+  .nl-indicators tr:last-child td { border-bottom: none; }
+  .vote-chip {
+    display: inline-block;
+    padding: .15rem .6rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  .vote-expansion  { background: #064e3b; color: #34d399; }
+  .vote-slowdown   { background: #1e3a5f; color: #60a5fa; }
+  .vote-recession  { background: #450a0a; color: #f87171; }
+  .vote-recovery   { background: #1e1b4b; color: #a78bfa; }
+
+  /* ── Allocation grid ──────────────────── */
+  .nl-alloc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .nl-alloc-col-title {
+    font-size: .8rem;
+    font-weight: 700;
+    margin-bottom: .6rem;
+  }
+  .nl-alloc-col-title.good { color: #34d399; }
+  .nl-alloc-col-title.bad  { color: #f87171; }
+  .nl-alloc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .45rem .6rem;
+    border-radius: 6px;
+    margin-bottom: .35rem;
+    font-size: .85rem;
+  }
+  .nl-alloc-item.good { background: #064e3b22; color: #6ee7b7; }
+  .nl-alloc-item.bad  { background: #450a0a22; color: #fca5a5; }
+  .nl-alloc-return {
+    font-weight: 700;
+    font-size: .8rem;
+  }
+
+  /* ── Watchlist alignment ──────────────── */
+  .nl-wl-group {
+    margin-bottom: 1rem;
+  }
+  .nl-wl-group-title {
+    font-size: .8rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .nl-wl-group-title.favorable { color: #34d399; }
+  .nl-wl-group-title.neutral   { color: #818cf8; }
+  .nl-wl-group-title.weak      { color: #f87171; }
+  .nl-wl-tickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+  .nl-wl-chip {
+    padding: .25rem .65rem;
+    border-radius: 6px;
+    font-size: .8rem;
+    font-weight: 600;
+    font-family: monospace;
+  }
+  .nl-wl-chip.favorable { background: #064e3b33; color: #6ee7b7; border: 1px solid #059669; }
+  .nl-wl-chip.neutral   { background: #1e1b4b33; color: #a78bfa; border: 1px solid #7c3aed; }
+  .nl-wl-chip.weak      { background: #450a0a33; color: #fca5a5; border: 1px solid #dc2626; }
+  .nl-wl-sector {
+    font-size: .75rem;
+    color: #6b7280;
+    margin-left: .2rem;
+  }
+
+  /* ── Empty state ──────────────────────── */
+  .nl-empty {
+    color: #4b5563;
+    font-size: .85rem;
+    font-style: italic;
+  }
+
+  /* ── Footer ───────────────────────────── */
+  .nl-footer {
+    text-align: center;
+    font-size: .75rem;
+    color: #374151;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #1f2937;
+  }
+
+  /* ── Print styles ─────────────────────── */
+  @media print {
+    body { background: #fff; color: #111; }
+    .main-nav, .nl-header-actions, .btn-back, .btn-print { display: none; }
+    .nl-section, .nl-header { border-color: #ddd; background: #fff; }
+    .nl-phase-label, .nl-section-title, .nl-alloc-col-title.good { color: #111; }
+    .vote-chip { border: 1px solid #ccc; }
+  }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="nl-page">
+
+  <!-- Header -->
+  <div class="nl-header">
+    <div>
+      <p class="nl-header-title">Rapport Hebdomadaire</p>
+      <p class="nl-header-subtitle">
+        Généré le {{ generated_at.strftime('%d %B %Y à %H:%M') }} — Mytrader Generator
+      </p>
+    </div>
+    <div class="nl-header-actions">
+      <a href="{{ url_for('cycle.index') }}" class="btn-back">← Cycle</a>
+      <button class="btn-print" onclick="window.print()">Imprimer</button>
+    </div>
+  </div>
+
+  <!-- Phase actuelle -->
+  <div class="nl-section">
+    <p class="nl-section-title">Phase macro actuelle</p>
+    <div class="nl-phase-banner">
+      <span class="nl-phase-icon">{{ current_data.icon }}</span>
+      <div>
+        <div class="nl-phase-label">{{ current_data.label }}</div>
+        {% if detection and detection.confidence %}
+          <div class="nl-phase-confidence">Confiance auto-détection : {{ detection.confidence }}%</div>
+        {% endif %}
+      </div>
+      <div class="nl-phase-source">
+        {{ current_data.periods }} cycles<br>observés
+      </div>
+    </div>
+    <p class="nl-phase-desc">{{ current_data.description }}</p>
+    {% if current_data.note %}
+      <p class="nl-phase-desc" style="color:#6b7280; margin-top:.5rem;">{{ current_data.note }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Indicateurs -->
+  {% if detection and detection.indicators %}
+  <div class="nl-section">
+    <p class="nl-section-title">Indicateurs ({{ detection.indicators|length }})</p>
+    <table class="nl-indicators">
+      <thead>
+        <tr>
+          <th>Indicateur</th>
+          <th>Signal</th>
+          <th>Vote</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key, ind in detection.indicators.items() %}
+        <tr>
+          <td>{{ ind.name }}</td>
+          <td style="color:#9ca3af;">{{ ind.signal }}</td>
+          <td>
+            <span class="vote-chip vote-{{ ind.vote }}">{{ ind.vote_label }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if detection.confidence %}
+    <p style="margin-top:.75rem; font-size:.8rem; color:#4b5563;">
+      Confiance globale : <strong style="color:#d1d5db;">{{ detection.confidence }}%</strong>
+      — Détectée le {{ detection.detected_at[:10] }}
+    </p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Allocations recommandées -->
+  <div class="nl-section">
+    <p class="nl-section-title">Allocations recommandées</p>
+    <div class="nl-alloc-grid">
+      <div>
+        <p class="nl-alloc-col-title good">À surpondérer</p>
+        {% for sector in top_sectors %}
+        <div class="nl-alloc-item good">
+          <span>{{ sector.name }}</span>
+          <span class="nl-alloc-return">+{{ sector.return }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div>
+        <p class="nl-alloc-col-title bad">À sous-pondérer</p>
+        {% for sector in worst_sectors %}
+        <div class="nl-alloc-item bad">
+          <span>{{ sector.name }}</span>
+          <span class="nl-alloc-return">{{ sector.return }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Watchlist -->
+  <div class="nl-section">
+    <p class="nl-section-title">Alignement watchlist</p>
+    {% set has_any = watchlist_by_alignment.favorable or watchlist_by_alignment.neutral or watchlist_by_alignment.weak %}
+    {% if not has_any %}
+      <p class="nl-empty">Watchlist vide ou aucun secteur identifié.</p>
+    {% else %}
+      {% if watchlist_by_alignment.favorable %}
+      <div class="nl-wl-group">
+        <div class="nl-wl-group-title favorable">Favorable</div>
+        <div class="nl-wl-tickers">
+          {% for sector in watchlist_by_alignment.favorable %}
+            {% for ticker in sector.tickers %}
+              <span class="nl-wl-chip favorable">{{ ticker }}<span class="nl-wl-sector">{{ sector.name }}</span></span>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if watchlist_by_alignment.neutral %}
+      <div class="nl-wl-group">
+        <div class="nl-wl-group-title neutral">Neutre</div>
+        <div class="nl-wl-tickers">
+          {% for sector in watchlist_by_alignment.neutral %}
+            {% for ticker in sector.tickers %}
+              <span class="nl-wl-chip neutral">{{ ticker }}<span class="nl-wl-sector">{{ sector.name }}</span></span>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if watchlist_by_alignment.weak %}
+      <div class="nl-wl-group">
+        <div class="nl-wl-group-title weak">Faible alignement</div>
+        <div class="nl-wl-tickers">
+          {% for sector in watchlist_by_alignment.weak %}
+            {% for ticker in sector.tickers %}
+              <span class="nl-wl-chip weak">{{ ticker }}<span class="nl-wl-sector">{{ sector.name }}</span></span>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  <!-- Tous les secteurs -->
+  <div class="nl-section">
+    <p class="nl-section-title">Tous les secteurs — Phase {{ current_data.label }}</p>
+    {% for sector in enriched_sectors %}
+    <div class="nl-alloc-item {{ 'good' if sector.rank <= 3 else ('bad' if sector.rank >= 8 else '') }}"
+         style="margin-bottom:.3rem; background: {% if sector.rank <= 3 %}#064e3b22{% elif sector.rank >= 8 %}#450a0a22{% else %}#1f293755{% endif %}">
+      <span style="color:{% if sector.rank <= 3 %}#6ee7b7{% elif sector.rank >= 8 %}#fca5a5{% else %}#9ca3af{% endif %}">
+        {{ sector.rank }}. {{ sector.name }}
+      </span>
+      <span class="nl-alloc-return" style="color:{% if sector.return > 0 %}#34d399{% else %}#f87171{% endif %}">
+        {% if sector.return > 0 %}+{% endif %}{{ sector.return }}%
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="nl-footer">
+    Mytrader Generator — Rapport généré automatiquement. Ne constitue pas un conseil en investissement.
+  </div>
+
+</div>
+{% endblock %}

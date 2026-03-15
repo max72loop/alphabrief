@@ -1,0 +1,82 @@
+{
+  "holdings": [
+    {
+      "ticker": "NU",
+      "added_at": "2026-01-24",
+      "quantity": 35.0,
+      "buy_price": 11.57
+    },
+    {
+      "ticker": "TSM",
+      "added_at": "2026-01-24",
+      "quantity": 4.5,
+      "buy_price": 221.0
+    },
+    {
+      "ticker": "GOOG",
+      "added_at": "2026-01-24",
+      "quantity": 5.3,
+      "buy_price": 231.0
+    },
+    {
+      "ticker": "MELI",
+      "quantity": 0.17,
+      "buy_price": 2043.0,
+      "added_at": "2026-01-24"
+    },
+    {
+      "ticker": "KO",
+      "quantity": 7.0,
+      "buy_price": 56.38,
+      "added_at": "2026-01-25"
+    },
+    {
+      "ticker": "UBER",
+      "quantity": 10.0,
+      "buy_price": 72.57,
+      "added_at": "2026-01-26"
+    },
+    {
+      "ticker": "SNAP",
+      "quantity": 34.0,
+      "buy_price": 7.47,
+      "added_at": "2026-01-26"
+    },
+    {
+      "ticker": "AXA",
+      "quantity": 5.0,
+      "buy_price": 39.2,
+      "added_at": "2026-01-26"
+    },
+    {
+      "ticker": "VLO",
+      "quantity": 2.0,
+      "buy_price": 118.21,
+      "added_at": "2026-01-26"
+    },
+    {
+      "ticker": "ZTS",
+      "quantity": 5.0,
+      "buy_price": 123.6,
+      "added_at": "2026-01-26"
+    },
+    {
+      "ticker": "1211.HK",
+      "quantity": 32.0,
+      "buy_price": 12.56,
+      "added_at": "2026-01-27"
+    },
+    {
+      "ticker": "ASR",
+      "quantity": 0,
+      "buy_price": 0,
+      "added_at": "2026-01-27"
+    },
+    {
+      "ticker": "GRAB",
+      "quantity": 0,
+      "buy_price": 0,
+      "added_at": "2026-01-27"
+    }
+  ]
+}

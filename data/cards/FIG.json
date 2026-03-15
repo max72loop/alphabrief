@@ -1,0 +1,171 @@
+{
+  "as_of": "2026-02-22",
+  "identity": {
+    "ticker": "FIG",
+    "name": "Figma, Inc.",
+    "exchange": "NYQ",
+    "currency": "USD",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "market_cap": 12929987584,
+    "description": "Figma, Inc. develops and sells a collaborative, browser-based platform for designing, prototyping, building digital experiences, and subscriptions for access to its platform. The company offers Figma Design, a collaborative design tool for teams that explore ideas and gather feedback, build reali...",
+    "website": "https://www.figma.com",
+    "employees": 1886
+  },
+  "business_snapshot": {
+    "one_liner": "",
+    "segments": [],
+    "geographies": [],
+    "moat_tags": [],
+    "top_competitors": []
+  },
+  "financials": {
+    "revenue_cagr_3y": null,
+    "revenue_yoy_rates": null,
+    "ebit_margin": -117.14554258882713,
+    "gross_margin": 88.31605944371978,
+    "fcf_margin": -9.230572047673533,
+    "roe": -88.225996,
+    "roic": -38.950002,
+    "net_debt_to_ebitda": null,
+    "interest_coverage": null,
+    "share_dilution_3y": 0.0,
+    "payout_ratio": 0.0,
+    "fcf_absolute": -69138000.0,
+    "net_income": -732120000.0,
+    "current_ratio": 2.583,
+    "eps_growth": null,
+    "net_margin": -118.43901,
+    "insider_ownership": 3.479,
+    "short_interest": 9.770001,
+    "gross_margin_trend": null,
+    "accruals_ratio": null,
+    "institutional_ownership": 84.53399499999999,
+    "altman_z": null
+  },
+  "valuation": {
+    "pe_ttm": null,
+    "ev_ebitda_ttm": null,
+    "ev_sales_ttm": 11.379,
+    "fcf_yield_ttm": -0.534710490252548,
+    "pb_ratio": 8.862092,
+    "price_to_ocf": 51.579449565924804,
+    "forward_pe": 92.75455
+  },
+  "market": {
+    "beta": null,
+    "volatility_1y": null,
+    "drawdown_1y": null,
+    "avg_volume_3m": 10129623,
+    "momentum_1m": -8.19845150405043,
+    "momentum_3m": -27.000562598442723,
+    "momentum_6m": -64.14238676939715,
+    "momentum_12m": -77.41125527914468,
+    "relative_momentum_1m": -5.44,
+    "relative_momentum_3m": -27.43,
+    "relative_momentum_12m": -84.95,
+    "analyst_target_mean": 46.44444,
+    "analyst_target_low": 30.0,
+    "analyst_target_high": 96.0,
+    "analyst_count": 9,
+    "analyst_recommendation": "buy",
+    "current_price": 26.09,
+    "previous_close": 25.86,
+    "change_pct": 0.8894044856921903,
+    "volume": 40822548,
+    "fifty_two_week_low": 19.85,
+    "fifty_two_week_high": 142.92
+  },
+  "technicals": {
+    "rsi_14": 47.96360939915602,
+    "sma_50": 31.40540019989014,
+    "sma_200": null,
+    "macd_line": -2.0441852670925087,
+    "macd_signal": -2.7962428041374694,
+    "macd_histogram": 0.7520575370449607,
+    "volatility_1y": 88.17302246705803,
+    "max_drawdown_1y": -82.46721361504227
+  },
+  "events": {
+    "next_earnings_date": null,
+    "catalysts": [],
+    "key_risks": []
+  },
+  "scores": {
+    "potential_score": 34,
+    "score_label": "Faible",
+    "importance_ranked_items": [
+      {
+        "label": "Perte opérationnelle (EBIT négatif)",
+        "importance_score": 90,
+        "why_it_matters": "EBIT margin ~-117.1% : l'entreprise brûle du cash opérationnel.",
+        "direction": "negative"
+      },
+      {
+        "label": "Fort upside analystes",
+        "importance_score": 85,
+        "why_it_matters": "Target moyen 46 vs prix 26 : +78% d'upside (9 analystes).",
+        "direction": "positive"
+      },
+      {
+        "label": "Proche du plus bas 52 sem",
+        "importance_score": 80,
+        "why_it_matters": "Prix à 5% du range 52 sem : proche du plancher, opportunité potentielle.",
+        "direction": "positive"
+      },
+      {
+        "label": "Drawdown sévère (1 an)",
+        "importance_score": 80,
+        "why_it_matters": "Max drawdown ~82% : perte maximale importante sur 1 an.",
+        "direction": "negative"
+      },
+      {
+        "label": "Marge brute très élevée",
+        "importance_score": 75,
+        "why_it_matters": "Gross margin ~88.3% : fort pouvoir de pricing.",
+        "direction": "positive"
+      },
+      {
+        "label": "FCF négatif (consommation de cash)",
+        "importance_score": 75,
+        "why_it_matters": "FCF margin ~-9.2% : plus de cash consommé que généré.",
+        "direction": "negative"
+      },
+      {
+        "label": "FCF yield tendu",
+        "importance_score": 75,
+        "why_it_matters": "FCF yield ~-0.5% : valorisation élevée vs cash.",
+        "direction": "negative"
+      },
+      {
+        "label": "Forward P/E très élevé",
+        "importance_score": 75,
+        "why_it_matters": "Forward P/E ~92.8x : valorisation future tendue.",
+        "direction": "negative"
+      },
+      {
+        "label": "Momentum très négatif (12m)",
+        "importance_score": 75,
+        "why_it_matters": "Perf 12m ~-77.4% : tendance baissière marquée.",
+        "direction": "negative"
+      },
+      {
+        "label": "Volatilité extrême",
+        "importance_score": 75,
+        "why_it_matters": "Volatilité annualisée ~88% : mouvements de prix très importants.",
+        "direction": "negative"
+      }
+    ],
+    "confidence_score": 61
+  },
+  "sources": [
+    {
+      "name": "stub",
+      "fetched_at": "2026-02-22T15:00:34.585857+00:00"
+    },
+    {
+      "name": "yfinance",
+      "fetched_at": "2026-02-22T15:00:35.040695+00:00"
+    }
+  ]
+}
