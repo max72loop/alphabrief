@@ -631,9 +631,8 @@
 
 <!-- ═══ ANNOUNCEMENT BAR ═══════════════════════════════════════════════ -->
 <div class="announce-bar">
-    <span>Prix de lancement <strong>9€/mois</strong> — Investis en confiance dès aujourd'hui.</span>
-    <span class="announce-spots">Encore <strong id="spots-count">143</strong> places disponibles.</span>
-    <a href="{{ url_for('watchlist.index') }}" class="announce-cta">Commencer →</a>
+    <span>Prix de lancement <strong>9€/mois</strong> — Offre limitée dans le temps.</span>
+    <a href="{{ url_for('watchlist.index') }}" class="announce-cta">Commencer gratuitement →</a>
 </div>
 
 <!-- ═══ NAV ═══════════════════════════════════════════════════════════ -->
@@ -672,9 +671,9 @@
             </h1>
             <p class="hero-tagline">Investis. Et oublie les cours.</p>
             <p class="hero-desc">
-                Tu n'as pas besoin de surveiller les marchés tous les jours pour bien placer ton argent.
-                MyTrader analyse les bonnes boîtes en continu et t'alerte quand c'est le moment d'agir.
-                Toi, tu prends la décision. Ensuite, tu passes à autre chose.
+                Tu n'as pas besoin de surveiller les marchés tous les jours pour investir avec méthode.
+                MyTrader analyse les entreprises en continu et t'alerte quand un signal mérite ton attention.
+                Toi, tu prends la décision en connaissance de cause. Ensuite, tu passes à autre chose.
             </p>
             <div class="hero-actions">
                 <a href="{{ url_for('watchlist.index') }}" class="btn btn-glow btn-xl">
@@ -720,7 +719,7 @@
                 <span class="demo-score-denom">/ 100</span>
                 <span class="demo-confidence-line">Confiance 85%</span>
             </div>
-            <div class="demo-signal-pill">BUY</div>
+            <div class="demo-signal-pill">SIGNAL FORT</div>
         </div>
         <div class="demo-factors">
             <div class="demo-factor">
@@ -801,10 +800,11 @@
             <div class="step-connector">→</div>
             <div class="step-item">
                 <div class="step-num">ÉTAPE 02</div>
-                <div class="step-title">L'algo détecte le bon moment</div>
+                <div class="step-title">L'algo analyse les signaux clés</div>
                 <div class="step-desc">
                     15+ facteurs analysés automatiquement — solidité de l'entreprise, momentum,
-                    valorisation, cycle macro. Il sait quand une action mérite vraiment ton attention.
+                    valorisation, cycle macro. Un score composite pour t'aider à identifier
+                    quand une action mérite vraiment ton attention.
                 </div>
             </div>
             <div class="step-connector">→</div>
@@ -834,64 +834,66 @@
 
             <div class="feature-card">
                 <div class="feature-icon-box">0–100</div>
-                <div class="feature-title">Un score. Une décision.</div>
+                <div class="feature-title">Un score clair pour décider en confiance</div>
                 <div class="feature-desc">
                     15+ facteurs analysés en continu — solidité financière, valorisation, momentum.
-                    Résultat : un score de 0 à 100 qui te dit si c'est le bon moment ou non.
-                    Simple. Lisible. Actionnable.
+                    Un seul chiffre de 0 à 100 pour structurer ta réflexion avant d'investir.
+                    Clair. Méthodique. Sans bruit.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">IA</div>
-                <div class="feature-title">Mise sur les bonnes boîtes</div>
+                <div class="feature-title">Investis sur ce que tu comprends vraiment</div>
                 <div class="feature-desc">
-                    L'IA analyse si l'entreprise est vraiment solide sur le long terme —
-                    avantage concurrentiel, position de marché, risques clés.
-                    Tu sais pourquoi tu investis, pas juste combien.
+                    L'IA décompose la solidité de l'entreprise sur le long terme —
+                    avantages concurrentiels, position de marché, risques identifiés.
+                    Tu poses ta décision sur des bases solides, pas sur des rumeurs.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">BTC</div>
-                <div class="feature-title">Bitcoin — quand entrer, quand sortir</div>
+                <div class="feature-title">Bitcoin : une lecture structurée du marché</div>
                 <div class="feature-desc">
-                    12 indicateurs on-chain et de marché combinés en un seul score composite.
-                    Pi Cycle, MVRV, Stock-to-Flow, Fear & Greed et plus — sans avoir à tous les comprendre.
+                    12 indicateurs on-chain et de marché combinés en un score composite.
+                    Pi Cycle, MVRV, Stock-to-Flow, Fear & Greed et plus — une grille d'analyse
+                    cohérente pour naviguer dans un actif volatil.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">ECO</div>
-                <div class="feature-title">Le bon secteur au bon moment</div>
+                <div class="feature-title">Aligne ton portefeuille avec le cycle économique</div>
                 <div class="feature-desc">
-                    Récession, reprise, expansion — l'app détecte la phase du cycle économique
-                    et te montre quels secteurs en profitent. Alloue ton argent là où ça a du sens.
+                    Récession, reprise, expansion — MyTrader identifie la phase du cycle et te montre
+                    quels secteurs en ont historiquement bénéficié. Alloue ton capital là où
+                    les fondamentaux jouent en ta faveur.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card" style="border-top:2px solid rgba(99,102,241,0.5);">
                 <div class="feature-icon-box">WL</div>
-                <div class="feature-title">Tu oublies. On surveille.</div>
+                <div class="feature-title">Reprends ta vie. Les alertes font le reste.</div>
                 <div class="feature-desc">
-                    Ajoute des entreprises à ta watchlist et reprends ta vie.
-                    MyTrader analyse en continu et te notifie uniquement quand ça mérite ton attention.
-                    Finis les rafraîchissements compulsifs.
+                    Ajoute tes entreprises à ta watchlist et déconnecte-toi vraiment.
+                    MyTrader analyse en continu et te notifie uniquement quand un signal
+                    mérite ton attention. Finis les vérifications compulsives.
                 </div>
                 <span class="feature-tag-pill" style="background:rgba(99,102,241,0.2);color:var(--primary-light);">PREMIUM</span>
             </div>
 
             <div class="feature-card" style="border-top:2px solid rgba(99,102,241,0.5);">
                 <div class="feature-icon-box">→</div>
-                <div class="feature-title">Comprends chaque décision</div>
+                <div class="feature-title">Trace le raisonnement derrière chaque score</div>
                 <div class="feature-desc">
                     Décomposition complète du score, historique d'évolution, export PDF.
-                    Tu vois exactement pourquoi le score a changé — et tu construis ta confiance
-                    d'investisseur au fil du temps.
+                    Tu vois exactement ce qui a changé et pourquoi — pour investir avec méthode,
+                    pas par intuition. Ta progression d'investisseur, documentée.
                 </div>
                 <span class="feature-tag-pill" style="background:rgba(99,102,241,0.2);color:var(--primary-light);">PREMIUM</span>
             </div>
@@ -1140,6 +1142,27 @@
 </section>
 
 
+<!-- ═══ AVERTISSEMENT RISQUE AMF ══════════════════════════════════════ -->
+<div class="data-note" style="padding-bottom:0;">
+    <div class="data-note-inner" style="border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.04);">
+        <div style="display:flex;gap:0.65rem;align-items:flex-start;">
+            <span style="color:#f59e0b;font-size:1rem;flex-shrink:0;margin-top:0.05rem;">⚠</span>
+            <div>
+                <strong style="color:rgba(248,250,252,0.7);font-size:0.8rem;">Information importante — Risques liés à l'investissement</strong>
+                <p style="margin:0.45rem 0 0;font-size:0.78rem;line-height:1.7;">
+                    Tout investissement en bourse comporte un risque de perte en capital, y compris totale.
+                    Les performances passées ne préjugent pas des performances futures. Les scores et analyses
+                    fournis par MyTrader sont des <strong style="color:rgba(248,250,252,0.55);">outils d'aide à la décision</strong>,
+                    non des conseils en investissement au sens de la réglementation AMF. Ils ne constituent pas une recommandation
+                    d'achat ou de vente de valeurs mobilières. Avant d'investir, assurez-vous que cela correspond
+                    à votre situation financière, vos objectifs et votre tolérance au risque. En cas de doute, consultez un conseiller
+                    financier agréé.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Note sources de données -->
 <div class="data-note">
     <div class="data-note-inner">
@@ -1195,21 +1218,6 @@
         observer.observe(scoreEl);
     }
 
-    // ─── Compteur de places décroissant ──────────────────────────────
-    (function() {
-        const el = document.getElementById('spots-count');
-        if (!el) return;
-        const key = 'mtg_spots';
-        let spots = parseInt(sessionStorage.getItem(key) || '143', 10);
-        el.textContent = spots;
-        setInterval(() => {
-            if (spots > 97) {
-                spots--;
-                sessionStorage.setItem(key, spots);
-                el.textContent = spots;
-            }
-        }, 11500 + Math.random() * 4000);
-    })();
 
     // ─── Sticky CTA — apparaît après le hero ─────────────────────────
     const stickyCta = document.getElementById('sticky-cta');
