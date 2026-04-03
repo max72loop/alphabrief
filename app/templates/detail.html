@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ ticker }} - MyTrader{% endblock %}
+{% block title %}{{ ticker }} — AlphaBrief{% endblock %}
 {% block page_content %}
 {% if card %}
 {% set ident = card.get('identity', {}) %}
@@ -15,10 +15,10 @@
     </div>
     <div class="detail-actions">
         <form method="POST" action="{{ url_for('scoring.score_single', ticker=ticker) }}" class="inline-form">
-            <button type="submit" class="btn btn-sm btn-accent">Re-scorer</button>
+            <button type="submit" class="btn btn-sm btn-accent" title="Recalcule le score à partir des données en cache">Actualiser le score</button>
         </form>
         <form method="POST" action="{{ url_for('cache_mgmt.invalidate', ticker=ticker) }}" class="inline-form">
-            <button type="submit" class="btn btn-sm btn-secondary" title="Vide le cache et force un recalcul complet depuis les APIs">Recalculer (fresh)</button>
+            <button type="submit" class="btn btn-sm btn-secondary" title="Vide le cache et recharge toutes les données depuis l'API FMP">Recalculer depuis l'API</button>
         </form>
         <a href="{{ url_for('scoring.history') }}?ticker={{ ticker }}" class="btn btn-sm btn-secondary">Historique</a>
     </div>
@@ -35,7 +35,7 @@
         <span class="snap-score-sub">/100</span>
         <span class="snap-score-label" style="color: {{ score_color }}">{{ card.scores.score_label or '' }}</span>
         <span class="signal-badge {% if s >= 65 %}signal-acheter{% elif s >= 40 %}signal-observer{% else %}signal-eviter{% endif %}" style="margin-top:0.5rem">
-            {% if s >= 65 %}Acheter{% elif s >= 40 %}Observer{% else %}Éviter{% endif %}
+            {% if s >= 65 %}Score fort{% elif s >= 40 %}Score moyen{% else %}Score faible{% endif %}
         </span>
     </div>
     <div class="snap-divider"></div>

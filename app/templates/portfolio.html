@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Portfolio - MyTrader{% endblock %}
+{% block title %}Portfolio - AlphaBrief{% endblock %}
 {% block page_content %}
 <div class="page-header">
     <h1>Mon Portefeuille</h1>
-    <span class="badge-count">{{ holdings|length }} position(s)</span>
+    <span class="badge-count">{{ holdings|length }} position{{ 's' if holdings|length != 1 else '' }}</span>
     {% if holdings %}
-    <form method="POST" action="{{ url_for('scoring.score_batch_portfolio') }}" class="inline-form" style="margin-left: auto;">
+    <form method="POST" action="{{ url_for('scoring.score_batch_portfolio') }}" class="inline-form" style="margin-left: auto;" data-ticker-count="{{ holdings|length }}">
         <button type="submit" class="btn btn-accent">Scorer tout</button>
     </form>
     {% endif %}
@@ -109,7 +109,7 @@
                     <form method="POST" action="{{ url_for('scoring.score_single', ticker=h.ticker) }}" class="inline-form">
                         <button type="submit" class="btn btn-sm btn-accent">Scorer</button>
                     </form>
-                    <form method="POST" action="{{ url_for('portfolio.remove', ticker=h.ticker) }}" class="inline-form">
+                    <form method="POST" action="{{ url_for('portfolio.remove', ticker=h.ticker) }}" class="inline-form" onsubmit="return confirm('Retirer {{ h.ticker }} du portefeuille ?')">
                         <button type="submit" class="btn btn-sm btn-danger">Retirer</button>
                     </form>
                 </td>
