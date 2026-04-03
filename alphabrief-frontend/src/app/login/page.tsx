@@ -31,18 +31,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <div className="bg-gray-900 p-8 rounded-xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">
-          {isSignUp ? 'Créer un compte' : 'Se connecter'}
-        </h1>
+    <div className="min-h-screen flex items-center justify-center bg-[#0f0f1a]">
+      <div className="bg-[#13131f] border border-white/[0.07] p-8 rounded-xl w-full max-w-md">
+        <div className="text-center mb-6">
+          <p className="text-base font-bold tracking-tight text-white mb-1">
+            Alpha<span className="text-indigo-400">Brief</span>
+          </p>
+          <h1 className="text-2xl font-bold text-white">
+            {isSignUp ? 'Créer un compte' : 'Se connecter'}
+          </h1>
+          {!isSignUp && (
+            <p className="text-zinc-500 text-xs mt-1">5 analyses gratuites par jour</p>
+          )}
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-blue-500 outline-none"
+            className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-indigo-500 outline-none"
             required
           />
           <input
@@ -50,7 +58,7 @@ export default function LoginPage() {
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-blue-500 outline-none"
+            className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:border-indigo-500 outline-none"
             required
             minLength={6}
           />
@@ -58,16 +66,16 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full p-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50"
+            className="w-full p-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold disabled:opacity-50"
           >
             {loading ? '...' : isSignUp ? "S'inscrire" : 'Se connecter'}
           </button>
         </form>
-        <p className="text-gray-400 text-sm text-center mt-4">
+        <p className="text-zinc-500 text-sm text-center mt-4">
           {isSignUp ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
           <button
             onClick={() => { setIsSignUp(!isSignUp); setError('') }}
-            className="text-blue-400 hover:underline"
+            className="text-indigo-400 hover:underline"
           >
             {isSignUp ? 'Se connecter' : "S'inscrire"}
           </button>
