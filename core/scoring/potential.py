@@ -1977,4 +1977,17 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
         intensity = min(avg_excess / 35.0, 1.0)
         total = total - _MAX_CONV * strength * (0.5 + 0.5 * intensity)
 
-    return int(round(clamp(total, 0.0, 100.0)))
+    score_total = int(round(clamp(total, 0.0, 100.0)))
+
+    # Pillar scores (0-100) exposés séparément pour Supabase + UI
+    # Fondamentaux = moyenne quality + growth + value (les 3 piliers "entreprise")
+    score_fundamentals = int(round(clamp((quality + growth + value) / 3.0, 0.0, 100.0)))
+    score_technicals = int(round(clamp(technical, 0.0, 100.0)))
+    score_momentum = int(round(clamp(momentum, 0.0, 100.0)))
+
+    return {
+        "total": score_total,
+        "fundamentals": score_fundamentals,
+        "technicals": score_technicals,
+        "momentum": score_momentum,
+    }

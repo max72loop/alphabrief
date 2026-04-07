@@ -15,6 +15,7 @@ from core.providers.fundamentals_yf import fetch_core_fundamentals
 from core.providers.llm_enricher import enrich_with_llm
 from core.scoring.importance import build_importance_items
 from core.scoring.confidence import compute_confidence_score
+from core.supabase_sink import upsert_ticker_score
 from utils import cache as _cache
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -273,7 +274,7 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
 
     # scoring
     _cb("Calcul du score de potentiel...")
-    card["scores"]["potential_score"] = compute_potential_score(card)
+    pillar_scores = compute_potential_score(card)
     _cb("Analyse des facteurs clés...")
     card["scores"]["importance_ranked_items"] = build_importance_items(card, limit=10)
 
@@ -281,17 +282,24 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     confidence = compute_confidence_score(card)
     card["scores"]["confidence_score"] = confidence
 
-    # ajustement du score (CORRIGÉ)
-    if card["scores"]["potential_score"] is not None:
-        card["scores"]["potential_score"] = int(
-            round(
-                card["scores"]["potential_score"]
-                * (0.5 + 0.5 * confidence / 100)
-            )
-        )
+    # Ajustement du score total par le facteur de confiance
+    raw_total = pillar_scores["total"]
+    adjusted_total = int(round(raw_total * (0.5 + 0.5 * confidence / 100)))
+    conf_factor = 0.5 + 0.5 * confidence / 100
 
-    card["scores"]["score_label"] = _score_label(card["scores"]["potential_score"])
+    card["scores"]["potential_score"] = adjusted_total
+    card["scores"]["score_fundamentals"] = int(round(pillar_scores["fundamentals"] * conf_factor))
+    card["scores"]["score_technicals"] = int(round(pillar_scores["technicals"] * conf_factor))
+    card["scores"]["score_momentum"] = int(round(pillar_scores["momentum"] * conf_factor))
+
+    card["scores"]["score_label"] = _score_label(adjusted_total)
     _cb("Analyse terminée !")
+
+    # Upsert vers Supabase (no-op si non configuré)
+    try:
+        upsert_ticker_score(card)
+    except Exception as e:
+        logger.error(f"Supabase upsert failed for {ticker}: {e}")
 
     return card
 
