@@ -1,0 +1,14 @@
+{
+  "fixture_name": "mock_benchmark",
+  "as_of": "2026-04-17",
+  "_note": "Benchmarks hors univers SP500 scoring. Structure extensible pour QQQ, IWM, etc.",
+  "benchmarks": {
+    "SPY": {
+      "ticker": "SPY",
+      "name": "SPDR S&P 500 ETF Trust",
+      "role": "primary",
+      "price_friday_close": 512.34,
+      "next_monday_open": {"date": "2026-04-20", "price": 513.80}
+    }
+  }
+}

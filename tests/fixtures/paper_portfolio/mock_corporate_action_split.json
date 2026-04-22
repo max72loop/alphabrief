@@ -1,0 +1,18 @@
+{
+  "fixture_name": "mock_corporate_action_split",
+  "_fixture_note": "Split 2-for-1 classique. Teste l'ajustement shares/entry_price dans corporate_actions.py.",
+  "events": [
+    {
+      "ticker": "NVDA",
+      "action_type": "SPLIT",
+      "effective_date": "2026-05-15",
+      "details": {
+        "ratio_new": 2,
+        "ratio_old": 1,
+        "announcement_date": "2026-04-10",
+        "record_date": "2026-05-10",
+        "description": "2-for-1 stock split — chaque action existante devient 2 actions, prix divisé par 2"
+      }
+    }
+  ]
+}

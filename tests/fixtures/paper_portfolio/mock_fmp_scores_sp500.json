@@ -1,0 +1,6534 @@
+{
+  "fixture_name": "mock_fmp_scores_sp500",
+  "generated_at": "2026-04-17T22:00:00Z",
+  "seed": 42,
+  "score_date": "2026-04-17",
+  "universe_size": 500,
+  "meta": {
+    "score_convention": "raw_components",
+    "description": "score_breakdown.{fundamentals,technicals,momentum} are raw scores each in [0,100]. Total score = round(0.50*fund + 0.25*tech + 0.25*mom). Invariant: abs(score - weighted_sum) <= 0.5 due to independent integer rounding of components.",
+    "weights": {
+      "fundamentals": 0.5,
+      "technicals": 0.25,
+      "momentum": 0.25
+    },
+    "component_range": [
+      0,
+      100
+    ],
+    "target_distribution": "Normal(mean=50, std=18) clipped to [0,100]",
+    "forced_extremes": "20 top (target in [80,95]) + 20 bottom (target in [5,30])"
+  },
+  "stats": {
+    "min": 6,
+    "max": 95,
+    "median": 50.0,
+    "p10": 28.0,
+    "p90": 72.0,
+    "count_ge_80": 24,
+    "count_le_30": 70,
+    "max_convention_deviation": 0.5
+  },
+  "scores": [
+    {
+      "ticker": "AAPL",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 64,
+        "momentum": 46
+      },
+      "price_friday_close": 339.78,
+      "sector": "Technology",
+      "market_cap": 798785095787,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MSFT",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 23,
+        "momentum": 24
+      },
+      "price_friday_close": 416.59,
+      "sector": "Technology",
+      "market_cap": 704705654594,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NVDA",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 61,
+        "momentum": 68
+      },
+      "price_friday_close": 253.47,
+      "sector": "Technology",
+      "market_cap": 1072257668418,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GOOGL",
+      "score": 67,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 73,
+        "momentum": 74
+      },
+      "price_friday_close": 305.97,
+      "sector": "Communication Services",
+      "market_cap": 2159227527113,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GOOG",
+      "score": 17,
+      "score_breakdown": {
+        "fundamentals": 16,
+        "technicals": 16,
+        "momentum": 20
+      },
+      "price_friday_close": 174.24,
+      "sector": "Communication Services",
+      "market_cap": 850190815538,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "META",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 21,
+        "technicals": 19,
+        "momentum": 45
+      },
+      "price_friday_close": 298.13,
+      "sector": "Communication Services",
+      "market_cap": 1174403574554,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AMZN",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 41,
+        "momentum": 50
+      },
+      "price_friday_close": 249.92,
+      "sector": "Consumer Discretionary",
+      "market_cap": 1025750550659,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TSLA",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 39,
+        "momentum": 58
+      },
+      "price_friday_close": 749.6,
+      "sector": "Consumer Discretionary",
+      "market_cap": 2207553375549,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BRK.B",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 50,
+        "technicals": 52,
+        "momentum": 48
+      },
+      "price_friday_close": 542.96,
+      "sector": "Financials",
+      "market_cap": 1317562535154,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LLY",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 25,
+        "momentum": 45
+      },
+      "price_friday_close": 799.16,
+      "sector": "Health Care",
+      "market_cap": 2702810488972,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JPM",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 74,
+        "momentum": 66
+      },
+      "price_friday_close": 720.64,
+      "sector": "Financials",
+      "market_cap": 1649877056111,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "V",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 68,
+        "momentum": 56
+      },
+      "price_friday_close": 649.85,
+      "sector": "Financials",
+      "market_cap": 2929766795635,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "XOM",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 57,
+        "momentum": 39
+      },
+      "price_friday_close": 138.43,
+      "sector": "Energy",
+      "market_cap": 1226033168448,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UNH",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 67,
+        "momentum": 88
+      },
+      "price_friday_close": 423.58,
+      "sector": "Health Care",
+      "market_cap": 515617024413,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MA",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 55,
+        "momentum": 61
+      },
+      "price_friday_close": 373.3,
+      "sector": "Financials",
+      "market_cap": 1308320805453,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AVGO",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 34,
+        "momentum": 24
+      },
+      "price_friday_close": 477.56,
+      "sector": "Technology",
+      "market_cap": 1510522223901,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WMT",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 65,
+        "momentum": 40
+      },
+      "price_friday_close": 89.98,
+      "sector": "Consumer Staples",
+      "market_cap": 384385875545,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PG",
+      "score": 33,
+      "score_breakdown": {
+        "fundamentals": 33,
+        "technicals": 43,
+        "momentum": 23
+      },
+      "price_friday_close": 404.78,
+      "sector": "Consumer Staples",
+      "market_cap": 143678714687,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HD",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 74,
+        "momentum": 55
+      },
+      "price_friday_close": 497.62,
+      "sector": "Consumer Discretionary",
+      "market_cap": 391392535562,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CVX",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 49,
+        "momentum": 54
+      },
+      "price_friday_close": 449.35,
+      "sector": "Energy",
+      "market_cap": 407510980928,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JNJ",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 37,
+        "momentum": 55
+      },
+      "price_friday_close": 224.76,
+      "sector": "Health Care",
+      "market_cap": 165851644769,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ABBV",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 48,
+        "momentum": 31
+      },
+      "price_friday_close": 318.9,
+      "sector": "Health Care",
+      "market_cap": 153951330607,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ORCL",
+      "score": 72,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 64,
+        "momentum": 76
+      },
+      "price_friday_close": 198.53,
+      "sector": "Technology",
+      "market_cap": 453102838123,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KO",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 40,
+        "momentum": 60
+      },
+      "price_friday_close": 176.3,
+      "sector": "Consumer Staples",
+      "market_cap": 245091098254,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BAC",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 53,
+        "momentum": 47
+      },
+      "price_friday_close": 129.79,
+      "sector": "Financials",
+      "market_cap": 131427149421,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PEP",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 39,
+        "momentum": 50
+      },
+      "price_friday_close": 476.68,
+      "sector": "Consumer Staples",
+      "market_cap": 109774649147,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "COST",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 48,
+        "momentum": 68
+      },
+      "price_friday_close": 423.7,
+      "sector": "Consumer Staples",
+      "market_cap": 191249699615,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MRK",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 61,
+        "momentum": 59
+      },
+      "price_friday_close": 128.28,
+      "sector": "Health Care",
+      "market_cap": 299384191560,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TMO",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 69,
+        "momentum": 42
+      },
+      "price_friday_close": 413.51,
+      "sector": "Health Care",
+      "market_cap": 132630329098,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ADBE",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 57,
+        "momentum": 54
+      },
+      "price_friday_close": 460.11,
+      "sector": "Technology",
+      "market_cap": 153117752401,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ACN",
+      "score": 87,
+      "score_breakdown": {
+        "fundamentals": 91,
+        "technicals": 97,
+        "momentum": 69
+      },
+      "price_friday_close": 351.75,
+      "sector": "Technology",
+      "market_cap": 125283687281,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WFC",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 54,
+        "momentum": 25
+      },
+      "price_friday_close": 148.22,
+      "sector": "Financials",
+      "market_cap": 370930725242,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CSCO",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 50,
+        "momentum": 23
+      },
+      "price_friday_close": 483.68,
+      "sector": "Technology",
+      "market_cap": 155977035554,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ABT",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 41,
+        "momentum": 42
+      },
+      "price_friday_close": 237.78,
+      "sector": "Health Care",
+      "market_cap": 153089635619,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MCD",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 62,
+        "momentum": 62
+      },
+      "price_friday_close": 156.4,
+      "sector": "Consumer Discretionary",
+      "market_cap": 200592839498,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DHR",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 73,
+        "technicals": 82,
+        "momentum": 54
+      },
+      "price_friday_close": 395.05,
+      "sector": "Health Care",
+      "market_cap": 348541663026,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DIS",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 43,
+        "momentum": 38
+      },
+      "price_friday_close": 424.16,
+      "sector": "Communication Services",
+      "market_cap": 183837008384,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VZ",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 41,
+        "momentum": 21
+      },
+      "price_friday_close": 41.98,
+      "sector": "Communication Services",
+      "market_cap": 140907136018,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CRM",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 33,
+        "technicals": 26,
+        "momentum": 49
+      },
+      "price_friday_close": 497.28,
+      "sector": "Technology",
+      "market_cap": 250743020717,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PM",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 68,
+        "momentum": 70
+      },
+      "price_friday_close": 135.68,
+      "sector": "Consumer Staples",
+      "market_cap": 106417049456,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TXN",
+      "score": 63,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 75,
+        "momentum": 52
+      },
+      "price_friday_close": 412.57,
+      "sector": "Technology",
+      "market_cap": 230518492025,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NEE",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 71,
+        "momentum": 49
+      },
+      "price_friday_close": 221.81,
+      "sector": "Utilities",
+      "market_cap": 115408471903,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NKE",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 45,
+        "momentum": 34
+      },
+      "price_friday_close": 210.91,
+      "sector": "Consumer Discretionary",
+      "market_cap": 332800197695,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AMD",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 56,
+        "momentum": 66
+      },
+      "price_friday_close": 129.93,
+      "sector": "Technology",
+      "market_cap": 135516130884,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "INTC",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 62,
+        "momentum": 32
+      },
+      "price_friday_close": 260.53,
+      "sector": "Technology",
+      "market_cap": 193469185087,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QCOM",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 43,
+        "momentum": 55
+      },
+      "price_friday_close": 335.44,
+      "sector": "Technology",
+      "market_cap": 400297084827,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LIN",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 64,
+        "technicals": 55,
+        "momentum": 81
+      },
+      "price_friday_close": 492.17,
+      "sector": "Materials",
+      "market_cap": 303787749889,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IBM",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 58,
+        "momentum": 62
+      },
+      "price_friday_close": 225.54,
+      "sector": "Technology",
+      "market_cap": 194028806042,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PFE",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 69,
+        "momentum": 49
+      },
+      "price_friday_close": 153.1,
+      "sector": "Health Care",
+      "market_cap": 441969025769,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RTX",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 57,
+        "momentum": 34
+      },
+      "price_friday_close": 387.1,
+      "sector": "Industrials",
+      "market_cap": 323682310773,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UPS",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 44,
+        "momentum": 56
+      },
+      "price_friday_close": 255.39,
+      "sector": "Industrials",
+      "market_cap": 117044463960,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HON",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 64,
+        "momentum": 67
+      },
+      "price_friday_close": 125.27,
+      "sector": "Industrials",
+      "market_cap": 138097924473,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CMCSA",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 12,
+        "momentum": 24
+      },
+      "price_friday_close": 173.14,
+      "sector": "Communication Services",
+      "market_cap": 210960883876,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "T",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 49,
+        "momentum": 40
+      },
+      "price_friday_close": 457.5,
+      "sector": "Communication Services",
+      "market_cap": 360099380747,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UNP",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 34,
+        "technicals": 39,
+        "momentum": 59
+      },
+      "price_friday_close": 162.37,
+      "sector": "Industrials",
+      "market_cap": 363980087413,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AMGN",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 43,
+        "momentum": 22
+      },
+      "price_friday_close": 157.18,
+      "sector": "Health Care",
+      "market_cap": 155457513979,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GS",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 54,
+        "momentum": 45
+      },
+      "price_friday_close": 474.15,
+      "sector": "Financials",
+      "market_cap": 124276089327,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MS",
+      "score": 76,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 85,
+        "momentum": 73
+      },
+      "price_friday_close": 143.36,
+      "sector": "Financials",
+      "market_cap": 190993835938,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LOW",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 37,
+        "momentum": 39
+      },
+      "price_friday_close": 223.63,
+      "sector": "Consumer Discretionary",
+      "market_cap": 390658850507,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CAT",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 62,
+        "momentum": 76
+      },
+      "price_friday_close": 114.49,
+      "sector": "Industrials",
+      "market_cap": 105814600743,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ELV",
+      "score": 20,
+      "score_breakdown": {
+        "fundamentals": 26,
+        "technicals": 12,
+        "momentum": 15
+      },
+      "price_friday_close": 400.14,
+      "sector": "Health Care",
+      "market_cap": 279780094914,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ISRG",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 40,
+        "momentum": 61
+      },
+      "price_friday_close": 462.0,
+      "sector": "Health Care",
+      "market_cap": 140422535484,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "INTU",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 60,
+        "momentum": 39
+      },
+      "price_friday_close": 430.26,
+      "sector": "Technology",
+      "market_cap": 393388319504,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SPGI",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 69,
+        "technicals": 56,
+        "momentum": 49
+      },
+      "price_friday_close": 63.25,
+      "sector": "Financials",
+      "market_cap": 144254148898,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NOW",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 54,
+        "momentum": 74
+      },
+      "price_friday_close": 180.67,
+      "sector": "Technology",
+      "market_cap": 403927140568,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MDT",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 76,
+        "momentum": 50
+      },
+      "price_friday_close": 389.58,
+      "sector": "Health Care",
+      "market_cap": 270772145167,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DE",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 46,
+        "momentum": 35
+      },
+      "price_friday_close": 399.19,
+      "sector": "Industrials",
+      "market_cap": 122934318909,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BKNG",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 52,
+        "momentum": 35
+      },
+      "price_friday_close": 375.05,
+      "sector": "Consumer Discretionary",
+      "market_cap": 452888568373,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AXP",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 57,
+        "momentum": 74
+      },
+      "price_friday_close": 443.27,
+      "sector": "Financials",
+      "market_cap": 203423661190,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SBUX",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 36,
+        "momentum": 61
+      },
+      "price_friday_close": 382.59,
+      "sector": "Consumer Discretionary",
+      "market_cap": 233709874380,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PLD",
+      "score": 27,
+      "score_breakdown": {
+        "fundamentals": 22,
+        "technicals": 15,
+        "momentum": 48
+      },
+      "price_friday_close": 384.7,
+      "sector": "Real Estate",
+      "market_cap": 374549346042,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GE",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 33,
+        "momentum": 28
+      },
+      "price_friday_close": 94.21,
+      "sector": "Industrials",
+      "market_cap": 158928551052,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BA",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 32,
+        "momentum": 40
+      },
+      "price_friday_close": 271.32,
+      "sector": "Industrials",
+      "market_cap": 146754518858,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BLK",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 65,
+        "momentum": 38
+      },
+      "price_friday_close": 308.02,
+      "sector": "Financials",
+      "market_cap": 225513950326,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AMAT",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 47,
+        "momentum": 56
+      },
+      "price_friday_close": 401.97,
+      "sector": "Technology",
+      "market_cap": 188870588312,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "C",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 69,
+        "technicals": 56,
+        "momentum": 56
+      },
+      "price_friday_close": 153.49,
+      "sector": "Financials",
+      "market_cap": 434777519869,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PYPL",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 52,
+        "momentum": 38
+      },
+      "price_friday_close": 351.87,
+      "sector": "Technology",
+      "market_cap": 327195737009,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SYK",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 59,
+        "momentum": 46
+      },
+      "price_friday_close": 126.72,
+      "sector": "Health Care",
+      "market_cap": 232072974429,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MMC",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 65,
+        "momentum": 55
+      },
+      "price_friday_close": 481.89,
+      "sector": "Financials",
+      "market_cap": 359619717244,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NFLX",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 38,
+        "momentum": 57
+      },
+      "price_friday_close": 462.22,
+      "sector": "Communication Services",
+      "market_cap": 319552297432,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LMT",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 50,
+        "momentum": 72
+      },
+      "price_friday_close": 201.94,
+      "sector": "Industrials",
+      "market_cap": 487434179179,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MDLZ",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 33,
+        "momentum": 31
+      },
+      "price_friday_close": 258.01,
+      "sector": "Consumer Staples",
+      "market_cap": 279318125964,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ADP",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 50,
+        "momentum": 34
+      },
+      "price_friday_close": 83.15,
+      "sector": "Technology",
+      "market_cap": 489354852817,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TJX",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 42,
+        "momentum": 36
+      },
+      "price_friday_close": 442.75,
+      "sector": "Consumer Discretionary",
+      "market_cap": 194194844318,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GILD",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 40,
+        "momentum": 17
+      },
+      "price_friday_close": 402.38,
+      "sector": "Health Care",
+      "market_cap": 157958625407,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ADI",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 66,
+        "momentum": 46
+      },
+      "price_friday_close": 490.79,
+      "sector": "Technology",
+      "market_cap": 185162889304,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CVS",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 48,
+        "momentum": 22
+      },
+      "price_friday_close": 178.61,
+      "sector": "Health Care",
+      "market_cap": 414534664807,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MO",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 52,
+        "momentum": 59
+      },
+      "price_friday_close": 194.95,
+      "sector": "Consumer Staples",
+      "market_cap": 345415549255,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SCHW",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 62,
+        "momentum": 68
+      },
+      "price_friday_close": 342.9,
+      "sector": "Financials",
+      "market_cap": 265356320831,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "REGN",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 58,
+        "momentum": 43
+      },
+      "price_friday_close": 51.25,
+      "sector": "Health Care",
+      "market_cap": 380068876161,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VRTX",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 51,
+        "momentum": 75
+      },
+      "price_friday_close": 367.48,
+      "sector": "Health Care",
+      "market_cap": 142522608423,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZTS",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 39,
+        "momentum": 43
+      },
+      "price_friday_close": 267.98,
+      "sector": "Health Care",
+      "market_cap": 247677091684,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EOG",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 36,
+        "momentum": 63
+      },
+      "price_friday_close": 200.21,
+      "sector": "Energy",
+      "market_cap": 109292435420,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CB",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 47,
+        "momentum": 64
+      },
+      "price_friday_close": 54.21,
+      "sector": "Financials",
+      "market_cap": 402419588703,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TMUS",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 26,
+        "momentum": 34
+      },
+      "price_friday_close": 474.77,
+      "sector": "Communication Services",
+      "market_cap": 189276648414,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AMT",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 17,
+        "technicals": 15,
+        "momentum": 48
+      },
+      "price_friday_close": 384.86,
+      "sector": "Real Estate",
+      "market_cap": 108533574681,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CI",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 24,
+        "technicals": 16,
+        "momentum": 40
+      },
+      "price_friday_close": 438.64,
+      "sector": "Health Care",
+      "market_cap": 151378253888,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PANW",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 25,
+        "momentum": 33
+      },
+      "price_friday_close": 447.42,
+      "sector": "Technology",
+      "market_cap": 332260824544,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SO",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 55,
+        "momentum": 66
+      },
+      "price_friday_close": 284.39,
+      "sector": "Utilities",
+      "market_cap": 141554914472,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DUK",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 22,
+        "momentum": 48
+      },
+      "price_friday_close": 153.02,
+      "sector": "Utilities",
+      "market_cap": 350498622791,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BSX",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 52,
+        "momentum": 47
+      },
+      "price_friday_close": 52.5,
+      "sector": "Health Care",
+      "market_cap": 144972205499,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FI",
+      "score": 73,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 74,
+        "momentum": 89
+      },
+      "price_friday_close": 366.61,
+      "sector": "Technology",
+      "market_cap": 467706536166,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CME",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 40,
+        "momentum": 48
+      },
+      "price_friday_close": 382.24,
+      "sector": "Financials",
+      "market_cap": 278123459873,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ICE",
+      "score": 63,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 70,
+        "momentum": 59
+      },
+      "price_friday_close": 259.02,
+      "sector": "Financials",
+      "market_cap": 235278089023,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NOC",
+      "score": 33,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 27,
+        "momentum": 28
+      },
+      "price_friday_close": 334.6,
+      "sector": "Industrials",
+      "market_cap": 206162443292,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GD",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 40,
+        "momentum": 58
+      },
+      "price_friday_close": 448.51,
+      "sector": "Industrials",
+      "market_cap": 138314242507,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "USB",
+      "score": 33,
+      "score_breakdown": {
+        "fundamentals": 33,
+        "technicals": 37,
+        "momentum": 29
+      },
+      "price_friday_close": 200.8,
+      "sector": "Financials",
+      "market_cap": 369309567164,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "APD",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 40,
+        "momentum": 57
+      },
+      "price_friday_close": 104.87,
+      "sector": "Materials",
+      "market_cap": 253764310484,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SHW",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 54,
+        "momentum": 62
+      },
+      "price_friday_close": 455.33,
+      "sector": "Materials",
+      "market_cap": 478234453830,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CCI",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 27,
+        "technicals": 33,
+        "momentum": 24
+      },
+      "price_friday_close": 192.8,
+      "sector": "Real Estate",
+      "market_cap": 440939194208,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EQIX",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 47,
+        "momentum": 80
+      },
+      "price_friday_close": 137.42,
+      "sector": "Real Estate",
+      "market_cap": 131286505029,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KMB",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 64,
+        "momentum": 56
+      },
+      "price_friday_close": 95.25,
+      "sector": "Consumer Staples",
+      "market_cap": 115586808558,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TGT",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 32,
+        "momentum": 62
+      },
+      "price_friday_close": 495.32,
+      "sector": "Consumer Discretionary",
+      "market_cap": 112160446773,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CL",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 16,
+        "technicals": 15,
+        "momentum": 48
+      },
+      "price_friday_close": 100.97,
+      "sector": "Consumer Staples",
+      "market_cap": 112658534961,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BDX",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 45,
+        "momentum": 54
+      },
+      "price_friday_close": 306.91,
+      "sector": "Health Care",
+      "market_cap": 378639700787,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ADSK",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 43,
+        "momentum": 36
+      },
+      "price_friday_close": 330.22,
+      "sector": "Technology",
+      "market_cap": 347771826956,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KLAC",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 42,
+        "momentum": 55
+      },
+      "price_friday_close": 333.7,
+      "sector": "Technology",
+      "market_cap": 413631793158,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LRCX",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 53,
+        "momentum": 36
+      },
+      "price_friday_close": 367.86,
+      "sector": "Technology",
+      "market_cap": 231712668335,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MU",
+      "score": 78,
+      "score_breakdown": {
+        "fundamentals": 73,
+        "technicals": 85,
+        "momentum": 83
+      },
+      "price_friday_close": 199.19,
+      "sector": "Technology",
+      "market_cap": 205453769454,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EMR",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 40,
+        "momentum": 40
+      },
+      "price_friday_close": 118.07,
+      "sector": "Industrials",
+      "market_cap": 212263361051,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FDX",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 30,
+        "momentum": 19
+      },
+      "price_friday_close": 159.92,
+      "sector": "Industrials",
+      "market_cap": 360395820166,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CRWD",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 65,
+        "momentum": 38
+      },
+      "price_friday_close": 153.32,
+      "sector": "Technology",
+      "market_cap": 128030648596,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ITW",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 61,
+        "momentum": 51
+      },
+      "price_friday_close": 191.89,
+      "sector": "Industrials",
+      "market_cap": 387776759986,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ETN",
+      "score": 75,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 82,
+        "momentum": 73
+      },
+      "price_friday_close": 433.95,
+      "sector": "Industrials",
+      "market_cap": 301667330563,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WM",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 58,
+        "momentum": 69
+      },
+      "price_friday_close": 391.91,
+      "sector": "Industrials",
+      "market_cap": 113329034849,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CMG",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 52,
+        "momentum": 64
+      },
+      "price_friday_close": 139.65,
+      "sector": "Consumer Discretionary",
+      "market_cap": 164077463041,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AON",
+      "score": 76,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 65,
+        "momentum": 100
+      },
+      "price_friday_close": 458.51,
+      "sector": "Financials",
+      "market_cap": 303054998275,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SNPS",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 26,
+        "technicals": 17,
+        "momentum": 45
+      },
+      "price_friday_close": 301.66,
+      "sector": "Technology",
+      "market_cap": 160771690217,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CDNS",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 33,
+        "technicals": 44,
+        "momentum": 44
+      },
+      "price_friday_close": 294.97,
+      "sector": "Technology",
+      "market_cap": 159435618845,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FTNT",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 39,
+        "momentum": 21
+      },
+      "price_friday_close": 320.75,
+      "sector": "Technology",
+      "market_cap": 272058880263,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ORLY",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 52,
+        "momentum": 39
+      },
+      "price_friday_close": 102.14,
+      "sector": "Consumer Discretionary",
+      "market_cap": 272797388629,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ROP",
+      "score": 25,
+      "score_breakdown": {
+        "fundamentals": 27,
+        "technicals": 16,
+        "momentum": 31
+      },
+      "price_friday_close": 350.39,
+      "sector": "Industrials",
+      "market_cap": 305326138403,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NXPI",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 66,
+        "momentum": 68
+      },
+      "price_friday_close": 74.07,
+      "sector": "Technology",
+      "market_cap": 299991274268,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MAR",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 46,
+        "momentum": 56
+      },
+      "price_friday_close": 228.16,
+      "sector": "Consumer Discretionary",
+      "market_cap": 205270692579,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PSX",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 12,
+        "momentum": 20
+      },
+      "price_friday_close": 142.29,
+      "sector": "Energy",
+      "market_cap": 114976405207,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MPC",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 24,
+        "technicals": 44,
+        "momentum": 35
+      },
+      "price_friday_close": 381.74,
+      "sector": "Energy",
+      "market_cap": 203338517397,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HUM",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 47,
+        "momentum": 62
+      },
+      "price_friday_close": 421.68,
+      "sector": "Health Care",
+      "market_cap": 146453340125,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TT",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 71,
+        "technicals": 74,
+        "momentum": 43
+      },
+      "price_friday_close": 389.79,
+      "sector": "Industrials",
+      "market_cap": 240711384129,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ANET",
+      "score": 85,
+      "score_breakdown": {
+        "fundamentals": 86,
+        "technicals": 88,
+        "momentum": 81
+      },
+      "price_friday_close": 269.63,
+      "sector": "Technology",
+      "market_cap": 213945155896,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PH",
+      "score": 88,
+      "score_breakdown": {
+        "fundamentals": 87,
+        "technicals": 80,
+        "momentum": 100
+      },
+      "price_friday_close": 466.87,
+      "sector": "Industrials",
+      "market_cap": 271122315110,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WELL",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 53,
+        "momentum": 59
+      },
+      "price_friday_close": 283.18,
+      "sector": "Real Estate",
+      "market_cap": 220679627475,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AJG",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 40,
+        "momentum": 19
+      },
+      "price_friday_close": 379.26,
+      "sector": "Financials",
+      "market_cap": 263498301557,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MCK",
+      "score": 21,
+      "score_breakdown": {
+        "fundamentals": 13,
+        "technicals": 23,
+        "momentum": 34
+      },
+      "price_friday_close": 277.22,
+      "sector": "Health Care",
+      "market_cap": 112259015532,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CARR",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 64,
+        "momentum": 54
+      },
+      "price_friday_close": 463.98,
+      "sector": "Industrials",
+      "market_cap": 217079131414,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MSI",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 38,
+        "momentum": 41
+      },
+      "price_friday_close": 255.43,
+      "sector": "Technology",
+      "market_cap": 221282106299,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AIG",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 40,
+        "momentum": 43
+      },
+      "price_friday_close": 247.27,
+      "sector": "Financials",
+      "market_cap": 470488410718,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GIS",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 44,
+        "momentum": 28
+      },
+      "price_friday_close": 139.78,
+      "sector": "Consumer Staples",
+      "market_cap": 133792814895,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ABNB",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 54,
+        "momentum": 39
+      },
+      "price_friday_close": 40.26,
+      "sector": "Consumer Discretionary",
+      "market_cap": 116555624080,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "COF",
+      "score": 69,
+      "score_breakdown": {
+        "fundamentals": 77,
+        "technicals": 67,
+        "momentum": 56
+      },
+      "price_friday_close": 393.85,
+      "sector": "Financials",
+      "market_cap": 200408925955,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EA",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 41,
+        "momentum": 64
+      },
+      "price_friday_close": 54.79,
+      "sector": "Communication Services",
+      "market_cap": 325589988735,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TRV",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 48,
+        "momentum": 37
+      },
+      "price_friday_close": 110.97,
+      "sector": "Financials",
+      "market_cap": 250265481513,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KHC",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 22,
+        "momentum": 44
+      },
+      "price_friday_close": 116.99,
+      "sector": "Consumer Staples",
+      "market_cap": 454761923602,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JCI",
+      "score": 20,
+      "score_breakdown": {
+        "fundamentals": 26,
+        "technicals": 17,
+        "momentum": 10
+      },
+      "price_friday_close": 190.07,
+      "sector": "Industrials",
+      "market_cap": 274158690286,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CTAS",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 33,
+        "momentum": 44
+      },
+      "price_friday_close": 229.64,
+      "sector": "Industrials",
+      "market_cap": 280822643219,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "APH",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 41,
+        "momentum": 42
+      },
+      "price_friday_close": 146.11,
+      "sector": "Technology",
+      "market_cap": 339600020325,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ECL",
+      "score": 82,
+      "score_breakdown": {
+        "fundamentals": 77,
+        "technicals": 91,
+        "momentum": 83
+      },
+      "price_friday_close": 270.1,
+      "sector": "Materials",
+      "market_cap": 429656449560,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WMB",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 45,
+        "momentum": 46
+      },
+      "price_friday_close": 430.88,
+      "sector": "Energy",
+      "market_cap": 337665298332,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FCX",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 73,
+        "momentum": 63
+      },
+      "price_friday_close": 143.02,
+      "sector": "Materials",
+      "market_cap": 499058249040,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SLB",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 38,
+        "momentum": 32
+      },
+      "price_friday_close": 155.2,
+      "sector": "Energy",
+      "market_cap": 158682557548,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VLO",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 34,
+        "momentum": 22
+      },
+      "price_friday_close": 307.92,
+      "sector": "Energy",
+      "market_cap": 152664892478,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OKE",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 39,
+        "momentum": 18
+      },
+      "price_friday_close": 495.53,
+      "sector": "Energy",
+      "market_cap": 494814528074,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DG",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 27,
+        "momentum": 44
+      },
+      "price_friday_close": 165.17,
+      "sector": "Consumer Staples",
+      "market_cap": 56566561605,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AZO",
+      "score": 81,
+      "score_breakdown": {
+        "fundamentals": 87,
+        "technicals": 90,
+        "momentum": 59
+      },
+      "price_friday_close": 234.24,
+      "sector": "Consumer Discretionary",
+      "market_cap": 84485382294,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DLR",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 26,
+        "momentum": 35
+      },
+      "price_friday_close": 139.21,
+      "sector": "Real Estate",
+      "market_cap": 38345609369,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EW",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 71,
+        "momentum": 69
+      },
+      "price_friday_close": 86.25,
+      "sector": "Health Care",
+      "market_cap": 81770009627,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HSY",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 26,
+        "technicals": 45,
+        "momentum": 38
+      },
+      "price_friday_close": 246.62,
+      "sector": "Consumer Staples",
+      "market_cap": 50943415048,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PSA",
+      "score": 67,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 72,
+        "momentum": 65
+      },
+      "price_friday_close": 227.94,
+      "sector": "Real Estate",
+      "market_cap": 98215772200,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DDOG",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 54,
+        "momentum": 47
+      },
+      "price_friday_close": 78.25,
+      "sector": "Technology",
+      "market_cap": 78453608415,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MRNA",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 50,
+        "momentum": 50
+      },
+      "price_friday_close": 143.61,
+      "sector": "Health Care",
+      "market_cap": 44145550701,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HCA",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 47,
+        "momentum": 49
+      },
+      "price_friday_close": 133.79,
+      "sector": "Health Care",
+      "market_cap": 58930459129,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IQV",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 49,
+        "momentum": 25
+      },
+      "price_friday_close": 110.96,
+      "sector": "Health Care",
+      "market_cap": 64568784633,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WBA",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 51,
+        "momentum": 66
+      },
+      "price_friday_close": 93.38,
+      "sector": "Consumer Staples",
+      "market_cap": 73934731169,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DVN",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 39,
+        "momentum": 48
+      },
+      "price_friday_close": 44.9,
+      "sector": "Energy",
+      "market_cap": 44670954055,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PNC",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 22,
+        "technicals": 20,
+        "momentum": 48
+      },
+      "price_friday_close": 214.87,
+      "sector": "Financials",
+      "market_cap": 37652590263,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TFC",
+      "score": 27,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 23,
+        "momentum": 25
+      },
+      "price_friday_close": 68.55,
+      "sector": "Financials",
+      "market_cap": 51342002551,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "COP",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 47,
+        "momentum": 45
+      },
+      "price_friday_close": 145.19,
+      "sector": "Energy",
+      "market_cap": 74845307383,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OXY",
+      "score": 78,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 85,
+        "momentum": 85
+      },
+      "price_friday_close": 89.34,
+      "sector": "Energy",
+      "market_cap": 30773952805,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KMI",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 48,
+        "momentum": 46
+      },
+      "price_friday_close": 169.13,
+      "sector": "Energy",
+      "market_cap": 37125433245,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HES",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 40,
+        "momentum": 65
+      },
+      "price_friday_close": 30.26,
+      "sector": "Energy",
+      "market_cap": 41776219866,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FANG",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 54,
+        "momentum": 55
+      },
+      "price_friday_close": 151.71,
+      "sector": "Energy",
+      "market_cap": 32051295849,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BK",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 63,
+        "momentum": 92
+      },
+      "price_friday_close": 214.47,
+      "sector": "Financials",
+      "market_cap": 30794984368,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ALL",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 65,
+        "momentum": 44
+      },
+      "price_friday_close": 157.54,
+      "sector": "Financials",
+      "market_cap": 36172215160,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PRU",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 42,
+        "momentum": 38
+      },
+      "price_friday_close": 119.07,
+      "sector": "Financials",
+      "market_cap": 51243545765,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MET",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 64,
+        "technicals": 64,
+        "momentum": 88
+      },
+      "price_friday_close": 203.65,
+      "sector": "Financials",
+      "market_cap": 32708637556,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PGR",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 64,
+        "momentum": 58
+      },
+      "price_friday_close": 17.59,
+      "sector": "Financials",
+      "market_cap": 87918327429,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AFL",
+      "score": 78,
+      "score_breakdown": {
+        "fundamentals": 84,
+        "technicals": 87,
+        "momentum": 56
+      },
+      "price_friday_close": 227.42,
+      "sector": "Financials",
+      "market_cap": 37197142802,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HIG",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 65,
+        "momentum": 26
+      },
+      "price_friday_close": 50.26,
+      "sector": "Financials",
+      "market_cap": 58135282275,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TROW",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 18,
+        "momentum": 24
+      },
+      "price_friday_close": 170.1,
+      "sector": "Financials",
+      "market_cap": 38296234352,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NTRS",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 20,
+        "technicals": 21,
+        "momentum": 42
+      },
+      "price_friday_close": 155.87,
+      "sector": "Financials",
+      "market_cap": 71798036132,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STT",
+      "score": 80,
+      "score_breakdown": {
+        "fundamentals": 81,
+        "technicals": 70,
+        "momentum": 88
+      },
+      "price_friday_close": 131.1,
+      "sector": "Financials",
+      "market_cap": 94515336237,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RF",
+      "score": 81,
+      "score_breakdown": {
+        "fundamentals": 87,
+        "technicals": 84,
+        "momentum": 67
+      },
+      "price_friday_close": 127.15,
+      "sector": "Financials",
+      "market_cap": 43065258198,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KEY",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 39,
+        "momentum": 53
+      },
+      "price_friday_close": 67.74,
+      "sector": "Financials",
+      "market_cap": 46257601993,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FITB",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 35,
+        "momentum": 59
+      },
+      "price_friday_close": 97.77,
+      "sector": "Financials",
+      "market_cap": 31706949496,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HBAN",
+      "score": 76,
+      "score_breakdown": {
+        "fundamentals": 82,
+        "technicals": 78,
+        "momentum": 63
+      },
+      "price_friday_close": 19.33,
+      "sector": "Financials",
+      "market_cap": 70648359520,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MTB",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 34,
+        "technicals": 25,
+        "momentum": 27
+      },
+      "price_friday_close": 166.34,
+      "sector": "Financials",
+      "market_cap": 50904756534,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CFG",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 32,
+        "momentum": 40
+      },
+      "price_friday_close": 197.51,
+      "sector": "Financials",
+      "market_cap": 62558825917,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BKR",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 68,
+        "momentum": 47
+      },
+      "price_friday_close": 182.25,
+      "sector": "Energy",
+      "market_cap": 79602147942,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HAL",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 53,
+        "momentum": 42
+      },
+      "price_friday_close": 126.63,
+      "sector": "Energy",
+      "market_cap": 33952517762,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BIIB",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 59,
+        "momentum": 53
+      },
+      "price_friday_close": 72.71,
+      "sector": "Health Care",
+      "market_cap": 62033945572,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IDXX",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 41,
+        "momentum": 65
+      },
+      "price_friday_close": 67.54,
+      "sector": "Health Care",
+      "market_cap": 31576987539,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DXCM",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 48,
+        "momentum": 53
+      },
+      "price_friday_close": 112.27,
+      "sector": "Health Care",
+      "market_cap": 51877121297,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ILMN",
+      "score": 75,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 74,
+        "momentum": 79
+      },
+      "price_friday_close": 208.74,
+      "sector": "Health Care",
+      "market_cap": 37110487908,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "A",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 57,
+        "momentum": 55
+      },
+      "price_friday_close": 62.32,
+      "sector": "Health Care",
+      "market_cap": 91441457259,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CAH",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 71,
+        "momentum": 41
+      },
+      "price_friday_close": 19.2,
+      "sector": "Health Care",
+      "market_cap": 91870308441,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BAX",
+      "score": 22,
+      "score_breakdown": {
+        "fundamentals": 19,
+        "technicals": 23,
+        "momentum": 26
+      },
+      "price_friday_close": 238.7,
+      "sector": "Health Care",
+      "market_cap": 91361763074,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HOLX",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 43,
+        "momentum": 63
+      },
+      "price_friday_close": 194.31,
+      "sector": "Health Care",
+      "market_cap": 30438476941,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RMD",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 45,
+        "momentum": 35
+      },
+      "price_friday_close": 227.89,
+      "sector": "Health Care",
+      "market_cap": 96475943754,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WAT",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 34,
+        "technicals": 35,
+        "momentum": 9
+      },
+      "price_friday_close": 144.33,
+      "sector": "Health Care",
+      "market_cap": 96535036657,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MTD",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 34,
+        "technicals": 34,
+        "momentum": 34
+      },
+      "price_friday_close": 214.7,
+      "sector": "Health Care",
+      "market_cap": 32960017914,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STE",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 45,
+        "momentum": 42
+      },
+      "price_friday_close": 159.46,
+      "sector": "Health Care",
+      "market_cap": 62817261991,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZBH",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 58,
+        "momentum": 77
+      },
+      "price_friday_close": 149.38,
+      "sector": "Health Care",
+      "market_cap": 49578604532,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ALGN",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 20,
+        "technicals": 37,
+        "momentum": 27
+      },
+      "price_friday_close": 188.85,
+      "sector": "Health Care",
+      "market_cap": 36093155859,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "COO",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 50,
+        "technicals": 61,
+        "momentum": 40
+      },
+      "price_friday_close": 186.5,
+      "sector": "Health Care",
+      "market_cap": 32835694793,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LH",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 43,
+        "momentum": 51
+      },
+      "price_friday_close": 126.03,
+      "sector": "Health Care",
+      "market_cap": 83374650636,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DGX",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 38,
+        "momentum": 59
+      },
+      "price_friday_close": 88.37,
+      "sector": "Health Care",
+      "market_cap": 55424363819,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CNC",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 59,
+        "momentum": 92
+      },
+      "price_friday_close": 187.28,
+      "sector": "Health Care",
+      "market_cap": 96389680910,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CRL",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 55,
+        "momentum": 51
+      },
+      "price_friday_close": 56.08,
+      "sector": "Health Care",
+      "market_cap": 46779710142,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PODD",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 76,
+        "technicals": 73,
+        "momentum": 71
+      },
+      "price_friday_close": 124.02,
+      "sector": "Health Care",
+      "market_cap": 39078218457,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "INCY",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 48,
+        "momentum": 50
+      },
+      "price_friday_close": 187.52,
+      "sector": "Health Care",
+      "market_cap": 93319034582,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VTRS",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 49,
+        "momentum": 36
+      },
+      "price_friday_close": 217.0,
+      "sector": "Health Care",
+      "market_cap": 38874752377,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TFX",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 52,
+        "momentum": 30
+      },
+      "price_friday_close": 215.15,
+      "sector": "Health Care",
+      "market_cap": 47301429921,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HSIC",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 46,
+        "momentum": 64
+      },
+      "price_friday_close": 160.39,
+      "sector": "Health Care",
+      "market_cap": 40132927195,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BIO",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 49,
+        "momentum": 44
+      },
+      "price_friday_close": 75.61,
+      "sector": "Health Care",
+      "market_cap": 91549833082,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RVTY",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 23,
+        "technicals": 27,
+        "momentum": 49
+      },
+      "price_friday_close": 247.02,
+      "sector": "Health Care",
+      "market_cap": 69093603111,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SBAC",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 55,
+        "momentum": 39
+      },
+      "price_friday_close": 35.77,
+      "sector": "Real Estate",
+      "market_cap": 35963826861,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AVB",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 61,
+        "momentum": 39
+      },
+      "price_friday_close": 94.84,
+      "sector": "Real Estate",
+      "market_cap": 67552836738,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EQR",
+      "score": 86,
+      "score_breakdown": {
+        "fundamentals": 81,
+        "technicals": 96,
+        "momentum": 85
+      },
+      "price_friday_close": 126.7,
+      "sector": "Real Estate",
+      "market_cap": 32686880677,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ESS",
+      "score": 90,
+      "score_breakdown": {
+        "fundamentals": 89,
+        "technicals": 93,
+        "momentum": 89
+      },
+      "price_friday_close": 82.0,
+      "sector": "Real Estate",
+      "market_cap": 74345026727,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "INVH",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 27,
+        "technicals": 46,
+        "momentum": 39
+      },
+      "price_friday_close": 213.74,
+      "sector": "Real Estate",
+      "market_cap": 44906596995,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MAA",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 34,
+        "momentum": 62
+      },
+      "price_friday_close": 213.04,
+      "sector": "Real Estate",
+      "market_cap": 56112007121,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CPT",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 23,
+        "technicals": 15,
+        "momentum": 34
+      },
+      "price_friday_close": 238.95,
+      "sector": "Real Estate",
+      "market_cap": 51348626609,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UDR",
+      "score": 40,
+      "score_breakdown": {
+        "fundamentals": 34,
+        "technicals": 43,
+        "momentum": 47
+      },
+      "price_friday_close": 42.24,
+      "sector": "Real Estate",
+      "market_cap": 65676184348,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ARE",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 66,
+        "momentum": 49
+      },
+      "price_friday_close": 129.98,
+      "sector": "Real Estate",
+      "market_cap": 87079828663,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BXP",
+      "score": 72,
+      "score_breakdown": {
+        "fundamentals": 69,
+        "technicals": 77,
+        "momentum": 72
+      },
+      "price_friday_close": 50.88,
+      "sector": "Real Estate",
+      "market_cap": 35577977864,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HST",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 41,
+        "momentum": 34
+      },
+      "price_friday_close": 26.13,
+      "sector": "Real Estate",
+      "market_cap": 68646458394,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "REG",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 38,
+        "momentum": 36
+      },
+      "price_friday_close": 47.85,
+      "sector": "Real Estate",
+      "market_cap": 42361862176,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FRT",
+      "score": 29,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 25,
+        "momentum": 18
+      },
+      "price_friday_close": 112.37,
+      "sector": "Real Estate",
+      "market_cap": 51021270353,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KIM",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 51,
+        "momentum": 53
+      },
+      "price_friday_close": 80.71,
+      "sector": "Real Estate",
+      "market_cap": 56234048365,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VTR",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 20,
+        "momentum": 31
+      },
+      "price_friday_close": 159.38,
+      "sector": "Real Estate",
+      "market_cap": 31180003997,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "O",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 50,
+        "momentum": 33
+      },
+      "price_friday_close": 168.06,
+      "sector": "Real Estate",
+      "market_cap": 47046839644,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EXR",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 46,
+        "momentum": 14
+      },
+      "price_friday_close": 18.24,
+      "sector": "Real Estate",
+      "market_cap": 34193291136,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CTSH",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 52,
+        "momentum": 43
+      },
+      "price_friday_close": 122.29,
+      "sector": "Technology",
+      "market_cap": 40452842120,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KEYS",
+      "score": 9,
+      "score_breakdown": {
+        "fundamentals": 6,
+        "technicals": 20,
+        "momentum": 5
+      },
+      "price_friday_close": 205.42,
+      "sector": "Technology",
+      "market_cap": 48213994512,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SWKS",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 21,
+        "technicals": 29,
+        "momentum": 22
+      },
+      "price_friday_close": 139.65,
+      "sector": "Technology",
+      "market_cap": 47280768619,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QRVO",
+      "score": 95,
+      "score_breakdown": {
+        "fundamentals": 93,
+        "technicals": 96,
+        "momentum": 97
+      },
+      "price_friday_close": 20.13,
+      "sector": "Technology",
+      "market_cap": 61299642681,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MCHP",
+      "score": 27,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 27,
+        "momentum": 20
+      },
+      "price_friday_close": 96.04,
+      "sector": "Technology",
+      "market_cap": 55779362760,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MPWR",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 28,
+        "momentum": 19
+      },
+      "price_friday_close": 38.57,
+      "sector": "Technology",
+      "market_cap": 49819536106,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ON",
+      "score": 89,
+      "score_breakdown": {
+        "fundamentals": 91,
+        "technicals": 85,
+        "momentum": 88
+      },
+      "price_friday_close": 236.46,
+      "sector": "Technology",
+      "market_cap": 76991271121,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TER",
+      "score": 92,
+      "score_breakdown": {
+        "fundamentals": 91,
+        "technicals": 91,
+        "momentum": 96
+      },
+      "price_friday_close": 156.32,
+      "sector": "Technology",
+      "market_cap": 30815211134,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ENPH",
+      "score": 29,
+      "score_breakdown": {
+        "fundamentals": 23,
+        "technicals": 19,
+        "momentum": 51
+      },
+      "price_friday_close": 81.93,
+      "sector": "Technology",
+      "market_cap": 75252179406,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SEDG",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 47,
+        "momentum": 34
+      },
+      "price_friday_close": 163.6,
+      "sector": "Technology",
+      "market_cap": 77431439075,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HPQ",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 45,
+        "momentum": 62
+      },
+      "price_friday_close": 245.54,
+      "sector": "Technology",
+      "market_cap": 91824938477,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DELL",
+      "score": 86,
+      "score_breakdown": {
+        "fundamentals": 83,
+        "technicals": 79,
+        "momentum": 99
+      },
+      "price_friday_close": 119.56,
+      "sector": "Technology",
+      "market_cap": 31569168100,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HPE",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 41,
+        "momentum": 15
+      },
+      "price_friday_close": 49.48,
+      "sector": "Technology",
+      "market_cap": 57960155608,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NTAP",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 50,
+        "momentum": 50
+      },
+      "price_friday_close": 247.1,
+      "sector": "Technology",
+      "market_cap": 44973632607,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JNPR",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 59,
+        "momentum": 81
+      },
+      "price_friday_close": 121.34,
+      "sector": "Technology",
+      "market_cap": 30591996109,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WDC",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 53,
+        "momentum": 75
+      },
+      "price_friday_close": 91.12,
+      "sector": "Technology",
+      "market_cap": 82742272784,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STX",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 53,
+        "momentum": 28
+      },
+      "price_friday_close": 244.84,
+      "sector": "Technology",
+      "market_cap": 53456152078,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WDAY",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 49,
+        "momentum": 56
+      },
+      "price_friday_close": 45.77,
+      "sector": "Technology",
+      "market_cap": 53140331480,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TEAM",
+      "score": 25,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 36,
+        "momentum": 8
+      },
+      "price_friday_close": 237.17,
+      "sector": "Technology",
+      "market_cap": 31927530128,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZS",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 40,
+        "momentum": 48
+      },
+      "price_friday_close": 133.46,
+      "sector": "Technology",
+      "market_cap": 41314961007,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NET",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 41,
+        "momentum": 45
+      },
+      "price_friday_close": 114.56,
+      "sector": "Technology",
+      "market_cap": 33461644458,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SNOW",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 52,
+        "momentum": 41
+      },
+      "price_friday_close": 133.07,
+      "sector": "Technology",
+      "market_cap": 91929238281,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MDB",
+      "score": 40,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 29,
+        "momentum": 46
+      },
+      "price_friday_close": 75.83,
+      "sector": "Technology",
+      "market_cap": 96584444067,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PLTR",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 67,
+        "momentum": 53
+      },
+      "price_friday_close": 216.99,
+      "sector": "Technology",
+      "market_cap": 55072810048,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SMCI",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 67,
+        "momentum": 66
+      },
+      "price_friday_close": 80.68,
+      "sector": "Technology",
+      "market_cap": 51463922387,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AKAM",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 61,
+        "momentum": 30
+      },
+      "price_friday_close": 106.62,
+      "sector": "Technology",
+      "market_cap": 84029376167,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FFIV",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 57,
+        "momentum": 61
+      },
+      "price_friday_close": 244.48,
+      "sector": "Technology",
+      "market_cap": 56836219554,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ANSS",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 54,
+        "momentum": 48
+      },
+      "price_friday_close": 85.83,
+      "sector": "Technology",
+      "market_cap": 37551682983,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PTC",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 44,
+        "momentum": 61
+      },
+      "price_friday_close": 107.08,
+      "sector": "Technology",
+      "market_cap": 31143461988,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TYL",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 47,
+        "momentum": 14
+      },
+      "price_friday_close": 174.81,
+      "sector": "Technology",
+      "market_cap": 38176219209,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EPAM",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 67,
+        "momentum": 33
+      },
+      "price_friday_close": 173.58,
+      "sector": "Technology",
+      "market_cap": 37319033830,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JKHY",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 55,
+        "momentum": 34
+      },
+      "price_friday_close": 98.48,
+      "sector": "Technology",
+      "market_cap": 41199026680,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FICO",
+      "score": 95,
+      "score_breakdown": {
+        "fundamentals": 99,
+        "technicals": 95,
+        "momentum": 87
+      },
+      "price_friday_close": 183.44,
+      "sector": "Technology",
+      "market_cap": 45659702212,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CDW",
+      "score": 78,
+      "score_breakdown": {
+        "fundamentals": 78,
+        "technicals": 72,
+        "momentum": 86
+      },
+      "price_friday_close": 99.91,
+      "sector": "Technology",
+      "market_cap": 52607665835,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LDOS",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 52,
+        "momentum": 57
+      },
+      "price_friday_close": 149.41,
+      "sector": "Industrials",
+      "market_cap": 83741271781,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TRMB",
+      "score": 36,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 38,
+        "momentum": 42
+      },
+      "price_friday_close": 226.52,
+      "sector": "Technology",
+      "market_cap": 38808677759,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CTVA",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 23,
+        "momentum": 40
+      },
+      "price_friday_close": 24.16,
+      "sector": "Materials",
+      "market_cap": 45319573238,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NUE",
+      "score": 71,
+      "score_breakdown": {
+        "fundamentals": 76,
+        "technicals": 80,
+        "momentum": 53
+      },
+      "price_friday_close": 44.13,
+      "sector": "Materials",
+      "market_cap": 54417326247,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STLD",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 43,
+        "momentum": 77
+      },
+      "price_friday_close": 190.57,
+      "sector": "Materials",
+      "market_cap": 39977008231,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VMC",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 66,
+        "momentum": 57
+      },
+      "price_friday_close": 204.63,
+      "sector": "Materials",
+      "market_cap": 35114670604,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MLM",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 17,
+        "momentum": 24
+      },
+      "price_friday_close": 157.54,
+      "sector": "Materials",
+      "market_cap": 92685151036,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NEM",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 71,
+        "technicals": 57,
+        "momentum": 67
+      },
+      "price_friday_close": 182.69,
+      "sector": "Materials",
+      "market_cap": 70559091084,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ALB",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 70,
+        "momentum": 50
+      },
+      "price_friday_close": 95.26,
+      "sector": "Materials",
+      "market_cap": 99137835751,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CE",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 25,
+        "technicals": 22,
+        "momentum": 48
+      },
+      "price_friday_close": 137.0,
+      "sector": "Materials",
+      "market_cap": 36498539291,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FMC",
+      "score": 41,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 44,
+        "momentum": 41
+      },
+      "price_friday_close": 56.81,
+      "sector": "Materials",
+      "market_cap": 57009370588,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IFF",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 66,
+        "momentum": 29
+      },
+      "price_friday_close": 18.32,
+      "sector": "Materials",
+      "market_cap": 62762919684,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LYB",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 42,
+        "momentum": 73
+      },
+      "price_friday_close": 77.17,
+      "sector": "Materials",
+      "market_cap": 91659892809,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MOS",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 39,
+        "momentum": 41
+      },
+      "price_friday_close": 40.44,
+      "sector": "Materials",
+      "market_cap": 31463457614,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CF",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 52,
+        "momentum": 32
+      },
+      "price_friday_close": 79.37,
+      "sector": "Materials",
+      "market_cap": 40062894496,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EMN",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 53,
+        "momentum": 50
+      },
+      "price_friday_close": 80.65,
+      "sector": "Materials",
+      "market_cap": 31208788216,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PPG",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 51,
+        "momentum": 65
+      },
+      "price_friday_close": 103.98,
+      "sector": "Materials",
+      "market_cap": 37844815107,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DD",
+      "score": 76,
+      "score_breakdown": {
+        "fundamentals": 77,
+        "technicals": 77,
+        "momentum": 75
+      },
+      "price_friday_close": 94.67,
+      "sector": "Materials",
+      "market_cap": 47699879063,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DOW",
+      "score": 8,
+      "score_breakdown": {
+        "fundamentals": 11,
+        "technicals": 12,
+        "momentum": 0
+      },
+      "price_friday_close": 36.09,
+      "sector": "Materials",
+      "market_cap": 44523129550,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PKG",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 58,
+        "momentum": 18
+      },
+      "price_friday_close": 62.5,
+      "sector": "Materials",
+      "market_cap": 30924336179,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SEE",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 43,
+        "momentum": 62
+      },
+      "price_friday_close": 247.84,
+      "sector": "Materials",
+      "market_cap": 74603148743,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IP",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 67,
+        "momentum": 37
+      },
+      "price_friday_close": 133.49,
+      "sector": "Materials",
+      "market_cap": 91754602075,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PXD",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 42,
+        "momentum": 50
+      },
+      "price_friday_close": 88.93,
+      "sector": "Energy",
+      "market_cap": 56911580304,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EQT",
+      "score": 15,
+      "score_breakdown": {
+        "fundamentals": 14,
+        "technicals": 4,
+        "momentum": 28
+      },
+      "price_friday_close": 194.72,
+      "sector": "Energy",
+      "market_cap": 76172417186,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CTRA",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 52,
+        "momentum": 54
+      },
+      "price_friday_close": 225.44,
+      "sector": "Energy",
+      "market_cap": 82903587781,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "APA",
+      "score": 81,
+      "score_breakdown": {
+        "fundamentals": 86,
+        "technicals": 89,
+        "momentum": 64
+      },
+      "price_friday_close": 195.22,
+      "sector": "Energy",
+      "market_cap": 50609639601,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MRO",
+      "score": 22,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 20,
+        "momentum": 14
+      },
+      "price_friday_close": 87.49,
+      "sector": "Energy",
+      "market_cap": 79208175584,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LNG",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 63,
+        "technicals": 72,
+        "momentum": 65
+      },
+      "price_friday_close": 37.17,
+      "sector": "Energy",
+      "market_cap": 91833740353,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ETR",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 44,
+        "momentum": 35
+      },
+      "price_friday_close": 195.97,
+      "sector": "Utilities",
+      "market_cap": 99312399620,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "XEL",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 40,
+        "momentum": 45
+      },
+      "price_friday_close": 169.21,
+      "sector": "Utilities",
+      "market_cap": 33565307380,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AEP",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 21,
+        "momentum": 29
+      },
+      "price_friday_close": 195.99,
+      "sector": "Utilities",
+      "market_cap": 31260285651,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "D",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 45,
+        "momentum": 54
+      },
+      "price_friday_close": 156.57,
+      "sector": "Utilities",
+      "market_cap": 78526805978,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SRE",
+      "score": 73,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 63,
+        "momentum": 98
+      },
+      "price_friday_close": 38.0,
+      "sector": "Utilities",
+      "market_cap": 84169615126,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EXC",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 59,
+        "momentum": 78
+      },
+      "price_friday_close": 112.33,
+      "sector": "Utilities",
+      "market_cap": 41821149628,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PCG",
+      "score": 85,
+      "score_breakdown": {
+        "fundamentals": 89,
+        "technicals": 74,
+        "momentum": 87
+      },
+      "price_friday_close": 120.33,
+      "sector": "Utilities",
+      "market_cap": 31573419204,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WEC",
+      "score": 72,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 79,
+        "momentum": 59
+      },
+      "price_friday_close": 107.29,
+      "sector": "Utilities",
+      "market_cap": 41285327486,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ED",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 49,
+        "momentum": 77
+      },
+      "price_friday_close": 221.66,
+      "sector": "Utilities",
+      "market_cap": 50049343541,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ES",
+      "score": 91,
+      "score_breakdown": {
+        "fundamentals": 97,
+        "technicals": 99,
+        "momentum": 72
+      },
+      "price_friday_close": 225.03,
+      "sector": "Utilities",
+      "market_cap": 41540986155,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DTE",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 66,
+        "momentum": 49
+      },
+      "price_friday_close": 92.03,
+      "sector": "Utilities",
+      "market_cap": 50101694943,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AEE",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 62,
+        "momentum": 80
+      },
+      "price_friday_close": 113.17,
+      "sector": "Utilities",
+      "market_cap": 54938161861,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PPL",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 39,
+        "momentum": 43
+      },
+      "price_friday_close": 133.13,
+      "sector": "Utilities",
+      "market_cap": 40897406372,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CMS",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 51,
+        "momentum": 43
+      },
+      "price_friday_close": 97.7,
+      "sector": "Utilities",
+      "market_cap": 36015973195,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CNP",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 37,
+        "momentum": 30
+      },
+      "price_friday_close": 112.15,
+      "sector": "Utilities",
+      "market_cap": 59287199267,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NI",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 61,
+        "momentum": 79
+      },
+      "price_friday_close": 75.33,
+      "sector": "Utilities",
+      "market_cap": 80896087240,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LNT",
+      "score": 29,
+      "score_breakdown": {
+        "fundamentals": 24,
+        "technicals": 35,
+        "momentum": 32
+      },
+      "price_friday_close": 199.41,
+      "sector": "Utilities",
+      "market_cap": 96426011010,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EVRG",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 54,
+        "momentum": 86
+      },
+      "price_friday_close": 211.96,
+      "sector": "Utilities",
+      "market_cap": 96173424856,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PNW",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 39,
+        "momentum": 65
+      },
+      "price_friday_close": 138.72,
+      "sector": "Utilities",
+      "market_cap": 35597899872,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ATO",
+      "score": 71,
+      "score_breakdown": {
+        "fundamentals": 76,
+        "technicals": 69,
+        "momentum": 63
+      },
+      "price_friday_close": 207.28,
+      "sector": "Utilities",
+      "market_cap": 36812847404,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CEG",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 71,
+        "technicals": 55,
+        "momentum": 57
+      },
+      "price_friday_close": 76.91,
+      "sector": "Utilities",
+      "market_cap": 60613201906,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VST",
+      "score": 83,
+      "score_breakdown": {
+        "fundamentals": 85,
+        "technicals": 82,
+        "momentum": 79
+      },
+      "price_friday_close": 42.07,
+      "sector": "Utilities",
+      "market_cap": 91873190572,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CPB",
+      "score": 63,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 72,
+        "momentum": 58
+      },
+      "price_friday_close": 184.44,
+      "sector": "Consumer Staples",
+      "market_cap": 59149751002,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LW",
+      "score": 22,
+      "score_breakdown": {
+        "fundamentals": 29,
+        "technicals": 31,
+        "momentum": 0
+      },
+      "price_friday_close": 155.5,
+      "sector": "Consumer Staples",
+      "market_cap": 32202671668,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MKC",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 42,
+        "momentum": 65
+      },
+      "price_friday_close": 30.87,
+      "sector": "Consumer Staples",
+      "market_cap": 80119578994,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CAG",
+      "score": 29,
+      "score_breakdown": {
+        "fundamentals": 31,
+        "technicals": 24,
+        "momentum": 29
+      },
+      "price_friday_close": 75.76,
+      "sector": "Consumer Staples",
+      "market_cap": 55585589615,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ADM",
+      "score": 40,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 42,
+        "momentum": 32
+      },
+      "price_friday_close": 42.89,
+      "sector": "Consumer Staples",
+      "market_cap": 66642358749,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BG",
+      "score": 77,
+      "score_breakdown": {
+        "fundamentals": 78,
+        "technicals": 85,
+        "momentum": 68
+      },
+      "price_friday_close": 225.26,
+      "sector": "Consumer Staples",
+      "market_cap": 92701237356,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TSN",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 50,
+        "momentum": 66
+      },
+      "price_friday_close": 90.97,
+      "sector": "Consumer Staples",
+      "market_cap": 37528683183,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HRL",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 40,
+        "momentum": 49
+      },
+      "price_friday_close": 183.74,
+      "sector": "Consumer Staples",
+      "market_cap": 60867167633,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SJM",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 26,
+        "momentum": 38
+      },
+      "price_friday_close": 51.73,
+      "sector": "Consumer Staples",
+      "market_cap": 51118332263,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CLX",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 57,
+        "momentum": 47
+      },
+      "price_friday_close": 249.94,
+      "sector": "Consumer Staples",
+      "market_cap": 34007903304,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CHD",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 33,
+        "technicals": 30,
+        "momentum": 16
+      },
+      "price_friday_close": 220.04,
+      "sector": "Consumer Staples",
+      "market_cap": 51905717727,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EL",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 32,
+        "momentum": 47
+      },
+      "price_friday_close": 231.75,
+      "sector": "Consumer Staples",
+      "market_cap": 53622297123,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STZ",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 51,
+        "momentum": 59
+      },
+      "price_friday_close": 41.79,
+      "sector": "Consumer Staples",
+      "market_cap": 33343314644,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "K",
+      "score": 71,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 75,
+        "momentum": 65
+      },
+      "price_friday_close": 237.66,
+      "sector": "Consumer Staples",
+      "market_cap": 91876864730,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DHI",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 49,
+        "momentum": 87
+      },
+      "price_friday_close": 98.46,
+      "sector": "Consumer Discretionary",
+      "market_cap": 43820801706,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LEN",
+      "score": 15,
+      "score_breakdown": {
+        "fundamentals": 10,
+        "technicals": 24,
+        "momentum": 15
+      },
+      "price_friday_close": 112.8,
+      "sector": "Consumer Discretionary",
+      "market_cap": 51724686344,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PHM",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 48,
+        "momentum": 59
+      },
+      "price_friday_close": 226.12,
+      "sector": "Consumer Discretionary",
+      "market_cap": 37713067531,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NVR",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 51,
+        "momentum": 40
+      },
+      "price_friday_close": 180.74,
+      "sector": "Consumer Discretionary",
+      "market_cap": 40697751451,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TOL",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 68,
+        "momentum": 48
+      },
+      "price_friday_close": 24.11,
+      "sector": "Consumer Discretionary",
+      "market_cap": 32526365002,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KBH",
+      "score": 79,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 72,
+        "momentum": 100
+      },
+      "price_friday_close": 94.67,
+      "sector": "Consumer Discretionary",
+      "market_cap": 65908742247,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "F",
+      "score": 6,
+      "score_breakdown": {
+        "fundamentals": 6,
+        "technicals": 0,
+        "momentum": 10
+      },
+      "price_friday_close": 37.09,
+      "sector": "Consumer Discretionary",
+      "market_cap": 66046078983,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GM",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 32,
+        "momentum": 40
+      },
+      "price_friday_close": 190.9,
+      "sector": "Consumer Discretionary",
+      "market_cap": 94140901419,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HLT",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 54,
+        "momentum": 80
+      },
+      "price_friday_close": 47.07,
+      "sector": "Consumer Discretionary",
+      "market_cap": 86159419860,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YUM",
+      "score": 22,
+      "score_breakdown": {
+        "fundamentals": 20,
+        "technicals": 14,
+        "momentum": 32
+      },
+      "price_friday_close": 101.56,
+      "sector": "Consumer Discretionary",
+      "market_cap": 44108939921,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DPZ",
+      "score": 77,
+      "score_breakdown": {
+        "fundamentals": 71,
+        "technicals": 85,
+        "momentum": 80
+      },
+      "price_friday_close": 84.76,
+      "sector": "Consumer Discretionary",
+      "market_cap": 57279262170,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ROST",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 53,
+        "momentum": 66
+      },
+      "price_friday_close": 101.69,
+      "sector": "Consumer Discretionary",
+      "market_cap": 32271843970,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RCL",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 62,
+        "momentum": 83
+      },
+      "price_friday_close": 105.69,
+      "sector": "Consumer Discretionary",
+      "market_cap": 40758639677,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CCL",
+      "score": 40,
+      "score_breakdown": {
+        "fundamentals": 36,
+        "technicals": 42,
+        "momentum": 45
+      },
+      "price_friday_close": 76.55,
+      "sector": "Consumer Discretionary",
+      "market_cap": 38028326434,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NCLH",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 74,
+        "momentum": 65
+      },
+      "price_friday_close": 106.22,
+      "sector": "Consumer Discretionary",
+      "market_cap": 63817723472,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EBAY",
+      "score": 69,
+      "score_breakdown": {
+        "fundamentals": 76,
+        "technicals": 60,
+        "momentum": 65
+      },
+      "price_friday_close": 140.47,
+      "sector": "Consumer Discretionary",
+      "market_cap": 45468946302,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ETSY",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 45,
+        "momentum": 76
+      },
+      "price_friday_close": 104.03,
+      "sector": "Consumer Discretionary",
+      "market_cap": 75982000869,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DRI",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 45,
+        "momentum": 59
+      },
+      "price_friday_close": 242.06,
+      "sector": "Consumer Discretionary",
+      "market_cap": 60858705414,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TTWO",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 61,
+        "momentum": 37
+      },
+      "price_friday_close": 228.8,
+      "sector": "Communication Services",
+      "market_cap": 56241068342,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WBD",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 35,
+        "momentum": 24
+      },
+      "price_friday_close": 28.8,
+      "sector": "Communication Services",
+      "market_cap": 78003807281,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PARA",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 36,
+        "momentum": 42
+      },
+      "price_friday_close": 179.1,
+      "sector": "Communication Services",
+      "market_cap": 50290729365,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CHTR",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 43,
+        "momentum": 55
+      },
+      "price_friday_close": 122.72,
+      "sector": "Communication Services",
+      "market_cap": 98412880015,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FOX",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 64,
+        "technicals": 59,
+        "momentum": 41
+      },
+      "price_friday_close": 147.07,
+      "sector": "Communication Services",
+      "market_cap": 33545695195,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FOXA",
+      "score": 68,
+      "score_breakdown": {
+        "fundamentals": 73,
+        "technicals": 60,
+        "momentum": 66
+      },
+      "price_friday_close": 191.61,
+      "sector": "Communication Services",
+      "market_cap": 34938058811,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ROKU",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 31,
+        "momentum": 16
+      },
+      "price_friday_close": 185.01,
+      "sector": "Communication Services",
+      "market_cap": 55280856875,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SIRI",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 59,
+        "momentum": 37
+      },
+      "price_friday_close": 162.8,
+      "sector": "Communication Services",
+      "market_cap": 85446066722,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OMC",
+      "score": 77,
+      "score_breakdown": {
+        "fundamentals": 75,
+        "technicals": 74,
+        "momentum": 83
+      },
+      "price_friday_close": 192.32,
+      "sector": "Communication Services",
+      "market_cap": 62712304874,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IPG",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 28,
+        "momentum": 43
+      },
+      "price_friday_close": 219.23,
+      "sector": "Communication Services",
+      "market_cap": 82722389113,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MTCH",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 28,
+        "momentum": 48
+      },
+      "price_friday_close": 145.7,
+      "sector": "Communication Services",
+      "market_cap": 31345112271,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LUV",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 62,
+        "momentum": 58
+      },
+      "price_friday_close": 217.18,
+      "sector": "Industrials",
+      "market_cap": 38922782558,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DAL",
+      "score": 66,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 62,
+        "momentum": 66
+      },
+      "price_friday_close": 113.75,
+      "sector": "Industrials",
+      "market_cap": 65486928709,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UAL",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 49,
+        "momentum": 55
+      },
+      "price_friday_close": 94.67,
+      "sector": "Industrials",
+      "market_cap": 37625038890,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AAL",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 76,
+        "technicals": 84,
+        "momentum": 59
+      },
+      "price_friday_close": 63.02,
+      "sector": "Industrials",
+      "market_cap": 70002194123,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EXPD",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 72,
+        "technicals": 63,
+        "momentum": 54
+      },
+      "price_friday_close": 223.69,
+      "sector": "Industrials",
+      "market_cap": 33577919822,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CHRW",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 64,
+        "momentum": 72
+      },
+      "price_friday_close": 61.95,
+      "sector": "Industrials",
+      "market_cap": 75285372478,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ODFL",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 59,
+        "momentum": 59
+      },
+      "price_friday_close": 243.44,
+      "sector": "Industrials",
+      "market_cap": 42654489421,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "XPO",
+      "score": 92,
+      "score_breakdown": {
+        "fundamentals": 95,
+        "technicals": 93,
+        "momentum": 86
+      },
+      "price_friday_close": 158.47,
+      "sector": "Industrials",
+      "market_cap": 70374588849,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JBHT",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 43,
+        "momentum": 56
+      },
+      "price_friday_close": 85.29,
+      "sector": "Industrials",
+      "market_cap": 43448386307,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KNX",
+      "score": 10,
+      "score_breakdown": {
+        "fundamentals": 8,
+        "technicals": 0,
+        "momentum": 24
+      },
+      "price_friday_close": 186.19,
+      "sector": "Industrials",
+      "market_cap": 31462071585,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CSX",
+      "score": 79,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 84,
+        "momentum": 84
+      },
+      "price_friday_close": 16.14,
+      "sector": "Industrials",
+      "market_cap": 31600697036,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NSC",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 35,
+        "momentum": 52
+      },
+      "price_friday_close": 237.99,
+      "sector": "Industrials",
+      "market_cap": 72203579940,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HII",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 58,
+        "momentum": 44
+      },
+      "price_friday_close": 125.84,
+      "sector": "Industrials",
+      "market_cap": 74590002054,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TDG",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 81,
+        "momentum": 73
+      },
+      "price_friday_close": 117.49,
+      "sector": "Industrials",
+      "market_cap": 53859706809,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TXT",
+      "score": 21,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 23,
+        "momentum": 5
+      },
+      "price_friday_close": 137.6,
+      "sector": "Industrials",
+      "market_cap": 44347641494,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BR",
+      "score": 28,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 17,
+        "momentum": 33
+      },
+      "price_friday_close": 155.57,
+      "sector": "Technology",
+      "market_cap": 50415134042,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "DOV",
+      "score": 21,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 19,
+        "momentum": 10
+      },
+      "price_friday_close": 248.83,
+      "sector": "Industrials",
+      "market_cap": 88456378624,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "XYL",
+      "score": 36,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 38,
+        "momentum": 20
+      },
+      "price_friday_close": 105.4,
+      "sector": "Industrials",
+      "market_cap": 32983326005,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IR",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 50,
+        "technicals": 47,
+        "momentum": 85
+      },
+      "price_friday_close": 97.75,
+      "sector": "Industrials",
+      "market_cap": 37291399622,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AME",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 62,
+        "technicals": 61,
+        "momentum": 52
+      },
+      "price_friday_close": 56.02,
+      "sector": "Industrials",
+      "market_cap": 42406730081,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MMM",
+      "score": 55,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 61,
+        "momentum": 64
+      },
+      "price_friday_close": 131.63,
+      "sector": "Industrials",
+      "market_cap": 75273200651,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "URI",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 30,
+        "technicals": 24,
+        "momentum": 13
+      },
+      "price_friday_close": 22.66,
+      "sector": "Industrials",
+      "market_cap": 90735081019,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MAS",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 23,
+        "technicals": 12,
+        "momentum": 37
+      },
+      "price_friday_close": 109.77,
+      "sector": "Industrials",
+      "market_cap": 32519408248,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BLDR",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 47,
+        "momentum": 46
+      },
+      "price_friday_close": 76.74,
+      "sector": "Industrials",
+      "market_cap": 33044300223,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AL",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 38,
+        "momentum": 32
+      },
+      "price_friday_close": 64.11,
+      "sector": "Industrials",
+      "market_cap": 98332085384,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WCC",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 59,
+        "technicals": 53,
+        "momentum": 62
+      },
+      "price_friday_close": 149.81,
+      "sector": "Industrials",
+      "market_cap": 38081391638,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EME",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 69,
+        "momentum": 67
+      },
+      "price_friday_close": 151.4,
+      "sector": "Industrials",
+      "market_cap": 54640413359,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GWW",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 53,
+        "momentum": 52
+      },
+      "price_friday_close": 209.29,
+      "sector": "Industrials",
+      "market_cap": 47218058325,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FAST",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 71,
+        "technicals": 75,
+        "momentum": 38
+      },
+      "price_friday_close": 115.67,
+      "sector": "Industrials",
+      "market_cap": 35447211748,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PNR",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 47,
+        "momentum": 50
+      },
+      "price_friday_close": 219.04,
+      "sector": "Industrials",
+      "market_cap": 68830839197,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ROK",
+      "score": 60,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 69,
+        "momentum": 47
+      },
+      "price_friday_close": 148.42,
+      "sector": "Industrials",
+      "market_cap": 46812560092,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CSL",
+      "score": 37,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 28,
+        "momentum": 51
+      },
+      "price_friday_close": 55.02,
+      "sector": "Industrials",
+      "market_cap": 32604163506,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ALLE",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 46,
+        "momentum": 37
+      },
+      "price_friday_close": 186.05,
+      "sector": "Industrials",
+      "market_cap": 32604093533,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SNA",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 65,
+        "momentum": 40
+      },
+      "price_friday_close": 185.08,
+      "sector": "Industrials",
+      "market_cap": 42436708323,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SWK",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 66,
+        "technicals": 63,
+        "momentum": 63
+      },
+      "price_friday_close": 217.7,
+      "sector": "Industrials",
+      "market_cap": 32496718138,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PWR",
+      "score": 43,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 41,
+        "momentum": 49
+      },
+      "price_friday_close": 35.9,
+      "sector": "Industrials",
+      "market_cap": 82035576865,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GNRC",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 66,
+        "momentum": 65
+      },
+      "price_friday_close": 28.23,
+      "sector": "Industrials",
+      "market_cap": 30870454744,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HUBB",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 51,
+        "technicals": 40,
+        "momentum": 40
+      },
+      "price_friday_close": 70.16,
+      "sector": "Industrials",
+      "market_cap": 83842907161,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IEX",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 57,
+        "momentum": 45
+      },
+      "price_friday_close": 115.17,
+      "sector": "Industrials",
+      "market_cap": 58049932520,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NDSN",
+      "score": 65,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 65,
+        "momentum": 80
+      },
+      "price_friday_close": 129.89,
+      "sector": "Industrials",
+      "market_cap": 78178015818,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OTIS",
+      "score": 24,
+      "score_breakdown": {
+        "fundamentals": 23,
+        "technicals": 29,
+        "momentum": 21
+      },
+      "price_friday_close": 247.44,
+      "sector": "Industrials",
+      "market_cap": 54815851770,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PCAR",
+      "score": 26,
+      "score_breakdown": {
+        "fundamentals": 21,
+        "technicals": 31,
+        "momentum": 33
+      },
+      "price_friday_close": 210.22,
+      "sector": "Industrials",
+      "market_cap": 35943536805,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WAB",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 21,
+        "technicals": 26,
+        "momentum": 24
+      },
+      "price_friday_close": 127.25,
+      "sector": "Industrials",
+      "market_cap": 31928616224,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "AXI",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 16,
+        "technicals": 22,
+        "momentum": 39
+      },
+      "price_friday_close": 80.83,
+      "sector": "Technology",
+      "market_cap": 20380930462,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VXR",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 31,
+        "momentum": 44
+      },
+      "price_friday_close": 33.81,
+      "sector": "Technology",
+      "market_cap": 10283597696,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CGH",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 56,
+        "momentum": 82
+      },
+      "price_friday_close": 45.89,
+      "sector": "Health Care",
+      "market_cap": 4152271294,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WUW",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 35,
+        "momentum": 60
+      },
+      "price_friday_close": 57.08,
+      "sector": "Consumer Discretionary",
+      "market_cap": 5891621642,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IZAY",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 51,
+        "momentum": 42
+      },
+      "price_friday_close": 86.79,
+      "sector": "Consumer Staples",
+      "market_cap": 44468190222,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IEGY",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 75,
+        "technicals": 81,
+        "momentum": 48
+      },
+      "price_friday_close": 45.71,
+      "sector": "Financials",
+      "market_cap": 2347146179,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LLT",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 78,
+        "momentum": 84
+      },
+      "price_friday_close": 105.04,
+      "sector": "Financials",
+      "market_cap": 1665258825,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RDMC",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 52,
+        "momentum": 34
+      },
+      "price_friday_close": 46.44,
+      "sector": "Consumer Discretionary",
+      "market_cap": 61937929989,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LSGW",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 73,
+        "technicals": 73,
+        "momentum": 78
+      },
+      "price_friday_close": 214.2,
+      "sector": "Technology",
+      "market_cap": 69171238670,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CHDM",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 52,
+        "momentum": 66
+      },
+      "price_friday_close": 50.39,
+      "sector": "Financials",
+      "market_cap": 39932234137,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FLLG",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 46,
+        "momentum": 8
+      },
+      "price_friday_close": 26.1,
+      "sector": "Industrials",
+      "market_cap": 30312868487,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TUF",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 44,
+        "momentum": 49
+      },
+      "price_friday_close": 118.5,
+      "sector": "Consumer Discretionary",
+      "market_cap": 13364036958,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "MIUW",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 20,
+        "technicals": 33,
+        "momentum": 20
+      },
+      "price_friday_close": 190.8,
+      "sector": "Consumer Discretionary",
+      "market_cap": 31665636454,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HBZ",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 27,
+        "technicals": 44,
+        "momentum": 38
+      },
+      "price_friday_close": 72.28,
+      "sector": "Financials",
+      "market_cap": 1276877200,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UPM",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 34,
+        "momentum": 42
+      },
+      "price_friday_close": 99.41,
+      "sector": "Energy",
+      "market_cap": 74551596767,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IEH",
+      "score": 64,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 72,
+        "momentum": 71
+      },
+      "price_friday_close": 72.64,
+      "sector": "Communication Services",
+      "market_cap": 1037891389,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NSML",
+      "score": 81,
+      "score_breakdown": {
+        "fundamentals": 75,
+        "technicals": 82,
+        "momentum": 91
+      },
+      "price_friday_close": 265.48,
+      "sector": "Technology",
+      "market_cap": 3440875006978,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PCYB",
+      "score": 25,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 27,
+        "momentum": 10
+      },
+      "price_friday_close": 17.5,
+      "sector": "Energy",
+      "market_cap": 1905029008,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZVN",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 56,
+        "momentum": 62
+      },
+      "price_friday_close": 72.78,
+      "sector": "Consumer Discretionary",
+      "market_cap": 6609671535,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OQIR",
+      "score": 31,
+      "score_breakdown": {
+        "fundamentals": 24,
+        "technicals": 43,
+        "momentum": 34
+      },
+      "price_friday_close": 91.11,
+      "sector": "Energy",
+      "market_cap": 14800626292,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VRY",
+      "score": 59,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 51,
+        "momentum": 72
+      },
+      "price_friday_close": 204.36,
+      "sector": "Financials",
+      "market_cap": 87864255125,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JNF",
+      "score": 48,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 59,
+        "momentum": 43
+      },
+      "price_friday_close": 295.7,
+      "sector": "Health Care",
+      "market_cap": 148878599292,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QYFQ",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 17,
+        "technicals": 32,
+        "momentum": 27
+      },
+      "price_friday_close": 92.5,
+      "sector": "Utilities",
+      "market_cap": 42917226355,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "UQTG",
+      "score": 67,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 75,
+        "momentum": 52
+      },
+      "price_friday_close": 175.25,
+      "sector": "Technology",
+      "market_cap": 92132988214,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YQAT",
+      "score": 39,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 47,
+        "momentum": 16
+      },
+      "price_friday_close": 51.78,
+      "sector": "Financials",
+      "market_cap": 27516184580,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZJHB",
+      "score": 40,
+      "score_breakdown": {
+        "fundamentals": 47,
+        "technicals": 31,
+        "momentum": 35
+      },
+      "price_friday_close": 129.47,
+      "sector": "Technology",
+      "market_cap": 57297535023,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CXP",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 35,
+        "technicals": 32,
+        "momentum": 20
+      },
+      "price_friday_close": 148.88,
+      "sector": "Consumer Staples",
+      "market_cap": 118847605205,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YEEV",
+      "score": 38,
+      "score_breakdown": {
+        "fundamentals": 39,
+        "technicals": 48,
+        "momentum": 27
+      },
+      "price_friday_close": 10.88,
+      "sector": "Health Care",
+      "market_cap": 6017039784,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QTNG",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 63,
+        "momentum": 38
+      },
+      "price_friday_close": 44.1,
+      "sector": "Utilities",
+      "market_cap": 92079488810,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WJM",
+      "score": 46,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 46,
+        "momentum": 48
+      },
+      "price_friday_close": 194.85,
+      "sector": "Materials",
+      "market_cap": 38075111078,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QODH",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 53,
+        "momentum": 63
+      },
+      "price_friday_close": 108.33,
+      "sector": "Technology",
+      "market_cap": 1390541875,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RHSH",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 47,
+        "momentum": 70
+      },
+      "price_friday_close": 31.13,
+      "sector": "Technology",
+      "market_cap": 71874505168,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HCB",
+      "score": 74,
+      "score_breakdown": {
+        "fundamentals": 67,
+        "technicals": 80,
+        "momentum": 81
+      },
+      "price_friday_close": 76.9,
+      "sector": "Energy",
+      "market_cap": 10518213919,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IVP",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 43,
+        "technicals": 54,
+        "momentum": 35
+      },
+      "price_friday_close": 99.9,
+      "sector": "Technology",
+      "market_cap": 13143073734,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SPHZ",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 25,
+        "technicals": 12,
+        "momentum": 31
+      },
+      "price_friday_close": 71.58,
+      "sector": "Health Care",
+      "market_cap": 11510412431,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NNOX",
+      "score": 69,
+      "score_breakdown": {
+        "fundamentals": 64,
+        "technicals": 62,
+        "momentum": 87
+      },
+      "price_friday_close": 178.86,
+      "sector": "Technology",
+      "market_cap": 44231378040,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BMX",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 37,
+        "momentum": 36
+      },
+      "price_friday_close": 153.07,
+      "sector": "Financials",
+      "market_cap": 94951396422,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "GGR",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 81,
+        "momentum": 59
+      },
+      "price_friday_close": 54.14,
+      "sector": "Health Care",
+      "market_cap": 9578950425,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OHCO",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 65,
+        "technicals": 51,
+        "momentum": 48
+      },
+      "price_friday_close": 249.45,
+      "sector": "Consumer Staples",
+      "market_cap": 74555683324,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BUR",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 39,
+        "momentum": 70
+      },
+      "price_friday_close": 133.11,
+      "sector": "Consumer Staples",
+      "market_cap": 129451571363,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FNP",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 49,
+        "momentum": 78
+      },
+      "price_friday_close": 128.12,
+      "sector": "Health Care",
+      "market_cap": 57435683430,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FMA",
+      "score": 88,
+      "score_breakdown": {
+        "fundamentals": 89,
+        "technicals": 98,
+        "momentum": 76
+      },
+      "price_friday_close": 8.74,
+      "sector": "Materials",
+      "market_cap": 6986793012,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JNWX",
+      "score": 88,
+      "score_breakdown": {
+        "fundamentals": 89,
+        "technicals": 91,
+        "momentum": 84
+      },
+      "price_friday_close": 152.0,
+      "sector": "Materials",
+      "market_cap": 48810001494,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EGJG",
+      "score": 51,
+      "score_breakdown": {
+        "fundamentals": 46,
+        "technicals": 58,
+        "momentum": 54
+      },
+      "price_friday_close": 169.47,
+      "sector": "Real Estate",
+      "market_cap": 60688356179,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BXKB",
+      "score": 53,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 62,
+        "momentum": 40
+      },
+      "price_friday_close": 78.06,
+      "sector": "Technology",
+      "market_cap": 11583676074,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FBQC",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 77,
+        "technicals": 66,
+        "momentum": 59
+      },
+      "price_friday_close": 76.1,
+      "sector": "Energy",
+      "market_cap": 14698904261,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VHM",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 28,
+        "technicals": 28,
+        "momentum": 54
+      },
+      "price_friday_close": 157.46,
+      "sector": "Technology",
+      "market_cap": 57302370306,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "STB",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 55,
+        "technicals": 67,
+        "momentum": 47
+      },
+      "price_friday_close": 34.96,
+      "sector": "Consumer Discretionary",
+      "market_cap": 1410830607,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "SQKI",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 48,
+        "technicals": 56,
+        "momentum": 47
+      },
+      "price_friday_close": 220.15,
+      "sector": "Technology",
+      "market_cap": 56609248594,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "IME",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 56,
+        "technicals": 48,
+        "momentum": 62
+      },
+      "price_friday_close": 13.58,
+      "sector": "Industrials",
+      "market_cap": 10070278625,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YCAO",
+      "score": 35,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 39,
+        "momentum": 37
+      },
+      "price_friday_close": 67.11,
+      "sector": "Industrials",
+      "market_cap": 61208147802,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CRG",
+      "score": 21,
+      "score_breakdown": {
+        "fundamentals": 24,
+        "technicals": 20,
+        "momentum": 17
+      },
+      "price_friday_close": 99.81,
+      "sector": "Health Care",
+      "market_cap": 12140357110,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CHLJ",
+      "score": 13,
+      "score_breakdown": {
+        "fundamentals": 9,
+        "technicals": 18,
+        "momentum": 16
+      },
+      "price_friday_close": 153.97,
+      "sector": "Technology",
+      "market_cap": 61295264848,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TZUQ",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 25,
+        "technicals": 40,
+        "momentum": 30
+      },
+      "price_friday_close": 119.87,
+      "sector": "Technology",
+      "market_cap": 45098648127,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VDEI",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 37,
+        "technicals": 32,
+        "momentum": 61
+      },
+      "price_friday_close": 87.63,
+      "sector": "Technology",
+      "market_cap": 18896997943,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "EIJT",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 45,
+        "technicals": 45,
+        "momentum": 44
+      },
+      "price_friday_close": 46.08,
+      "sector": "Technology",
+      "market_cap": 5857862561,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "QPIB",
+      "score": 81,
+      "score_breakdown": {
+        "fundamentals": 81,
+        "technicals": 79,
+        "momentum": 82
+      },
+      "price_friday_close": 19.73,
+      "sector": "Technology",
+      "market_cap": 1186907795,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BAKY",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 78,
+        "technicals": 70,
+        "momentum": 54
+      },
+      "price_friday_close": 211.76,
+      "sector": "Technology",
+      "market_cap": 136432807964,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "XOR",
+      "score": 32,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 31,
+        "momentum": 35
+      },
+      "price_friday_close": 133.71,
+      "sector": "Industrials",
+      "market_cap": 93496187131,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CWE",
+      "score": 56,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 58,
+        "momentum": 68
+      },
+      "price_friday_close": 39.85,
+      "sector": "Consumer Discretionary",
+      "market_cap": 39802851346,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "RENE",
+      "score": 42,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 46,
+        "momentum": 48
+      },
+      "price_friday_close": 98.44,
+      "sector": "Technology",
+      "market_cap": 3160227012,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LGV",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 38,
+        "technicals": 56,
+        "momentum": 48
+      },
+      "price_friday_close": 93.38,
+      "sector": "Technology",
+      "market_cap": 3683356781,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "NTXE",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 63,
+        "momentum": 45
+      },
+      "price_friday_close": 15.97,
+      "sector": "Utilities",
+      "market_cap": 15335310774,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZZF",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 51,
+        "momentum": 72
+      },
+      "price_friday_close": 115.21,
+      "sector": "Energy",
+      "market_cap": 7926185963,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZNZV",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 49,
+        "technicals": 47,
+        "momentum": 30
+      },
+      "price_friday_close": 26.97,
+      "sector": "Energy",
+      "market_cap": 48684499179,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "FZWD",
+      "score": 69,
+      "score_breakdown": {
+        "fundamentals": 74,
+        "technicals": 67,
+        "momentum": 62
+      },
+      "price_friday_close": 106.39,
+      "sector": "Health Care",
+      "market_cap": 23111600845,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HGOL",
+      "score": 30,
+      "score_breakdown": {
+        "fundamentals": 32,
+        "technicals": 38,
+        "momentum": 16
+      },
+      "price_friday_close": 144.78,
+      "sector": "Financials",
+      "market_cap": 56251993705,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "HAV",
+      "score": 50,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 46,
+        "momentum": 50
+      },
+      "price_friday_close": 98.88,
+      "sector": "Technology",
+      "market_cap": 2054789242,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YIL",
+      "score": 84,
+      "score_breakdown": {
+        "fundamentals": 87,
+        "technicals": 88,
+        "momentum": 75
+      },
+      "price_friday_close": 6.96,
+      "sector": "Industrials",
+      "market_cap": 5451207507,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KADI",
+      "score": 54,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 51,
+        "momentum": 42
+      },
+      "price_friday_close": 477.23,
+      "sector": "Technology",
+      "market_cap": 300197428034,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "BDTN",
+      "score": 76,
+      "score_breakdown": {
+        "fundamentals": 75,
+        "technicals": 83,
+        "momentum": 71
+      },
+      "price_friday_close": 80.14,
+      "sector": "Financials",
+      "market_cap": 81407875808,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "TQDM",
+      "score": 52,
+      "score_breakdown": {
+        "fundamentals": 52,
+        "technicals": 57,
+        "momentum": 46
+      },
+      "price_friday_close": 113.02,
+      "sector": "Energy",
+      "market_cap": 1198857643,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "WNA",
+      "score": 61,
+      "score_breakdown": {
+        "fundamentals": 60,
+        "technicals": 54,
+        "momentum": 69
+      },
+      "price_friday_close": 140.12,
+      "sector": "Consumer Discretionary",
+      "market_cap": 92702497908,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LNC",
+      "score": 49,
+      "score_breakdown": {
+        "fundamentals": 53,
+        "technicals": 40,
+        "momentum": 50
+      },
+      "price_friday_close": 252.8,
+      "sector": "Real Estate",
+      "market_cap": 281164576715,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KVDX",
+      "score": 47,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 50,
+        "momentum": 54
+      },
+      "price_friday_close": 16.98,
+      "sector": "Utilities",
+      "market_cap": 4169119521,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "KMWJ",
+      "score": 36,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 45,
+        "momentum": 19
+      },
+      "price_friday_close": 30.23,
+      "sector": "Consumer Discretionary",
+      "market_cap": 1389683056,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VXFT",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 54,
+        "technicals": 48,
+        "momentum": 74
+      },
+      "price_friday_close": 20.06,
+      "sector": "Consumer Discretionary",
+      "market_cap": 17211543906,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JJG",
+      "score": 34,
+      "score_breakdown": {
+        "fundamentals": 42,
+        "technicals": 26,
+        "momentum": 28
+      },
+      "price_friday_close": 143.92,
+      "sector": "Health Care",
+      "market_cap": 39414603441,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OOOV",
+      "score": 62,
+      "score_breakdown": {
+        "fundamentals": 57,
+        "technicals": 57,
+        "momentum": 77
+      },
+      "price_friday_close": 22.1,
+      "sector": "Technology",
+      "market_cap": 2078619009,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "VCJ",
+      "score": 70,
+      "score_breakdown": {
+        "fundamentals": 70,
+        "technicals": 79,
+        "momentum": 59
+      },
+      "price_friday_close": 101.5,
+      "sector": "Consumer Discretionary",
+      "market_cap": 59110869045,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "CYHV",
+      "score": 57,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 62,
+        "momentum": 43
+      },
+      "price_friday_close": 229.37,
+      "sector": "Financials",
+      "market_cap": 63756818360,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ABH",
+      "score": 45,
+      "score_breakdown": {
+        "fundamentals": 40,
+        "technicals": 41,
+        "momentum": 59
+      },
+      "price_friday_close": 229.66,
+      "sector": "Materials",
+      "market_cap": 35980927469,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ONU",
+      "score": 58,
+      "score_breakdown": {
+        "fundamentals": 58,
+        "technicals": 50,
+        "momentum": 67
+      },
+      "price_friday_close": 209.84,
+      "sector": "Consumer Discretionary",
+      "market_cap": 88922993944,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "PMHE",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 41,
+        "technicals": 40,
+        "momentum": 56
+      },
+      "price_friday_close": 75.56,
+      "sector": "Industrials",
+      "market_cap": 8560238132,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "YNH",
+      "score": 67,
+      "score_breakdown": {
+        "fundamentals": 61,
+        "technicals": 68,
+        "momentum": 78
+      },
+      "price_friday_close": 357.63,
+      "sector": "Technology",
+      "market_cap": 279763128361,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "OBRH",
+      "score": 9,
+      "score_breakdown": {
+        "fundamentals": 12,
+        "technicals": 0,
+        "momentum": 13
+      },
+      "price_friday_close": 115.1,
+      "sector": "Utilities",
+      "market_cap": 1057660313,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "ZOV",
+      "score": 44,
+      "score_breakdown": {
+        "fundamentals": 44,
+        "technicals": 51,
+        "momentum": 38
+      },
+      "price_friday_close": 198.64,
+      "sector": "Consumer Discretionary",
+      "market_cap": 60718497289,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "JWY",
+      "score": 18,
+      "score_breakdown": {
+        "fundamentals": 22,
+        "technicals": 26,
+        "momentum": 3
+      },
+      "price_friday_close": 4.45,
+      "sector": "Industrials",
+      "market_cap": 3608203500,
+      "score_date": "2026-04-17"
+    },
+    {
+      "ticker": "LVWZ",
+      "score": 23,
+      "score_breakdown": {
+        "fundamentals": 22,
+        "technicals": 31,
+        "momentum": 17
+      },
+      "price_friday_close": 62.34,
+      "sector": "Technology",
+      "market_cap": 5661609357,
+      "score_date": "2026-04-17"
+    }
+  ]
+}

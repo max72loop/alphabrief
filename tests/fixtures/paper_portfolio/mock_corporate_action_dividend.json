@@ -1,0 +1,36 @@
+{
+  "fixture_name": "mock_corporate_action_dividend",
+  "_fixture_note": "Deux cas: (1) dividende cash standard avec ex_date renseignée, (2) ADR étranger avec ex_date=null → fallback payment_date - 1 business day.",
+  "events": [
+    {
+      "ticker": "KO",
+      "action_type": "DIVIDEND",
+      "effective_date": "2026-05-15",
+      "details": {
+        "amount": 0.48,
+        "currency": "USD",
+        "ex_date": "2026-05-15",
+        "record_date": "2026-05-16",
+        "payment_date": "2026-06-02",
+        "declaration_date": "2026-04-10",
+        "description": "Dividende trimestriel Coca-Cola, cas US equity standard"
+      }
+    },
+    {
+      "ticker": "BABA",
+      "action_type": "DIVIDEND",
+      "effective_date": "2026-05-22",
+      "details": {
+        "amount": 1.52,
+        "currency": "USD",
+        "ex_date": null,
+        "record_date": "2026-05-20",
+        "payment_date": "2026-05-25",
+        "declaration_date": "2026-04-15",
+        "warning": "EX_DATE_MISSING",
+        "fallback_rule": "payment_date - 1 business day",
+        "description": "Alibaba ADR — FMP renvoie ex_date=null, effective_date calculée par fallback (payment_date=2026-05-25 lundi → 1 jour ouvré avant = 2026-05-22 vendredi)"
+      }
+    }
+  ]
+}

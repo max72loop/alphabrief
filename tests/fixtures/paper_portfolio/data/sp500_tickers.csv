@@ -1,0 +1,501 @@
+ticker,sector,market_cap_tier
+AAPL,Technology,mega
+MSFT,Technology,mega
+NVDA,Technology,mega
+GOOGL,Communication Services,mega
+GOOG,Communication Services,mega
+META,Communication Services,mega
+AMZN,Consumer Discretionary,mega
+TSLA,Consumer Discretionary,mega
+BRK.B,Financials,mega
+LLY,Health Care,mega
+JPM,Financials,mega
+V,Financials,mega
+XOM,Energy,mega
+UNH,Health Care,mega
+MA,Financials,mega
+AVGO,Technology,mega
+WMT,Consumer Staples,large
+PG,Consumer Staples,large
+HD,Consumer Discretionary,large
+CVX,Energy,large
+JNJ,Health Care,large
+ABBV,Health Care,large
+ORCL,Technology,large
+KO,Consumer Staples,large
+BAC,Financials,large
+PEP,Consumer Staples,large
+COST,Consumer Staples,large
+MRK,Health Care,large
+TMO,Health Care,large
+ADBE,Technology,large
+ACN,Technology,large
+WFC,Financials,large
+CSCO,Technology,large
+ABT,Health Care,large
+MCD,Consumer Discretionary,large
+DHR,Health Care,large
+DIS,Communication Services,large
+VZ,Communication Services,large
+CRM,Technology,large
+PM,Consumer Staples,large
+TXN,Technology,large
+NEE,Utilities,large
+NKE,Consumer Discretionary,large
+AMD,Technology,large
+INTC,Technology,large
+QCOM,Technology,large
+LIN,Materials,large
+IBM,Technology,large
+PFE,Health Care,large
+RTX,Industrials,large
+UPS,Industrials,large
+HON,Industrials,large
+CMCSA,Communication Services,large
+T,Communication Services,large
+UNP,Industrials,large
+AMGN,Health Care,large
+GS,Financials,large
+MS,Financials,large
+LOW,Consumer Discretionary,large
+CAT,Industrials,large
+ELV,Health Care,large
+ISRG,Health Care,large
+INTU,Technology,large
+SPGI,Financials,large
+NOW,Technology,large
+MDT,Health Care,large
+DE,Industrials,large
+BKNG,Consumer Discretionary,large
+AXP,Financials,large
+SBUX,Consumer Discretionary,large
+PLD,Real Estate,large
+GE,Industrials,large
+BA,Industrials,large
+BLK,Financials,large
+AMAT,Technology,large
+C,Financials,large
+PYPL,Technology,large
+SYK,Health Care,large
+MMC,Financials,large
+NFLX,Communication Services,large
+LMT,Industrials,large
+MDLZ,Consumer Staples,large
+ADP,Technology,large
+TJX,Consumer Discretionary,large
+GILD,Health Care,large
+ADI,Technology,large
+CVS,Health Care,large
+MO,Consumer Staples,large
+SCHW,Financials,large
+REGN,Health Care,large
+VRTX,Health Care,large
+ZTS,Health Care,large
+EOG,Energy,large
+CB,Financials,large
+TMUS,Communication Services,large
+AMT,Real Estate,large
+CI,Health Care,large
+PANW,Technology,large
+SO,Utilities,large
+DUK,Utilities,large
+BSX,Health Care,large
+FI,Technology,large
+CME,Financials,large
+ICE,Financials,large
+NOC,Industrials,large
+GD,Industrials,large
+USB,Financials,large
+APD,Materials,large
+SHW,Materials,large
+CCI,Real Estate,large
+EQIX,Real Estate,large
+KMB,Consumer Staples,large
+TGT,Consumer Discretionary,large
+CL,Consumer Staples,large
+BDX,Health Care,large
+ADSK,Technology,large
+KLAC,Technology,large
+LRCX,Technology,large
+MU,Technology,large
+EMR,Industrials,large
+FDX,Industrials,large
+CRWD,Technology,large
+ITW,Industrials,large
+ETN,Industrials,large
+WM,Industrials,large
+CMG,Consumer Discretionary,large
+AON,Financials,large
+SNPS,Technology,large
+CDNS,Technology,large
+FTNT,Technology,large
+ORLY,Consumer Discretionary,large
+ROP,Industrials,large
+NXPI,Technology,large
+MAR,Consumer Discretionary,large
+PSX,Energy,large
+MPC,Energy,large
+HUM,Health Care,large
+TT,Industrials,large
+ANET,Technology,large
+PH,Industrials,large
+WELL,Real Estate,large
+AJG,Financials,large
+MCK,Health Care,large
+CARR,Industrials,large
+MSI,Technology,large
+AIG,Financials,large
+GIS,Consumer Staples,large
+ABNB,Consumer Discretionary,large
+COF,Financials,large
+EA,Communication Services,large
+TRV,Financials,large
+KHC,Consumer Staples,large
+JCI,Industrials,large
+CTAS,Industrials,large
+APH,Technology,large
+ECL,Materials,large
+WMB,Energy,large
+FCX,Materials,large
+SLB,Energy,large
+VLO,Energy,large
+OKE,Energy,large
+DG,Consumer Staples,mid
+AZO,Consumer Discretionary,mid
+DLR,Real Estate,mid
+EW,Health Care,mid
+HSY,Consumer Staples,mid
+PSA,Real Estate,mid
+DDOG,Technology,mid
+MRNA,Health Care,mid
+HCA,Health Care,mid
+IQV,Health Care,mid
+WBA,Consumer Staples,mid
+DVN,Energy,mid
+PNC,Financials,mid
+TFC,Financials,mid
+COP,Energy,mid
+OXY,Energy,mid
+KMI,Energy,mid
+HES,Energy,mid
+FANG,Energy,mid
+BK,Financials,mid
+ALL,Financials,mid
+PRU,Financials,mid
+MET,Financials,mid
+PGR,Financials,mid
+AFL,Financials,mid
+HIG,Financials,mid
+TROW,Financials,mid
+NTRS,Financials,mid
+STT,Financials,mid
+RF,Financials,mid
+KEY,Financials,mid
+FITB,Financials,mid
+HBAN,Financials,mid
+MTB,Financials,mid
+CFG,Financials,mid
+BKR,Energy,mid
+HAL,Energy,mid
+BIIB,Health Care,mid
+IDXX,Health Care,mid
+DXCM,Health Care,mid
+ILMN,Health Care,mid
+A,Health Care,mid
+CAH,Health Care,mid
+BAX,Health Care,mid
+HOLX,Health Care,mid
+RMD,Health Care,mid
+WAT,Health Care,mid
+MTD,Health Care,mid
+STE,Health Care,mid
+ZBH,Health Care,mid
+ALGN,Health Care,mid
+COO,Health Care,mid
+LH,Health Care,mid
+DGX,Health Care,mid
+CNC,Health Care,mid
+CRL,Health Care,mid
+PODD,Health Care,mid
+INCY,Health Care,mid
+VTRS,Health Care,mid
+TFX,Health Care,mid
+HSIC,Health Care,mid
+BIO,Health Care,mid
+RVTY,Health Care,mid
+SBAC,Real Estate,mid
+AVB,Real Estate,mid
+EQR,Real Estate,mid
+ESS,Real Estate,mid
+INVH,Real Estate,mid
+MAA,Real Estate,mid
+CPT,Real Estate,mid
+UDR,Real Estate,mid
+ARE,Real Estate,mid
+BXP,Real Estate,mid
+HST,Real Estate,mid
+REG,Real Estate,mid
+FRT,Real Estate,mid
+KIM,Real Estate,mid
+VTR,Real Estate,mid
+O,Real Estate,mid
+EXR,Real Estate,mid
+CTSH,Technology,mid
+KEYS,Technology,mid
+SWKS,Technology,mid
+QRVO,Technology,mid
+MCHP,Technology,mid
+MPWR,Technology,mid
+ON,Technology,mid
+TER,Technology,mid
+ENPH,Technology,mid
+SEDG,Technology,mid
+HPQ,Technology,mid
+DELL,Technology,mid
+HPE,Technology,mid
+NTAP,Technology,mid
+JNPR,Technology,mid
+WDC,Technology,mid
+STX,Technology,mid
+WDAY,Technology,mid
+TEAM,Technology,mid
+ZS,Technology,mid
+NET,Technology,mid
+SNOW,Technology,mid
+MDB,Technology,mid
+PLTR,Technology,mid
+SMCI,Technology,mid
+AKAM,Technology,mid
+FFIV,Technology,mid
+ANSS,Technology,mid
+PTC,Technology,mid
+TYL,Technology,mid
+EPAM,Technology,mid
+JKHY,Technology,mid
+FICO,Technology,mid
+CDW,Technology,mid
+LDOS,Industrials,mid
+TRMB,Technology,mid
+CTVA,Materials,mid
+NUE,Materials,mid
+STLD,Materials,mid
+VMC,Materials,mid
+MLM,Materials,mid
+NEM,Materials,mid
+ALB,Materials,mid
+CE,Materials,mid
+FMC,Materials,mid
+IFF,Materials,mid
+LYB,Materials,mid
+MOS,Materials,mid
+CF,Materials,mid
+EMN,Materials,mid
+PPG,Materials,mid
+DD,Materials,mid
+DOW,Materials,mid
+PKG,Materials,mid
+SEE,Materials,mid
+IP,Materials,mid
+PXD,Energy,mid
+EQT,Energy,mid
+CTRA,Energy,mid
+APA,Energy,mid
+MRO,Energy,mid
+LNG,Energy,mid
+ETR,Utilities,mid
+XEL,Utilities,mid
+AEP,Utilities,mid
+D,Utilities,mid
+SRE,Utilities,mid
+EXC,Utilities,mid
+PCG,Utilities,mid
+WEC,Utilities,mid
+ED,Utilities,mid
+ES,Utilities,mid
+DTE,Utilities,mid
+AEE,Utilities,mid
+PPL,Utilities,mid
+CMS,Utilities,mid
+CNP,Utilities,mid
+NI,Utilities,mid
+LNT,Utilities,mid
+EVRG,Utilities,mid
+PNW,Utilities,mid
+ATO,Utilities,mid
+CEG,Utilities,mid
+VST,Utilities,mid
+CPB,Consumer Staples,mid
+LW,Consumer Staples,mid
+MKC,Consumer Staples,mid
+CAG,Consumer Staples,mid
+ADM,Consumer Staples,mid
+BG,Consumer Staples,mid
+TSN,Consumer Staples,mid
+HRL,Consumer Staples,mid
+SJM,Consumer Staples,mid
+CLX,Consumer Staples,mid
+CHD,Consumer Staples,mid
+EL,Consumer Staples,mid
+STZ,Consumer Staples,mid
+K,Consumer Staples,mid
+DHI,Consumer Discretionary,mid
+LEN,Consumer Discretionary,mid
+PHM,Consumer Discretionary,mid
+NVR,Consumer Discretionary,mid
+TOL,Consumer Discretionary,mid
+KBH,Consumer Discretionary,mid
+F,Consumer Discretionary,mid
+GM,Consumer Discretionary,mid
+HLT,Consumer Discretionary,mid
+YUM,Consumer Discretionary,mid
+DPZ,Consumer Discretionary,mid
+ROST,Consumer Discretionary,mid
+RCL,Consumer Discretionary,mid
+CCL,Consumer Discretionary,mid
+NCLH,Consumer Discretionary,mid
+EBAY,Consumer Discretionary,mid
+ETSY,Consumer Discretionary,mid
+DRI,Consumer Discretionary,mid
+TTWO,Communication Services,mid
+WBD,Communication Services,mid
+PARA,Communication Services,mid
+CHTR,Communication Services,mid
+FOX,Communication Services,mid
+FOXA,Communication Services,mid
+ROKU,Communication Services,mid
+SIRI,Communication Services,mid
+OMC,Communication Services,mid
+IPG,Communication Services,mid
+MTCH,Communication Services,mid
+LUV,Industrials,mid
+DAL,Industrials,mid
+UAL,Industrials,mid
+AAL,Industrials,mid
+EXPD,Industrials,mid
+CHRW,Industrials,mid
+ODFL,Industrials,mid
+XPO,Industrials,mid
+JBHT,Industrials,mid
+KNX,Industrials,mid
+CSX,Industrials,mid
+NSC,Industrials,mid
+HII,Industrials,mid
+TDG,Industrials,mid
+TXT,Industrials,mid
+BR,Technology,mid
+DOV,Industrials,mid
+XYL,Industrials,mid
+IR,Industrials,mid
+AME,Industrials,mid
+MMM,Industrials,mid
+URI,Industrials,mid
+MAS,Industrials,mid
+BLDR,Industrials,mid
+AL,Industrials,mid
+WCC,Industrials,mid
+EME,Industrials,mid
+GWW,Industrials,mid
+FAST,Industrials,mid
+PNR,Industrials,mid
+ROK,Industrials,mid
+CSL,Industrials,mid
+ALLE,Industrials,mid
+SNA,Industrials,mid
+SWK,Industrials,mid
+PWR,Industrials,mid
+GNRC,Industrials,mid
+HUBB,Industrials,mid
+IEX,Industrials,mid
+NDSN,Industrials,mid
+OTIS,Industrials,mid
+PCAR,Industrials,mid
+WAB,Industrials,mid
+AXI,Technology,small
+VXR,Technology,small
+CGH,Health Care,small
+WUW,Consumer Discretionary,small
+IZAY,Consumer Staples,mid
+IEGY,Financials,small
+LLT,Financials,small
+RDMC,Consumer Discretionary,mid
+LSGW,Technology,mid
+CHDM,Financials,mid
+FLLG,Industrials,mid
+TUF,Consumer Discretionary,small
+MIUW,Consumer Discretionary,mid
+HBZ,Financials,small
+UPM,Energy,mid
+IEH,Communication Services,small
+NSML,Technology,mega
+PCYB,Energy,small
+ZVN,Consumer Discretionary,small
+OQIR,Energy,small
+VRY,Financials,mid
+JNF,Health Care,large
+QYFQ,Utilities,mid
+UQTG,Technology,mid
+YQAT,Financials,small
+ZJHB,Technology,mid
+CXP,Consumer Staples,large
+YEEV,Health Care,small
+QTNG,Utilities,mid
+WJM,Materials,mid
+QODH,Technology,small
+RHSH,Technology,mid
+HCB,Energy,small
+IVP,Technology,small
+SPHZ,Health Care,small
+NNOX,Technology,mid
+BMX,Financials,mid
+GGR,Health Care,small
+OHCO,Consumer Staples,mid
+BUR,Consumer Staples,large
+FNP,Health Care,mid
+FMA,Materials,small
+JNWX,Materials,mid
+EGJG,Real Estate,mid
+BXKB,Technology,small
+FBQC,Energy,small
+VHM,Technology,mid
+STB,Consumer Discretionary,small
+SQKI,Technology,mid
+IME,Industrials,small
+YCAO,Industrials,mid
+CRG,Health Care,small
+CHLJ,Technology,mid
+TZUQ,Technology,mid
+VDEI,Technology,small
+EIJT,Technology,small
+QPIB,Technology,small
+BAKY,Technology,large
+XOR,Industrials,mid
+CWE,Consumer Discretionary,mid
+RENE,Technology,small
+LGV,Technology,small
+NTXE,Utilities,small
+ZZF,Energy,small
+ZNZV,Energy,mid
+FZWD,Health Care,small
+HGOL,Financials,mid
+HAV,Technology,small
+YIL,Industrials,small
+KADI,Technology,large
+BDTN,Financials,mid
+TQDM,Energy,small
+WNA,Consumer Discretionary,mid
+LNC,Real Estate,large
+KVDX,Utilities,small
+KMWJ,Consumer Discretionary,small
+VXFT,Consumer Discretionary,small
+JJG,Health Care,mid
+OOOV,Technology,small
+VCJ,Consumer Discretionary,mid
+CYHV,Financials,mid
+ABH,Materials,mid
+ONU,Consumer Discretionary,mid
+PMHE,Industrials,small
+YNH,Technology,large
+OBRH,Utilities,small
+ZOV,Consumer Discretionary,mid
+JWY,Industrials,small
+LVWZ,Technology,small

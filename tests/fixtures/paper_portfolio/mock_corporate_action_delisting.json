@@ -1,0 +1,18 @@
+{
+  "fixture_name": "mock_corporate_action_delisting",
+  "_fixture_note": "Radiation suite à acquisition. Teste la liquidation de position au dernier prix coté.",
+  "events": [
+    {
+      "ticker": "XYZT",
+      "action_type": "DELISTING",
+      "effective_date": "2026-05-01",
+      "details": {
+        "reason": "ACQUISITION_COMPLETED",
+        "last_price": 45.20,
+        "announcement_date": "2026-03-15",
+        "acquirer": "MEGACORP",
+        "description": "Liquidation au dernier prix coté avant radiation. Cash réintégré au portefeuille."
+      }
+    }
+  ]
+}
