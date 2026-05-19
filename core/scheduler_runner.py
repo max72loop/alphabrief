@@ -18,6 +18,7 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any
 
 # ── .env loader (sans dépendance externe) ────────────────────────────────────
 
@@ -41,7 +42,9 @@ _load_dotenv()
 
 # ── Imports projet (après dotenv) ─────────────────────────────────────────────
 
-from core.generator import generate_card  # noqa: E402
+from core.generator import generate_card          # noqa: E402
+from core.alert_engine import process_alerts      # noqa: E402
+from core.providers.events_yf import sync_events_for  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,6 +57,7 @@ logger = logging.getLogger(__name__)
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+RESEND_KEY   = os.environ.get("RESEND_API_KEY", "") or None
 
 # Délai entre deux tickers (secondes) — évite les rate limits Yahoo/FMP
 DELAY_S = 3
@@ -88,6 +92,29 @@ def _sb_get(path: str) -> list[dict]:
     except Exception as e:
         logger.warning(f"Supabase GET {path} failed: {e}")
         return []
+
+
+# ── Snapshot des scores actuels (avant run) ───────────────────────────────────
+
+def fetch_current_scores() -> dict[str, dict[str, Any]]:
+    """
+    Récupère score_total et rsi_14 pour tous les tickers déjà en base.
+    Retourne un dict {ticker: {"score": int, "rsi": float|None}}.
+    """
+    rows = _sb_get(
+        "ticker_scores?select=ticker,score_total,market_data"
+    )
+    result: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        ticker = (r.get("ticker") or "").upper()
+        if not ticker:
+            continue
+        market_data = r.get("market_data") or {}
+        result[ticker] = {
+            "score": r.get("score_total"),
+            "rsi":   market_data.get("rsi_14"),
+        }
+    return result
 
 
 # ── Sélection des tickers à scorer ───────────────────────────────────────────
@@ -144,6 +171,10 @@ def run() -> None:
         logger.error("SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY manquants — arrêt.")
         sys.exit(1)
 
+    # Snapshot des scores avant le run (pour comparaison dans l'alert engine)
+    prev_scores = fetch_current_scores()
+    logger.info(f"Snapshot pré-run : {len(prev_scores)} ticker(s) en base.")
+
     tickers = fetch_tickers_to_score()
     total = len(tickers)
 
@@ -162,6 +193,24 @@ def run() -> None:
             label = card.get("scores", {}).get("score_label", "")
             logger.info(f"  ✓ {ticker} → {score}/100 ({label})")
             success.append(ticker)
+
+            # Détection d'alertes — comparaison avec le snapshot pré-run
+            prev = prev_scores.get(ticker.upper(), {})
+            process_alerts(
+                ticker=ticker,
+                card=card,
+                old_score=prev.get("score"),
+                old_rsi=prev.get("rsi"),
+                sb_url=SUPABASE_URL,
+                sb_key=SUPABASE_KEY,
+                resend_key=RESEND_KEY,
+            )
+
+            # Sync earnings/dividend events (best-effort, n'échoue pas le ticker)
+            try:
+                sync_events_for(ticker)
+            except Exception as e:
+                logger.debug(f"  events sync skipped for {ticker}: {e}")
         except KeyboardInterrupt:
             logger.warning("Interruption utilisateur — arrêt propre.")
             break
