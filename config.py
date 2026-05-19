@@ -10,7 +10,7 @@ load_dotenv(BASE_DIR / '.env')
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-prod')
     DATA_DIR = BASE_DIR / 'data'
-    DB_PATH = BASE_DIR / 'data' / 'mytrader.db'
+    DB_PATH = BASE_DIR / 'data' / 'alphabrief.db'
     DEBUG = True
     MAX_RETRIES = 3
     ALERT_REFRESH_HOURS = 4
