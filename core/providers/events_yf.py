@@ -109,7 +109,10 @@ def sync_events_for(ticker: str) -> int:
     No-op si SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY absents.
     """
     sb_url = os.environ.get("SUPABASE_URL", "")
-    sb_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+    sb_key = (
+        os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        or os.environ.get("SUPABASE_KEY", "")
+    )
     if not sb_url or not sb_key:
         return 0
 
