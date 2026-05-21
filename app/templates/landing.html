@@ -59,6 +59,26 @@
             display: flex;
             align-items: center;
             padding: 7rem 2.5rem 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(99,102,241,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(124,58,237,0.03) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 48%, rgba(99,102,241,0.01) 49%, rgba(99,102,241,0.01) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(124,58,237,0.01) 49%, rgba(124,58,237,0.01) 51%, transparent 52%);
+            background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px;
+            background-attachment: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero {
+            position: relative;
+            z-index: 1;
         }
         .hero {
             max-width: 780px;
@@ -665,7 +685,6 @@
     <div class="hero">
 
         <div class="hero-content">
-            <div class="hero-badge">Investissement · Décision · Confiance</div>
             <h1 class="hero-title">
                 Les bonnes entreprises.<br>
                 <span class="hero-title-gradient">Au bon moment.</span>
