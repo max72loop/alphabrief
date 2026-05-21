@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Cycle Économique S&P 500 - MyTrader{% endblock %}
+{% block title %}Macro — AlphaBrief{% endblock %}
 
 {% block head %}
 <style>
@@ -467,6 +467,11 @@
 {% endblock %}
 
 {% block page_content %}
+<div class="macro-tabs">
+    <a href="{{ url_for('cycle.index') }}" class="macro-tab macro-tab--active">Cycle</a>
+    <a href="{{ url_for('marche.index') }}" class="macro-tab">Marché</a>
+    <a href="{{ url_for('bitcoin.index') }}" class="macro-tab">Bitcoin</a>
+</div>
 <div class="page-header">
     <h1>{{ current_data.icon }} Cycle Économique</h1>
     <span class="badge-count">S&P 500 — depuis 1960</span>

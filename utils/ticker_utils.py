@@ -1,4 +1,3 @@
-# mytrader_generator/utils/ticker_utils.py
 """Utilities for handling international ticker symbols."""
 
 from __future__ import annotations

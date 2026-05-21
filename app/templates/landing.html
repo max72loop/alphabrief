@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyTrader — Investis dans les bonnes boîtes. Au bon moment.</title>
+    <title>AlphaBrief — Investis dans les bonnes boîtes. Au bon moment.</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
     <style>
@@ -651,7 +651,7 @@
 
 <!-- ═══ ANNOUNCEMENT BAR ═══════════════════════════════════════════════ -->
 <div class="announce-bar">
-    <span>Prix de lancement <strong>9€/mois</strong> — Investis en confiance dès aujourd'hui.</span>
+    <span>Prix de lancement <strong>9€/mois</strong> — Analysez le marché avec méthode dès aujourd'hui.</span>
     <span class="announce-spots">Encore <strong id="spots-count">143</strong> places disponibles.</span>
     <a href="{{ url_for('watchlist.index') }}" class="announce-cta">Commencer →</a>
 </div>
@@ -659,7 +659,7 @@
 <!-- ═══ NAV ═══════════════════════════════════════════════════════════ -->
 <nav class="landing-nav">
     <a href="/" class="nav-brand">
-        <img src="{{ url_for('static', filename='logo.svg') }}" alt="MyTrader Generator" height="48">
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="AlphaBrief Generator" height="48">
     </a>
     <div class="landing-nav-links">
         <a href="#how" class="landing-nav-link">Comment ça marche</a>
@@ -687,13 +687,13 @@
         <div class="hero-content">
             <h1 class="hero-title">
                 Les bonnes entreprises.<br>
-                <span class="hero-title-gradient">Au bon moment.</span>
+                <span class="hero-title-gradient">Analysées pour toi.</span>
             </h1>
-            <p class="hero-tagline">Investis. Et oublie les cours.</p>
+            <p class="hero-tagline">Comprends. Décide. Avance.</p>
             <p class="hero-desc">
-                Tu n'as pas besoin de surveiller les marchés tous les jours pour bien placer ton argent.
-                MyTrader analyse les bonnes boîtes en continu et t'alerte quand c'est le moment d'agir.
-                Toi, tu prends la décision. Ensuite, tu passes à autre chose.
+                Tu n'as pas besoin de surveiller les marchés tous les jours pour analyser le marché correctement.
+                AlphaBrief agrège 15+ facteurs financiers en continu et t'alerte quand une opportunité mérite ton analyse.
+                Toi, tu prends la décision — en connaissance de cause.
             </p>
             <div class="hero-actions">
                 <a href="{{ url_for('watchlist.index') }}" class="btn btn-glow btn-xl">
@@ -739,7 +739,7 @@
                 <span class="demo-score-denom">/ 100</span>
                 <span class="demo-confidence-line">Confiance 85%</span>
             </div>
-            <div class="demo-signal-pill">BUY</div>
+            <div class="demo-signal-pill">Score élevé</div>
         </div>
         <div class="demo-factors">
             <div class="demo-factor">
@@ -794,7 +794,7 @@
         </div>
         <div style="text-align:center;">
             <div style="font-size:1.6rem;font-weight:800;color:var(--primary-light);">IA</div>
-            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem;">Sélectionne les entreprises solides</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem;">Identifie les entreprises solides</div>
         </div>
     </div>
 </div>
@@ -804,35 +804,35 @@
 <section id="how" class="land-section land-section-alt">
     <div class="land-container">
         <div class="land-label">Méthode</div>
-        <h2 class="land-title">Investir sans y passer ses journées</h2>
+        <h2 class="land-title">Analyser le marché sans y passer ses journées</h2>
         <p class="land-desc">
-            Trois étapes, et tu reprends ta vie. L'app surveille à ta place — toi tu agis quand c'est le bon moment.
+            Trois étapes, et tu reprends ta vie. L'app analyse à ta place — toi tu décides en connaissance de cause.
         </p>
         <div class="steps-row">
             <div class="step-item">
                 <div class="step-num">ÉTAPE 01</div>
-                <div class="step-title">Construis ta liste</div>
+                <div class="step-title">Construis ta liste de suivi</div>
                 <div class="step-desc">
                     Ajoute les entreprises qui t'intéressent. Aucune expertise requise —
-                    MyTrader s'occupe de les surveiller pour toi en continu, 24h/24.
+                    AlphaBrief s'occupe d'agréger et d'analyser les données en continu, 24h/24.
                 </div>
             </div>
             <div class="step-connector">→</div>
             <div class="step-item">
                 <div class="step-num">ÉTAPE 02</div>
-                <div class="step-title">L'algo détecte le bon moment</div>
+                <div class="step-title">L'algo analyse les facteurs clés</div>
                 <div class="step-desc">
                     15+ facteurs analysés automatiquement — solidité de l'entreprise, momentum,
-                    valorisation, cycle macro. Il sait quand une action mérite vraiment ton attention.
+                    valorisation, cycle macro. L'algo te signale quand une action mérite une analyse approfondie.
                 </div>
             </div>
             <div class="step-connector">→</div>
             <div class="step-item">
                 <div class="step-num">ÉTAPE 03</div>
-                <div class="step-title">Tu agis. Puis tu oublies.</div>
+                <div class="step-title">Tu décides. En connaissance de cause.</div>
                 <div class="step-desc">
-                    Un signal clair, une décision, c'est tout. Tu n'as pas besoin d'être rivé
-                    à ton écran. MyTrader t'alerte quand ça bouge — pas l'inverse.
+                    Des données claires, une analyse complète, c'est tout. Tu n'as pas besoin d'être rivé
+                    à ton écran. AlphaBrief t'alerte quand quelque chose change — la décision finale t'appartient.
                 </div>
             </div>
         </div>
@@ -844,51 +844,51 @@
 <section id="features" class="land-section">
     <div class="land-container">
         <div class="land-label">Fonctionnalités</div>
-        <h2 class="land-title">Tout ce qu'il faut pour miser juste</h2>
+        <h2 class="land-title">Tout ce qu'il faut pour analyser juste</h2>
         <p class="land-desc">
-            Pas besoin d'être expert. MyTrader transforme les données complexes en une seule chose :
-            savoir si une entreprise vaut ton argent, maintenant.
+            Pas besoin d'être expert. AlphaBrief transforme des données complexes en analyses claires :
+            score, métriques brutes, indicateurs — pour que tu comprennes et décides par toi-même.
         </p>
         <div class="features-grid">
 
             <div class="feature-card">
                 <div class="feature-icon-box">0–100</div>
-                <div class="feature-title">Un score. Une décision.</div>
+                <div class="feature-title">Un score. Une analyse complète.</div>
                 <div class="feature-desc">
                     15+ facteurs analysés en continu — solidité financière, valorisation, momentum.
-                    Résultat : un score de 0 à 100 qui te dit si c'est le bon moment ou non.
-                    Simple. Lisible. Actionnable.
+                    Résultat : un score de 0 à 100 qui synthétise les données disponibles.
+                    Simple. Lisible. Transparent.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">IA</div>
-                <div class="feature-title">Mise sur les bonnes boîtes</div>
+                <div class="feature-title">Identifie les entreprises solides</div>
                 <div class="feature-desc">
-                    L'IA analyse si l'entreprise est vraiment solide sur le long terme —
+                    L'IA analyse la solidité de l'entreprise sur le long terme —
                     avantage concurrentiel, position de marché, risques clés.
-                    Tu sais pourquoi tu investis, pas juste combien.
+                    Tu comprends ce que tu analyses, pas juste un chiffre.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">BTC</div>
-                <div class="feature-title">Bitcoin — quand entrer, quand sortir</div>
+                <div class="feature-title">Bitcoin — tableau de bord on-chain</div>
                 <div class="feature-desc">
                     12 indicateurs on-chain et de marché combinés en un seul score composite.
-                    Pi Cycle, MVRV, Stock-to-Flow, Fear & Greed et plus — sans avoir à tous les comprendre.
+                    Pi Cycle, MVRV, Stock-to-Flow, Fear & Greed et plus — visualisés en un coup d'œil.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon-box">ECO</div>
-                <div class="feature-title">Le bon secteur au bon moment</div>
+                <div class="feature-title">Les secteurs selon le cycle économique</div>
                 <div class="feature-desc">
                     Récession, reprise, expansion — l'app détecte la phase du cycle économique
-                    et te montre quels secteurs en profitent. Alloue ton argent là où ça a du sens.
+                    et te montre quels secteurs historiquement surperforment. Un contexte macro pour enrichir ton analyse.
                 </div>
                 <span class="feature-tag-pill">GRATUIT + PREMIUM</span>
             </div>
@@ -898,7 +898,7 @@
                 <div class="feature-title">Tu oublies. On surveille.</div>
                 <div class="feature-desc">
                     Ajoute des entreprises à ta watchlist et reprends ta vie.
-                    MyTrader analyse en continu et te notifie uniquement quand ça mérite ton attention.
+                    AlphaBrief analyse en continu et te notifie uniquement quand ça mérite ton attention.
                     Finis les rafraîchissements compulsifs.
                 </div>
                 <span class="feature-tag-pill" style="background:rgba(99,102,241,0.2);color:var(--primary-light);">PREMIUM</span>
@@ -929,7 +929,7 @@
 
             <div class="testimonial-card">
                 <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"Avant je vérifiais les cours trois fois par jour par anxiété. Maintenant MyTrader me prévient si quelque chose mérite mon attention. Je dors mieux et je perds moins de temps."</p>
+                <p class="testimonial-text">"Avant je vérifiais les cours trois fois par jour par anxiété. Maintenant AlphaBrief me prévient si quelque chose mérite mon attention. Je dors mieux et je perds moins de temps."</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">TM</div>
                     <div>
@@ -971,18 +971,18 @@
 <!-- ═══ COMPARISON ════════════════════════════════════════════════════ -->
 <section id="compare" class="land-section land-section-alt">
     <div class="land-container">
-        <div class="land-label">Pourquoi MyTrader</div>
+        <div class="land-label">Pourquoi AlphaBrief</div>
         <h2 class="land-title">Ce que les autres outils ne font pas</h2>
         <p class="land-desc">
             TradingView, Yahoo Finance, Seeking Alpha — faits pour les traders professionnels, pas pour toi.
-            MyTrader est le seul outil qui combine scoring, IA et alertes pour que tu investisses
+            AlphaBrief est le seul outil qui combine scoring, IA et alertes pour analyser le marché
             sans y passer ta vie.
         </p>
         <table class="comp-table">
             <thead>
                 <tr>
                     <th>Feature</th>
-                    <th class="th-mytrader">MyTrader</th>
+                    <th class="th-mytrader">AlphaBrief</th>
                     <th>TradingView</th>
                     <th>Seeking Alpha</th>
                     <th>Yahoo Finance</th>
@@ -1106,7 +1106,7 @@
                     <span style="color:var(--text-muted);font-size:1.1rem;">+</span>
                 </summary>
                 <p style="margin-top:0.85rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7;">
-                    MyTrader agrège des données fondamentales et de marché en temps réel depuis des sources financières de référence. Un <strong style="color:var(--text-secondary);">score de confiance</strong> est affiché pour chaque analyse — il signale automatiquement quand certaines données sont incomplètes, pour ne jamais décider sur une base biaisée.
+                    AlphaBrief agrège des données fondamentales et de marché en temps réel depuis des sources financières de référence. Un <strong style="color:var(--text-secondary);">score de confiance</strong> est affiché pour chaque analyse — il signale automatiquement quand certaines données sont incomplètes, pour ne jamais décider sur une base biaisée.
                 </p>
             </details>
 
@@ -1116,7 +1116,7 @@
                     <span style="color:var(--text-muted);font-size:1.1rem;">+</span>
                 </summary>
                 <p style="margin-top:0.85rem;font-size:0.85rem;color:var(--text-muted);line-height:1.7;">
-                    MyTrader est fait pour les <strong style="color:var(--text-secondary);">jeunes actifs qui veulent faire fructifier leur argent</strong> sans y consacrer des heures. Tu n'as pas besoin d'être expert — juste de vouloir prendre de meilleures décisions que la moyenne. Ce n'est pas un robo-advisor : il t'aide à décider en confiance, pas à décider à ta place.
+                    AlphaBrief est fait pour les <strong style="color:var(--text-secondary);">jeunes actifs qui veulent faire fructifier leur argent</strong> sans y consacrer des heures. Tu n'as pas besoin d'être expert — juste de vouloir prendre de meilleures décisions que la moyenne. Ce n'est pas un robo-advisor : il t'aide à décider en confiance, pas à décider à ta place.
                 </p>
             </details>
 
@@ -1140,11 +1140,11 @@
     <div class="cta-inner">
         <div class="land-label" style="text-align:center">Prends le contrôle</div>
         <h2 class="cta-title">
-            Investis avec confiance.<br>Sans y passer tes soirées.
+            Analysez avec méthode.<br>Sans y passer vos soirées.
         </h2>
         <p class="cta-desc">
             Commence gratuitement. Construis ta watchlist, obtiens tes premiers scores,
-            et ressens la différence entre investir par instinct et investir avec méthode.
+            et découvre la différence entre analyser à l'instinct et analyser avec des données.
             Sans CB. Sans engagement.
         </p>
         <div class="cta-actions">
@@ -1159,20 +1159,25 @@
 </section>
 
 
-<!-- Note sources de données -->
+<!-- Note sources de données + Disclaimer AMF -->
 <div class="data-note">
     <div class="data-note-inner">
-        MyTrader agrège en temps réel données fondamentales, techniques et macro depuis des sources financières de référence.
-        Le <strong>score de confiance</strong> signale automatiquement quand certaines données
-        sont incomplètes, pour ne jamais décider sur une base biaisée.
-        MyTrader est un outil d'aide à la décision — pas un conseil financier, pas un robo-advisor.
+        <strong>Avertissement réglementaire</strong> — AlphaBrief est un outil d'analyse quantitative à usage informatif uniquement.
+        Les scores, données et analyses présentés ne constituent pas des conseils en investissement au sens de la directive MIF II
+        ni des recommandations personnalisées d'achat ou de vente de valeurs mobilières.
+        AlphaBrief n'est pas enregistré auprès de l'AMF en qualité de Conseiller en Investissements Financiers (CIF).
+        Tout investissement comporte des risques, y compris la perte partielle ou totale du capital investi.
+        <strong>L'utilisateur est seul responsable de ses décisions d'investissement.</strong>
+        <br><br>
+        Les données sont agrégées depuis des sources financières de référence. Le <strong>score de confiance</strong>
+        signale automatiquement quand certaines données sont incomplètes.
     </div>
 </div>
 
 
 <!-- ═══ STICKY CTA BAR ════════════════════════════════════════════════ -->
 <div class="sticky-cta" id="sticky-cta">
-    <span class="sticky-cta-text">MyTrader · <strong>Investis en confiance</strong> · 9€/mois</span>
+    <span class="sticky-cta-text">AlphaBrief · <strong>Analysez en confiance</strong> · 9€/mois</span>
     <a href="{{ url_for('watchlist.index') }}" class="btn btn-glow" style="padding:0.6rem 1.4rem;font-size:0.88rem;">
         Essayer gratuitement →
     </a>
@@ -1181,8 +1186,12 @@
 
 <!-- Footer -->
 <footer class="landing-footer">
-    <span class="footer-brand">MyTrader Generator</span>
-    <span class="footer-copy">Investissement simplifié · Alertes automatiques · IA intégrée</span>
+    <span class="footer-brand">AlphaBrief Generator</span>
+    <span class="footer-copy">Analyse quantitative · Alertes automatiques · IA intégrée</span>
+    <span class="footer-copy" style="font-size:0.7rem;opacity:0.45;display:block;margin-top:0.5rem;">
+        Outil d'analyse quantitative informatif uniquement — pas un conseil en investissement au sens MIF II.
+        AlphaBrief n'est pas enregistré auprès de l'AMF en qualité de CIF. L'utilisateur est seul responsable de ses décisions.
+    </span>
 </footer>
 
 
@@ -1295,6 +1304,7 @@
 
 <!-- ═══ ONBOARDING TOUR ═══════════════════════════════════════════════ -->
 <script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+
 
 </body>
 </html>

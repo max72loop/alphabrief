@@ -33,8 +33,11 @@ def show(ticker):
         card = None
 
     layout = JsonStore.get_layout(ticker)
+    # Score history for chart (last 30, chronological order)
+    raw_history = JsonStore.get_score_history(ticker=ticker)
+    score_history = list(reversed(raw_history[:30]))
 
-    return render_template('detail.html', ticker=ticker, card=card, layout=layout)
+    return render_template('detail.html', ticker=ticker, card=card, layout=layout, score_history=score_history)
 
 
 @bp.route('/stream/<ticker>')

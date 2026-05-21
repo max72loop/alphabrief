@@ -1,9 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Watchlist - MyTrader{% endblock %}
+{% block title %}Watchlist — AlphaBrief{% endblock %}
+{% block head %}
+<style>
+/* ── Score fusionné ───────────────────────────────────────────── */
+.score-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+.score-chip-num {
+    font-size: 1rem;
+    font-weight: 800;
+}
+.score-chip.chip-high  { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+.score-chip.chip-mid   { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+.score-chip.chip-low   { background: rgba(239,68,68,0.12);   color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+/* ── Boutons icônes ───────────────────────────────────────────── */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+.btn-icon-score:hover { background: rgba(99,102,241,0.15); color: var(--primary-light); border-color: rgba(99,102,241,0.3); }
+.btn-icon-delete:hover { background: rgba(239,68,68,0.12); color: #ef4444; border-color: rgba(239,68,68,0.25); }
+.actions-cell { display: flex; align-items: center; gap: 0.35rem; }
+
+.analyses-counter {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-right: auto;
+    margin-left: 0.5rem;
+}
+.analyses-counter--low { color: var(--warning); font-weight: 600; }
+</style>
+{% endblock %}
 {% block page_content %}
 <div class="page-header">
     <h1>Ma Watchlist</h1>
-    <span class="badge-count">{{ tickers|length }} ticker(s)</span>
+    <span class="badge-count">{{ tickers|length }} ticker{{ 's' if tickers|length != 1 else '' }}</span>
 </div>
 
 <div class="card add-form">
@@ -19,7 +68,8 @@
 <div class="card">
     <div class="card-header">
         <span>Tickers suivis</span>
-        <form method="POST" action="{{ url_for('scoring.score_batch') }}" class="inline-form">
+        <span id="analyses-counter" class="analyses-counter"></span>
+        <form method="POST" action="{{ url_for('scoring.score_batch') }}" class="inline-form" data-ticker-count="{{ tickers|length }}">
             <button type="submit" class="btn btn-sm btn-accent">Scorer tout</button>
         </form>
     </div>
@@ -48,17 +98,15 @@
                 </td>
                 <td class="text-center">
                     {% if info %}
-                        <span class="score-pill score-{{ 'high' if info.score >= 70 else ('mid' if info.score >= 50 else 'low') }}">
-                            {{ info.score }}
+                        {% if info.score >= 75 %}{% set chip = 'chip-high' %}{% set label = 'Excellent' %}
+                        {% elif info.score >= 60 %}{% set chip = 'chip-high' %}{% set label = 'Bon' %}
+                        {% elif info.score >= 45 %}{% set chip = 'chip-mid' %}{% set label = 'Neutre' %}
+                        {% elif info.score >= 30 %}{% set chip = 'chip-mid' %}{% set label = 'Attention' %}
+                        {% else %}{% set chip = 'chip-low' %}{% set label = 'Risqué' %}{% endif %}
+                        <span class="score-chip {{ chip }}">
+                            <span class="score-chip-num">{{ info.score }}</span>
+                            <span style="font-size:0.72rem;opacity:0.75;">{{ label }}</span>
                         </span>
-                        <br>
-                        {% if info.score >= 65 %}
-                        <span class="signal-badge signal-acheter">Acheter</span>
-                        {% elif info.score >= 40 %}
-                        <span class="signal-badge signal-observer">Observer</span>
-                        {% else %}
-                        <span class="signal-badge signal-eviter">Éviter</span>
-                        {% endif %}
                         <br><span class="score-date">{{ info.date }}</span>
                     {% else %}
                         <span class="text-muted">—</span>
@@ -83,13 +131,18 @@
                 </td>
                 <td class="actions-cell">
                     <form method="POST" action="{{ url_for('scoring.score_single', ticker=ticker) }}" class="inline-form">
-                        <button type="submit" class="btn btn-sm btn-accent">Scorer</button>
-                    </form>
-                    <form method="POST" action="{{ url_for('portfolio.transfer', ticker=ticker) }}" class="inline-form">
-                        <button type="submit" class="btn btn-sm btn-secondary">Portfolio</button>
+                        <button type="submit" class="btn-icon btn-icon-score" title="Analyser" aria-label="Analyser {{ ticker }}">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                            </svg>
+                        </button>
                     </form>
                     <form method="POST" action="{{ url_for('watchlist.remove', ticker=ticker) }}" class="inline-form">
-                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                        <button type="submit" class="btn-icon btn-icon-delete" title="Supprimer" aria-label="Supprimer {{ ticker }} de la watchlist">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+                            </svg>
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -98,8 +151,31 @@
     </table>
 </div>
 {% else %}
-<div class="card empty-state">
-    <p>Votre watchlist est vide. Ajoutez des tickers ci-dessus.</p>
+<div class="card empty-state empty-state--guided">
+    <div class="empty-state-icon">📋</div>
+    <p class="empty-state-title">Votre watchlist est vide</p>
+    <p class="empty-state-desc">
+        Ajoutez un ticker dans le champ ci-dessus pour générer votre premier score.<br>
+        Essayez par exemple <button class="empty-state-demo-btn" onclick="document.querySelector('.input-ticker').value='AAPL';document.querySelector('.input-ticker').focus()">AAPL</button>,
+        <button class="empty-state-demo-btn" onclick="document.querySelector('.input-ticker').value='MC.PA';document.querySelector('.input-ticker').focus()">MC.PA</button> ou
+        <button class="empty-state-demo-btn" onclick="document.querySelector('.input-ticker').value='MSFT';document.querySelector('.input-ticker').focus()">MSFT</button>.
+    </p>
+    <p class="empty-state-hint">
+        <a href="{{ url_for('algorithm.index') }}" class="empty-state-link">Comment fonctionne le score ?</a>
+    </p>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('analyses-counter');
+    if (!el || !window.AB) return;
+    var used = window.AB.getAnalysesUsed();
+    var remaining = window.AB.FREE_DAILY_LIMIT - used;
+    el.textContent = remaining + '\u202f/\u202f' + window.AB.FREE_DAILY_LIMIT + ' analyses restantes';
+    el.classList.toggle('analyses-counter--low', remaining <= 1);
+});
+</script>
 {% endblock %}

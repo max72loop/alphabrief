@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
-# data/cache/ next to the mytrader/ root
+# data/cache/ next to the project root
 _BASE_DIR = Path(__file__).resolve().parent.parent
 CACHE_DIR = _BASE_DIR / "data" / "cache"
 
