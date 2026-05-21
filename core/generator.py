@@ -90,9 +90,17 @@ def empty_card(ticker: str) -> Dict[str, Any]:
         },
         "market": {
             "beta": None,
-            "volatility_1y": None,
-            "drawdown_1y": None,
+            # FIX M3 (audit 2026-05-13) : champs alignés avec fetch_identity_and_market.
+            # `volatility_1y` et `drawdown_1y` retirés d'ici (gardés uniquement dans
+            # technicals où ils sont calculés).
             "avg_volume_3m": None,
+            "current_price": None,
+            "previous_close": None,
+            "change_pct": None,
+            "volume": None,
+            "fifty_two_week_low": None,
+            "fifty_two_week_high": None,
+            "dividend_yield": None,
             "momentum_1m": None,
             "momentum_3m": None,
             "momentum_6m": None,
@@ -123,6 +131,9 @@ def empty_card(ticker: str) -> Dict[str, Any]:
         },
         "scores": {
             "potential_score": None,
+            "fundamentals_score": None,
+            "technicals_score": None,
+            "momentum_score": None,
             "score_label": None,
             "importance_ranked_items": [],
             "confidence_score": None,
@@ -159,12 +170,20 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
             _cache.save(ticker, "momentum", data)
         return data
 
+    def _has_useful_fundamentals(payload):
+        if not payload:
+            return False
+        fin = payload.get("financials", {})
+        val = payload.get("valuation", {})
+        return sum(1 for v in {**fin, **val}.values() if v is not None) >= 3
+
     def _fetch_fundamentals():
         cached = _cache.load(ticker, "fundamentals")
-        if cached:
+        if _has_useful_fundamentals(cached):
             return cached
         data = fetch_core_fundamentals(ticker)
-        _cache.save(ticker, "fundamentals", data)
+        if _has_useful_fundamentals(data):
+            _cache.save(ticker, "fundamentals", data)
         return data
 
     def _fetch_technicals():
@@ -273,7 +292,7 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
 
     # scoring
     _cb("Calcul du score de potentiel...")
-    card["scores"]["potential_score"] = compute_potential_score(card)
+    breakdown = compute_potential_score(card)
     _cb("Analyse des facteurs clés...")
     card["scores"]["importance_ranked_items"] = build_importance_items(card, limit=10)
 
@@ -281,16 +300,26 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     confidence = compute_confidence_score(card)
     card["scores"]["confidence_score"] = confidence
 
-    # ajustement du score (CORRIGÉ)
-    if card["scores"]["potential_score"] is not None:
-        card["scores"]["potential_score"] = int(
-            round(
-                card["scores"]["potential_score"]
-                * (0.5 + 0.5 * confidence / 100)
-            )
-        )
+    # Ajustement par la confiance — appliqué à chaque sous-score pour que
+    # la décomposition reste cohérente avec le total affiché.
+    #
+    # FIX I1 (audit 2026-05-13) : Le multiplicateur historique `0.5 + 0.5*conf/100`
+    # provoquait une double pénalisation lorsque les fondamentaux étaient
+    # absents : `score_linear` retourne déjà 50 (neutre) sur None, et le facteur
+    # x0.5 transformait ce 50 neutre en un score affiché de ~25 ("Faible").
+    # On relève le plancher de 0.5 → 0.8 pour limiter la sur-pénalisation tout
+    # en gardant le signal "données peu fiables → score modulé légèrement".
+    factor = 0.8 + 0.2 * (confidence or 0) / 100
+    card["scores"]["potential_score"]    = int(round(breakdown["total"]        * factor))
+    card["scores"]["fundamentals_score"] = int(round(breakdown["fundamentals"] * factor))
+    card["scores"]["technicals_score"]   = int(round(breakdown["technicals"]   * factor))
+    card["scores"]["momentum_score"]     = int(round(breakdown["momentum"]     * factor))
 
-    card["scores"]["score_label"] = _score_label(card["scores"]["potential_score"])
+    # FIX I4 (audit 2026-05-13) : appliquer le label sur le score brut (avant
+    # factor) plutôt que sur le score affiché. Garantit qu'une entreprise de
+    # fondamentaux solides reste étiquetée "Fort" même quand la confidence est
+    # basse (données partielles), sans gonfler artificiellement le score.
+    card["scores"]["score_label"] = _score_label(int(round(breakdown["total"])))
     _cb("Analyse terminée !")
 
     return card

@@ -621,6 +621,10 @@ def compute_pb_score_sector_aware(pb: Optional[float], sector: Optional[str], in
     """
     if pb is None:
         return 50.0
+    # PB négatif = equity comptable négative = signal de détresse financière.
+    # Ne pas laisser score_linear_inverse retourner 100 (best) pour ce cas.
+    if pb <= 0:
+        return 0.0
 
     # Industries / secteurs où le P/B est structurellement élevé et non pertinent
     asset_light_industries = {
@@ -844,6 +848,39 @@ def compute_gross_margin_score_sector_aware(gross_margin: Optional[float], secto
         return 50.0
     lo, hi = _SECTOR_GROSS_MARGIN_RANGES.get(sector or "", _DEFAULT_GROSS_MARGIN_RANGE)
     return score_linear(gross_margin, lo=lo, hi=hi)
+
+
+# ---------------------------------------------------------------------------
+# Scoring marge FCF (Free Cash Flow / Revenue) ajusté par secteur — FIX I6
+# Aligné sur le pattern EBIT/Gross sector-aware. Les bornes FCF sont dérivées
+# des bornes EBIT avec un offset typique de -2 à -5 pp pour tenir compte du
+# capex et du BFR (le FCF est structurellement inférieur à l'EBIT).
+# ---------------------------------------------------------------------------
+
+_SECTOR_FCF_MARGIN_RANGES: dict[str, tuple[float, float]] = {
+    "Technology":              (8.0, 30.0),   # SaaS : capex léger, FCF proche d'EBIT
+    "Communication Services":  (5.0, 25.0),
+    "Consumer Discretionary":  (2.0, 12.0),
+    "Health Care":             (5.0, 25.0),
+    "Industrials":             (2.0, 15.0),   # Capex industriel lourd
+    "Consumer Staples":        (2.0, 12.0),
+    "Materials":               (2.0, 15.0),
+    "Energy":                  (2.0, 18.0),   # Très volatil au cycle
+    "Real Estate":             (10.0, 35.0),  # REITs : FCF élevé après capex
+    "Utilities":               (2.0, 12.0),   # Capex régulier
+    # Financials : exclus via is_financial → fcf_margin mis à None upstream
+}
+_DEFAULT_FCF_MARGIN_RANGE: tuple[float, float] = (3.0, 20.0)
+
+
+def compute_fcf_margin_score_sector_aware(
+    fcf_margin: Optional[float], sector: Optional[str]
+) -> float:
+    """Score FCF margin calibré par secteur. None → 50 (neutre)."""
+    if fcf_margin is None:
+        return 50.0
+    lo, hi = _SECTOR_FCF_MARGIN_RANGES.get(sector or "", _DEFAULT_FCF_MARGIN_RANGE)
+    return score_linear(fcf_margin, lo=lo, hi=hi)
 
 
 # ---------------------------------------------------------------------------
@@ -1513,17 +1550,18 @@ def compute_momentum_quality_score(momentum_12m: Optional[float], volatility_1y:
     return 12.0       # Effondrement progressif
 
 
-def compute_potential_score(card: Dict[str, Any]) -> int:
+def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
     """
-    Score 0-100, déterministe.
+    Score 0-100, déterministe. Retourne un dict avec 4 clés :
+      - total          : score global
+      - fundamentals   : bloc "entreprise" (Quality, Growth, Value, Risk, Analyst)
+      - technicals     : indicateurs techniques (RSI, SMA, MACD, position 52w)
+      - momentum       : momentum absolu + relatif + qualité
 
-    Composantes (total 100%):
-    - Quality (20%): EBIT margin + ROE + FCF margin + Cash Conversion
-    - Growth (15%): Revenue CAGR 3y + tendance de croissance (accélération/décélération)
-    - Value (30%): FCF yield + P/E + EV/EBITDA + P/B + PEG + Dividend Yield
-    - Momentum (15%): Performance 12 mois
-    - Technical (10%): RSI + Signal SMA (50/200, golden/death cross)
-    - Risk (10%): Beta + Debt
+    Pondération finale : 50 % fundamentals, 25 % technicals, 25 % momentum.
+    À l'intérieur du bloc fundamentals, les piliers gardent leurs poids
+    historiques normalisés (Q/G/V/R/An ≈ 18/13/25/10/12) pour préserver la
+    hiérarchie des signaux.
     """
     identity = card.get("identity", {})
     fin = card.get("financials", {})
@@ -1583,7 +1621,11 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
     # La FCF margin d'une banque n'est pas comparable à celle d'une tech/industrielle.
     if is_financial:
         fcf_margin = None
-    fcf_margin_score = score_linear(fcf_margin, lo=3.0, hi=20.0)
+    # FIX I6 : FCF margin sector-aware (alignée sur le pattern EBIT/Gross).
+    # Une SaaS génère structurellement plus de FCF qu'un industriel à capex lourd,
+    # donc on calibre les bornes par secteur. Range dérivée des _SECTOR_EBIT_RANGES
+    # avec un décalage à la baisse (FCF < EBIT à cause du capex et BFR).
+    fcf_margin_score = compute_fcf_margin_score_sector_aware(fcf_margin, sector)
 
     # Cash Conversion (qualité des bénéfices)
     cash_conv_fcf = to_float(fin.get("fcf_absolute"))
@@ -1603,10 +1645,16 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
     net_margin_score = compute_net_margin_score(net_margin)
 
     # Quality composite : pondération dynamique selon les données disponibles
-    quality_components = [("ebit", ebit_score, 0.25, ebit_margin)]
+    # FIX I5 : ebit_margin et roe sont désormais conditionnels (comme les autres
+    # composants). Avant ce fix, un ticker sans ebit ni roe se retrouvait avec
+    # deux entrées neutres à 50 qui diluaient les autres signaux.
+    quality_components: list[tuple[str, float, float, Any]] = []
+    if ebit_margin is not None:
+        quality_components.append(("ebit", ebit_score, 0.25, ebit_margin))
     if gross_margin is not None:
         quality_components.append(("gross", gross_margin_score, 0.15, gross_margin))
-    quality_components.append(("roe", roe_score, 0.15, roe))
+    if roe is not None:
+        quality_components.append(("roe", roe_score, 0.15, roe))
     if fcf_margin is not None:
         quality_components.append(("fcf_m", fcf_margin_score, 0.18, fcf_margin))
     if cash_conv_fcf is not None:
@@ -1645,8 +1693,12 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
         quality_components.append(("institutional", inst_score, 0.10, inst_own))
 
     # Normaliser les poids pour que le total = 1.0
+    # Edge case (FIX I5) : si aucun composant Quality n'est dispo → neutre 50.
     total_qw = sum(w for _, _, w, _ in quality_components)
-    quality = sum(s * w / total_qw for _, s, w, _ in quality_components)
+    if total_qw > 0:
+        quality = sum(s * w / total_qw for _, s, w, _ in quality_components)
+    else:
+        quality = 50.0
 
     # === GROWTH (15%) ===
     rev_cagr = to_float(fin.get("revenue_cagr_3y"))
@@ -1928,36 +1980,32 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
     total_rw = sum(w for _, _, w, _ in risk_components)
     risk_score = sum(s * w / total_rw for _, s, w, _ in risk_components)
 
-    # === SCORE FINAL ===
-    # Quality: 18%, Growth: 13%, Value: 25%, Momentum: 12%, Technical: 10%, Risk: 10%, Analyst: 12%
+    # === BLOC FONDAMENTAUX ===
+    # Poids internes (normalisés pour sommer à 1.0) — hérités de la pondération
+    # historique Q/G/V/R/An = 18/13/25/10/12 (ou 20/15/30/10/— sans analyst).
     has_analyst = analyst_target is not None
     if has_analyst:
-        total = (
-            0.18 * quality +
-            0.13 * growth +
-            0.25 * value +
-            0.12 * momentum +
-            0.10 * technical +
-            0.10 * risk_score +
-            0.12 * analyst
-        )
+        fund_components = [
+            (quality,    0.18),
+            (growth,     0.13),
+            (value,      0.25),
+            (risk_score, 0.10),
+            (analyst,    0.12),
+        ]
     else:
-        # Fallback sans données analystes : poids originaux
-        total = (
-            0.20 * quality +
-            0.15 * growth +
-            0.30 * value +
-            0.15 * momentum +
-            0.10 * technical +
-            0.10 * risk_score
-        )
+        fund_components = [
+            (quality,    0.20),
+            (growth,     0.15),
+            (value,      0.30),
+            (risk_score, 0.10),
+        ]
+    _total_fw = sum(w for _, w in fund_components)
+    fundamentals = sum(s * w / _total_fw for s, w in fund_components)
 
-    # === BONUS/MALUS DE CONVERGENCE PROPORTIONNEL (Amélioration 3) ===
-    # Bonus/malus graduel selon le nombre ET la force d'alignement des piliers.
-    # Formule : MAX_CONV × (nb_alignés / nb_total) × (0.5 + 0.5 × intensité)
-    #   - nb_alignés / nb_total : fraction des piliers alignés (0.75 ou 1.0)
-    #   - intensité : à quel point les piliers dépassent le seuil (0 → 1)
-    # Plage effective : ≈ 0 à 8 points (vs binaire 3/5 auparavant).
+    # === BONUS/MALUS DE CONVERGENCE PROPORTIONNEL ===
+    # Appliqué au bloc fondamentaux uniquement : l'alignement Quality/Growth/Value/Risk
+    # est un signal de conviction "entreprise". Le momentum et la technique sont déjà
+    # des signaux indépendants et ne bénéficient pas d'un bonus de convergence.
     _BULL_THRESH = 65.0
     _BEAR_THRESH = 35.0
     _MAX_CONV = 8.0
@@ -1968,13 +2016,24 @@ def compute_potential_score(card: Dict[str, Any]) -> int:
 
     if len(bullish_pillars) >= 3:
         avg_excess = sum(p - _BULL_THRESH for p in bullish_pillars) / len(bullish_pillars)
-        strength  = len(bullish_pillars) / len(pillars)       # 0.75 ou 1.0
-        intensity = min(avg_excess / 35.0, 1.0)               # 0 à 1 selon l'excès
-        total = total + _MAX_CONV * strength * (0.5 + 0.5 * intensity)
+        strength  = len(bullish_pillars) / len(pillars)
+        intensity = min(avg_excess / 35.0, 1.0)
+        fundamentals = fundamentals + _MAX_CONV * strength * (0.5 + 0.5 * intensity)
     elif len(bearish_pillars) >= 3:
         avg_excess = sum(_BEAR_THRESH - p for p in bearish_pillars) / len(bearish_pillars)
         strength  = len(bearish_pillars) / len(pillars)
         intensity = min(avg_excess / 35.0, 1.0)
-        total = total - _MAX_CONV * strength * (0.5 + 0.5 * intensity)
+        fundamentals = fundamentals - _MAX_CONV * strength * (0.5 + 0.5 * intensity)
 
-    return int(round(clamp(total, 0.0, 100.0)))
+    # === COMBINAISON FINALE 50 / 25 / 25 ===
+    fundamentals = clamp(fundamentals, 0.0, 100.0)
+    technicals   = clamp(technical,    0.0, 100.0)
+    mom_clamped  = clamp(momentum,     0.0, 100.0)
+    total = 0.50 * fundamentals + 0.25 * technicals + 0.25 * mom_clamped
+
+    return {
+        "total":        int(round(clamp(total, 0.0, 100.0))),
+        "fundamentals": int(round(fundamentals)),
+        "technicals":   int(round(technicals)),
+        "momentum":     int(round(mom_clamped)),
+    }

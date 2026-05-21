@@ -14,12 +14,29 @@ CACHE_DIR = _BASE_DIR / "data" / "cache"
 
 # TTL in hours per section
 SECTION_TTL: Dict[str, float] = {
-    "fundamentals": 24.0,
+    "fundamentals": 6.0,
     "identity":     6.0,
     "technicals":   1.0,
     "llm":          48.0,
     "momentum":     2.0,
 }
+
+
+def _is_poisoned(section: str, data: Dict[str, Any]) -> bool:
+    """Detect a poisoned payload (e.g. FMP 429 returning all-None fundamentals).
+    Returning True means save() will skip writing so the previous cache (or a
+    later retry) wins instead of locking a useless payload behind the TTL."""
+    if not isinstance(data, dict):
+        return False
+    if section == "fundamentals":
+        fin = data.get("financials") or {}
+        val = data.get("valuation") or {}
+        if not fin and not val:
+            return True
+        merged = {**fin, **val}
+        if merged and all(v is None for v in merged.values()):
+            return True
+    return False
 
 
 def _cache_path(ticker: str, section: str) -> Path:
@@ -51,6 +68,9 @@ def load(ticker: str, section: str) -> Optional[Dict[str, Any]]:
 
 def save(ticker: str, section: str, data: Dict[str, Any]) -> None:
     """Persist data to cache."""
+    if _is_poisoned(section, data):
+        logger.warning("Cache SKIP poisoned payload %s/%s (all-None)", ticker, section)
+        return
     path = _cache_path(ticker, section)
     try:
         payload = {
