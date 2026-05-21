@@ -9,6 +9,7 @@ def run_refresh(app):
     """Job APScheduler : re-score toute la watchlist et génère des alertes."""
     with app.app_context():
         from app.storage.json_store import JsonStore
+        from app.storage.supabase_writer import write_score as sb_write_score
         from core.generator import generate_card
 
         tickers = JsonStore.get_watchlist()
@@ -37,6 +38,13 @@ def run_refresh(app):
                     JsonStore.save_cached_card(ticker, card)
                     JsonStore.add_score_entry(ticker, score, confidence or 0)
                     _check_alerts(ticker, score, prev_score, delta_threshold, strong_buy)
+
+                    # Dual-write Supabase
+                    try:
+                        sb_write_score(ticker, card)
+                    except Exception as sb_err:
+                        logger.error(f"Supabase write {ticker}: {sb_err}")
+
                     logger.info(f"Auto-refresh {ticker} : {score}/100")
                 except Exception as e:
                     logger.error(f"Auto-refresh {ticker} : {e}")
