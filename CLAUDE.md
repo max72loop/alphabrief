@@ -4,7 +4,7 @@ Screener quantitatif d'actions. Score chaque ticker de 0 à 100 via fondamentaux
 
 ## Stack
 
-- **Backend** : Python (Flask + APScheduler), scheduler toutes les 4h
+- **Backend** : Python (lib de scoring importée par l'agent daemon — voir « Déploiement »)
 - **Base** : Supabase (auth, tables de scores, watchlists, profiles)
 - **Frontend** : Next.js (React 19, Tailwind v4, Supabase SSR)
 - **Data** : yfinance (actuel) — migration vers FMP (Financial Modeling Prep) prévue
@@ -13,13 +13,20 @@ Screener quantitatif d'actions. Score chaque ticker de 0 à 100 via fondamentaux
 
 ## Architecture
 
-```
-Python scheduler (APScheduler)
-    → fetch yfinance / FMP
-    → calcul scores (fondamentaux, techniques, momentum)
-    → upsert Supabase (ticker_scores + champs enrichis)
+Ce repo est une **librairie** (`core/`, `app/`, `utils/`) consommée par deux runtimes :
 
-Next.js frontend
+```
+/root/agents/alphabrief/main.py   ← daemon de prod (PM2 "alphabrief")
+    APScheduler en continu :
+      - 7h  : scoring watchlist + alertes Telegram + dual-write Supabase
+      - /30 : health check
+      - 3h  : cache cleanup
+    Importe core.generator, app.storage.supabase_writer,
+            core.providers.events_yf
+
+core/cli.py   ← outil local (python -m core.cli analyze/run-all/status)
+
+Next.js frontend (repo séparé `alphabrief-frontend/`)
     → auth Supabase SSR
     → lecture ticker_scores
     → /dashboard  : screener filtrable (secteur, score min, watchlist)
@@ -69,31 +76,29 @@ Chaque pilier a un poids configurable dans `config.py`. Classification adaptativ
 
 ## Déploiement VPS (95.217.239.25)
 
-### Premier déploiement
-```bash
-ssh root@95.217.239.25
-cd /root/alphabrief
-git pull
-cp .env.example .env   # puis remplir les vraies valeurs
-mkdir -p logs
-npm install -g pm2
-pm2 start ecosystem.config.cjs
-pm2 save
-pm2 startup             # coller la commande affichée
-```
+La prod tourne via le **daemon agent** dans `/root/agents/alphabrief/`, pas
+depuis ce repo directement. Le repo est la lib + les migrations + le CLI.
 
 ### Mise à jour du code
 ```bash
 ssh root@95.217.239.25
 cd /root/alphabrief && git pull
-pm2 restart alphabrief
+pm2 restart alphabrief        # recharge le daemon avec le nouveau code de la lib
+```
+
+### Configuration PM2 du daemon
+```
+/root/agents/alphabrief/ecosystem.config.js
+  script: /root/agents/alphabrief/main.py
+  args:   --daemon
+  cwd:    /root/agents/alphabrief
 ```
 
 ### Commandes PM2 utiles
 ```bash
 pm2 logs alphabrief          # logs en temps réel
 pm2 status                   # état du process
-pm2 restart alphabrief       # forcer un run immédiat
+pm2 restart alphabrief       # recharger après git pull
 ```
 
 ## CLI local

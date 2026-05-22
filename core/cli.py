@@ -36,15 +36,62 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 from core.generator import generate_card  # noqa: E402
-from core.scheduler_runner import (  # noqa: E402
-    fetch_tickers_to_score, _sb_get, STALE_AFTER_H,
-    SUPABASE_URL, SUPABASE_KEY, DEFAULT_TICKERS,
-)
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ── Supabase REST + sélection des tickers ─────────────────────────────────────
 
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+
+STALE_AFTER_H = 20
 DELAY_S = 2
+
+DEFAULT_TICKERS: list[str] = [
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA",
+    "JPM", "V", "UNH", "COST", "ADBE", "CRM", "COIN", "DPZ",
+]
+
+
+def _sb_get(path: str) -> list[dict]:
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return []
+    url = f"{SUPABASE_URL}/rest/v1/{path}"
+    req = urllib.request.Request(url, headers={
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Accept": "application/json",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read())
+    except (urllib.error.HTTPError, urllib.error.URLError, OSError):
+        return []
+
+
+def fetch_tickers_to_score() -> list[str]:
+    tickers: set[str] = set(DEFAULT_TICKERS)
+
+    for r in _sb_get("watchlist_tickers?select=ticker"):
+        if r.get("ticker"):
+            tickers.add(r["ticker"].upper())
+
+    now = datetime.now(timezone.utc)
+    skip: set[str] = set()
+    for r in _sb_get("ticker_scores?select=ticker,computed_at"):
+        ticker = (r.get("ticker") or "").upper()
+        if not ticker:
+            continue
+        tickers.add(ticker)
+        computed_at = r.get("computed_at")
+        if computed_at:
+            try:
+                dt = datetime.fromisoformat(computed_at.replace("Z", "+00:00"))
+                if (now - dt) < timedelta(hours=STALE_AFTER_H):
+                    skip.add(ticker)
+            except Exception:
+                pass
+
+    return sorted(tickers - skip)
 
 
 def _print_header(title: str) -> None:

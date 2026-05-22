@@ -29,7 +29,7 @@ Stack :
 
 ## Ce que tu dois demander avant de faire
 - Modifier les variables d'environnement (.env / .env.local)
-- Faire un pm2 delete ou changer le cron_restart dans ecosystem.config.cjs
+- Faire un pm2 delete ou modifier /root/agents/alphabrief/ecosystem.config.js
 - Supprimer des fichiers ou colonnes Supabase
 - Toucher aux politiques RLS Supabase
 - Pousser sur une branche protégée ou force push
