@@ -94,10 +94,6 @@ def write_score(ticker: str, card: Dict[str, Any]) -> bool:
             "score_momentum": momentum_sc,
             "score_date": date.today().isoformat(),
             "computed_at": now,
-            "company_name": identity.get("name") or "",
-            "sector": identity.get("sector") or "",
-            "exchange": identity.get("exchange") or "",
-            "currency": identity.get("currency") or "",
             "market_cap": identity.get("market_cap"),
             "one_liner": business.get("one_liner", ""),
             "moat_tags": business.get("moat_tags", []),
@@ -106,6 +102,15 @@ def write_score(ticker: str, card: Dict[str, Any]) -> bool:
             "financials": fin_merged,
             "market_data": market_data,
         }
+        # Champs d'identité : on ne les inclut que si FMP a effectivement renvoyé
+        # une valeur. Sinon l'upsert écraserait des données déjà correctes
+        # (ex. un backfill yfinance) avec des chaînes vides quand FMP est en
+        # quota ou que /profile n'a rien renvoyé pour ce ticker.
+        for col, key in (("company_name", "name"), ("sector", "sector"),
+                         ("exchange", "exchange"), ("currency", "currency")):
+            val = identity.get(key)
+            if val:
+                row[col] = val
         client.table("ticker_scores").upsert(row, on_conflict="ticker").execute()
         logger.info(f"Supabase upsert ticker_scores: {ticker} = {potential}/100")
     except Exception as e:
