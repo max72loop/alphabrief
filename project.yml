@@ -1,0 +1,10 @@
+# Manifeste projet — AlphaBrief (scoring actions + monitoring)
+# Cas éclaté : racine canonique = la lib versionnée (/root/alphabrief) ;
+# l'entrypoint runtime est le daemon /root/agents/alphabrief/main.py.
+name: alphabrief
+layer: metier
+state_source: heartbeat
+agents:
+  - name: alphabrief
+    script: /root/agents/alphabrief/main.py
+    cadence: 30        # secondes — battement de liveness (découplé des jobs scoring/health)
