@@ -33,8 +33,20 @@ from alfred.shared.config import cfg
 from alfred.shared.logger import get_logger
 from alfred.shared.telegram import notify, Priority
 from alfred.shared.redis_client import redis_client, publish_event
+from alfred.shared.heartbeat import publish_heartbeat
 
 logger = get_logger("alphabrief")
+
+
+def _ab_heartbeat() -> None:
+    """Battement normalisé découplé (30s), même au repos entre les jobs métier."""
+    publish_heartbeat(
+        project="alphabrief", agent="alphabrief",
+        status="idle", health=100,
+        kpis={},
+        last_event="daemon actif",
+        layer="metier", cadence=30,
+    )
 
 # ── Paths ─────────────────────────────────────────────────────────────────
 AGENT_DIR    = Path("/root/agents/alphabrief")
@@ -692,6 +704,8 @@ def main():
             _paper_nav_safe, "cron", day_of_week="mon-fri", hour=22, minute=0,
             id="paper_mvp_nav_daily", timezone="UTC",
         )
+        # Heartbeat normalisé (modèle projet) — 30s, découplé des jobs métier.
+        scheduler.add_job(_ab_heartbeat, "interval", seconds=30, id="ab_heartbeat")
 
         try:
             logger.info(
@@ -701,6 +715,7 @@ def main():
             )
             # Health check immédiat au démarrage
             health_check()
+            _ab_heartbeat()  # battement immédiat au boot
             scheduler.start()
         except (KeyboardInterrupt, SystemExit):
             logger.info("AlphaBrief Agent arrêté")
