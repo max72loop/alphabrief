@@ -1,0 +1,14 @@
+{
+  "thresholds": {
+    "alert_score_delta": 15,
+    "strong_buy_score": 60,
+    "cache_max_age_hours": 48
+  },
+  "crons": {
+    "scoring_hour": 7,
+    "report_hour": 9,
+    "health_check_min": 30,
+    "cache_cleanup_hour": 3
+  },
+  "_notes": "strong_buy_score abaissé 75 → 60 le 2026-05-21. Cause : le provider FMP ne récupère pas revenue/fcf_margin/fcf_absolute/growth_3y pour plusieurs mega-caps (NVDA, AAPL, TSM, GOOG observés). Sans ces inputs, les piliers Value/Growth/Cash tombent à 50 neutre et plafonnent fundamentals ~55-60. Top observé : NVDA/TSM 57. Le seuil 60 reste prudent (alertes rares) sans bloquer toute alerte. TODO data quality : auditer fundamentals_yf.py + fmp_client.py pour expliciter les endpoints lacunaires."
+}

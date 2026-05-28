@@ -1,0 +1,30 @@
+# Secrets — alphabrief lit /root/.env partagé (hors dépôt). Jamais de secret ici.
+.env
+.env.*
+*.key
+*.pem
+
+# Caches Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Bases (la DB de scoring mytrader.db vit dans la lib /root/alphabrief, pas ici — règle de sûreté)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs & sauvegardes
+*.log
+logs/
+*.bak*
+
+# Virtualenvs
+.venv*/
+venv/
+
+# Données runtime / rapports / snapshots / caches FMP (régénérables)
+data/
+snapshots/
+*_cache/
+.cache/
