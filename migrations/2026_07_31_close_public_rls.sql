@@ -53,27 +53,43 @@
 
 
 -- ── 1. Tables de scoring (supabase_schema.sql) ──────────────
+--
+-- ⚠ `alerts` est décrite dans supabase_schema.sql mais N'EXISTE PAS dans le
+--   projet Supabase (vérifié le 2026-07-31 : PostgREST renvoie PGRST205,
+--   « Could not find the table 'public.alerts' in the schema cache »).
+--   Un ALTER TABLE sec ferait échouer toute la migration sur sa première
+--   instruction. Le bloc ci-dessous ignore les tables absentes, et signale
+--   celles qu'il saute au lieu de le taire.
 
-ALTER TABLE ticker_scores  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE score_history  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE alerts         ENABLE ROW LEVEL SECURITY;
+DO $$
+DECLARE
+    t TEXT;
+    absentes TEXT[] := '{}';
+BEGIN
+    FOREACH t IN ARRAY ARRAY['ticker_scores','score_history','alerts']
+    LOOP
+        IF to_regclass('public.' || t) IS NULL THEN
+            absentes := absentes || t;
+            CONTINUE;
+        END IF;
 
--- Lecture publique
-DROP POLICY IF EXISTS "Public read ticker_scores" ON ticker_scores;
-DROP POLICY IF EXISTS "Public read score_history" ON score_history;
-DROP POLICY IF EXISTS "Public read alerts"        ON alerts;
+        EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
 
--- Écriture ouverte à anon (le vrai trou — cf. §2 de l'en-tête)
-DROP POLICY IF EXISTS "Service write ticker_scores" ON ticker_scores;
-DROP POLICY IF EXISTS "Service write score_history" ON score_history;
-DROP POLICY IF EXISTS "Service write alerts"        ON alerts;
+        -- Lecture publique
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'Public read ' || t, t);
+        -- Écriture ouverte à anon (le vrai trou — cf. §2 de l'en-tête)
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'Service write ' || t, t);
 
-CREATE POLICY "authenticated read ticker_scores" ON ticker_scores
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read score_history" ON score_history
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read alerts" ON alerts
-    FOR SELECT TO authenticated USING (true);
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'authenticated read ' || t, t);
+        EXECUTE format(
+            'CREATE POLICY %I ON %I FOR SELECT TO authenticated USING (true)',
+            'authenticated read ' || t, t);
+    END LOOP;
+
+    IF array_length(absentes, 1) IS NOT NULL THEN
+        RAISE NOTICE 'Tables absentes, ignorées : %', array_to_string(absentes, ', ');
+    END IF;
+END $$;
 
 
 -- ── 2. Tables paper_* (bac à sable d'allocation) ────────────
@@ -116,13 +132,16 @@ CREATE POLICY "authenticated read paper_sofr_rates" ON paper_sofr_rates
     FOR SELECT TO authenticated USING (true);
 
 
--- ── 3. HORS PÉRIMÈTRE DU LOT 0 ──────────────────────────────
--- profiles, watchlists, watchlist_tickers, portfolio_holdings, ticker_events
--- sont référencées par le frontend mais n'ont AUCUN fichier de schéma dans le
--- repo — leurs policies ont été créées à la main dans le dashboard. Elles
--- portent probablement des règles par user_id qu'on casserait en aveugle.
--- Elles sont traitées au lot 1, quand le multi-tenant est aplati.
--- La requête §4 les inclut pour qu'on voie leur état avant d'y toucher.
+-- ── 3. HORS PÉRIMÈTRE ───────────────────────────────────────
+-- profiles, watchlists, watchlist_tickers, ticker_events sont référencées par
+-- le frontend mais n'ont AUCUN fichier de schéma dans le repo — leurs policies
+-- ont été créées à la main dans le dashboard. Elles portent probablement des
+-- règles par user_id qu'on casserait en aveugle. La requête §4 les inclut
+-- pour qu'on voie leur état avant d'y toucher.
+--
+-- portfolio_holdings : N'EXISTE PAS non plus (PGRST205, vérifié 2026-07-31).
+-- Le frontend l'interrogeait dans le vide — /portfolio et /api/portfolio
+-- échouaient en silence. Rien à archiver, rien à supprimer.
 
 
 -- ── 4. VÉRIFICATION — à lancer AVANT et APRÈS ───────────────

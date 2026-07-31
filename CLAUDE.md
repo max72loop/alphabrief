@@ -1,124 +1,126 @@
 # AlphaBrief
 
-Screener quantitatif d'actions. Score chaque ticker de 0 à 100 via fondamentaux, techniques et momentum. Freemium : 5 analyses/jour gratuites, illimité en premium.
+Suivi de patrimoine personnel, mono-utilisateur, sans intention commerciale.
+Voir ses investissements répartis sur plusieurs supports au même endroit,
+garder des notes éditables sur les sociétés suivies, et se faire relancer
+chaque semaine pour saisir les nouveaux chiffres.
+
+Ce n'est plus un screener vendu en SaaS. Toute la logique de facturation a été
+retirée au lot 1 (2026-07-31).
 
 ## Stack
 
-- **Backend** : Python (lib de scoring importée par l'agent daemon — voir « Déploiement »)
-- **Base** : Supabase (auth, tables de scores, watchlists, profiles)
-- **Frontend** : Next.js (React 19, Tailwind v4, Supabase SSR)
-- **Data** : yfinance (actuel) — migration vers FMP (Financial Modeling Prep) prévue
-- **Paiements** : Lemon Squeezy — webhook implémenté, checkout URL à configurer
-- **LLM** : DeepSeek — enrichissement business snapshot (one_liner, moat_tags, catalysts)
+- **Backend** : Python (lib de scoring importée par le daemon — voir « Runtime »)
+- **Base** : Supabase (auth + Postgres)
+- **Frontend** : Next.js 16 (React 19, Tailwind v4, Supabase SSR), déployé sur Vercel
+- **Data** : FMP pour les fondamentaux US, yfinance en repli — voir « Gotchas »
+- **LLM** : DeepSeek — enrichissement business snapshot
 
-## Architecture
+## Runtime
 
-Ce repo est une **librairie** (`core/`, `app/`, `utils/`) consommée par deux runtimes :
+Ce repo est une **librairie** (`core/`, `utils/`) consommée par deux runtimes :
 
 ```
 /root/agents/alphabrief/main.py   ← daemon de prod (PM2 "alphabrief")
-    APScheduler en continu :
-      - 7h  : scoring watchlist + alertes Telegram + dual-write Supabase
-      - /30 : health check
-      - 3h  : cache cleanup
-    Importe core.generator, app.storage.supabase_writer,
-            core.providers.events_yf
+    APScheduler : scoring 7h · health /30min · cache cleanup 3h
+                  paper_mvp weekly lundi 14h UTC · nav daily 22h UTC
+    Importe core.generator, core.storage.supabase_writer, core.providers.events_yf
+    ⚠ Couplé à l'écosystème Alfred (alfred.shared.{config,logger,telegram,
+      redis_client,heartbeat}) — dépendance à DOCUMENTER, pas à casser :
+      le rappel hebdomadaire du lot 4 s'appuie dessus.
 
 core/cli.py   ← outil local (python -m core.cli analyze/run-all/status)
 
-Next.js frontend (repo séparé `alphabrief-frontend/`)
-    → auth Supabase SSR
-    → lecture ticker_scores
-    → /dashboard  : screener filtrable (secteur, score min, watchlist)
-    → /ticker/[symbol] : page detail (scores, facteurs, métriques)
-    → /pricing    : Free vs Premium, CTA Lemon Squeezy
+Frontend Next.js (repo séparé alphabrief-frontend/)
 ```
 
-## Schéma Supabase
+Le dépôt distant du daemon (`alphabrief-agent`) n'existe pas sur GitHub. Son
+historique est poussé sur `refs/heads/daemon-runtime` du repo `alphabrief`,
+en attendant mieux.
 
-### ticker_scores
-Colonnes principales : `ticker`, `company_name`, `sector`, `exchange`, `currency`, `market_cap`, `one_liner`, `moat_tags`, `score_total`, `score_fundamentals`, `score_technicals`, `score_momentum`, `score_label`, `importance_items` (jsonb), `financials` (jsonb), `market_data` (jsonb), `score_date`, `computed_at`
+## Modèle de données (lot 1)
 
-### profiles
-`id` (FK auth.users), `is_premium`, `lemon_order_id`, `analyses_today`, `last_analysis_date`, `updated_at`
+`supports` · `positions` · `snapshots` · `flux` · `societes`
 
-### watchlists / watchlist_tickers
-`watchlists` : `id`, `user_id` (FK auth.users)
-`watchlist_tickers` : `watchlist_id`, `ticker`
+**Un support n'est pas un compte, c'est une poche homogène.** Un compte mixte
+se déclare en plusieurs supports (Revolut → « Revolut Actions » + « Revolut
+Crypto »). C'est ce qui permet à `classe_dominante` d'être NOT NULL et à la
+répartition par classe de n'avoir aucun trou.
 
-## Variables d'environnement
+**Non-double-comptage.** `snapshots.niveau` vaut `support` ou `position`, et
+une contrainte CHECK interdit qu'il diverge des FK. Le total d'un support est
+le snapshot de niveau `support`. Le détail par position ne s'y additionne
+jamais : il se **réconcilie** contre lui, et l'écart est une information, pas
+une erreur.
 
-### Backend (`alphabrief/.env`)
-```
-SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
-DEEPSEEK_API_KEY=
-FMP_API_KEY=
-```
+**Toute somme passe par `v_patrimoine_total`.** Aucune agrégation ad hoc dans
+le code applicatif — c'est ce qui empêche un futur écran de réinventer un
+`SUM(valeur_eur)` qui mélangerait les deux niveaux.
 
-### Frontend (`alphabrief-frontend/.env.local`)
-```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-LEMON_WEBHOOK_SECRET=
-NEXT_PUBLIC_LEMON_CHECKOUT_URL=
-```
+## Règles de travail
 
-## Scoring
+### Suppression — critère mécanique, jamais l'intuition
 
-Le score 0–100 combine trois piliers :
-- **Fondamentaux** (50%) : inspiré Brian Feroldi / Quality of Earnings — croissance, marges, ROIC, dette, dilution
-- **Techniques** (25%) : RSI 14, SMA 50/200, MACD, drawdown, volatilité
-- **Momentum** (25%) : performance 1/3/6/12 mois relative au marché et au secteur
-
-Chaque pilier a un poids configurable dans `config.py`. Classification adaptative par type d'action (growth, value, dividend...).
-
-## Déploiement VPS (95.217.239.25)
-
-La prod tourne via le **daemon agent** dans `/root/agents/alphabrief/`, pas
-depuis ce repo directement. Le repo est la lib + les migrations + le CLI.
-
-### Mise à jour du code
-```bash
-ssh root@95.217.239.25
-cd /root/alphabrief && git pull
-pm2 restart alphabrief        # recharge le daemon avec le nouveau code de la lib
-```
-
-### Configuration PM2 du daemon
-```
-/root/agents/alphabrief/ecosystem.config.js
-  script: /root/agents/alphabrief/main.py
-  args:   --daemon
-  cwd:    /root/agents/alphabrief
-```
-
-### Commandes PM2 utiles
-```bash
-pm2 logs alphabrief          # logs en temps réel
-pm2 status                   # état du process
-pm2 restart alphabrief       # recharger après git pull
-```
-
-## CLI local
+Aucune suppression sur la foi d'un nom de fichier ou de dossier. Avant tout
+`rm` / `git rm` : **grep des imports entrants sur chaque fichier concerné**, et
+résultat du grep documenté dans la PR.
 
 ```bash
-python -m core.cli analyze AAPL MSFT NVDA   # scorer des tickers précis
-python -m core.cli run-all                   # tout scorer (comme le VPS)
-python -m core.cli status                    # voir fraîcheur des données en base
+# imports par alias ET par chemin relatif — les deux, sinon on en rate
+grep -rn "components/landing/Gauge\|from ['\"]\./landing/Gauge" src/
 ```
 
-## Règles critiques
+Origine de la règle : au lot 1, `components/landing/Gauge.tsx` avait été
+flaggé « supprimer » parce qu'il vivait dans `landing/`. C'était le design
+system, importé par 14 fichiers hors landing. Un inventaire bâti sur les noms
+de dossiers ment.
 
-- Ne JAMAIS mentionner "conseil en investissement" — AlphaBrief est un outil d'aide à la décision, pas du conseil financier
-- Ne jamais commiter les fichiers `.env` / `.env.local`
-- Les deux codebases (`alphabrief/` et `alphabrief-frontend/`) sont séparées, pas un monorepo
-- Préférer FMP à yfinance pour les nouvelles features data (yfinance est non-officiel et peut casser)
+### Frontière d'autonomie
+
+Commits en local : libres.
+
+Demandent un feu vert explicite de Max :
+
+- **push sur la branche déployée** — Vercel déploie depuis `main` du frontend,
+  donc un push est une mise en production, pas un geste de versioning
+- **application d'une migration**
+- **modification de variables d'environnement**
+- **suppression de table**
+
+### Vérification
+
+- Les calculs financiers doivent être couverts par des tests à cas connus
+  vérifiés à la main.
+- Comparer avant/après plutôt qu'affirmer : mesurer la baseline (`git stash`,
+  worktree sur le commit précédent) avant de dire « aucune régression ».
+- Ne jamais commiter les `.env` / `.env.local`.
+
+## Contraintes produit
+
+- Mono-utilisateur, mais **auth obligatoire** : aucune donnée patrimoniale
+  lisible sans session. RLS fermée, `authenticated` uniquement.
+- Devise de référence EUR. `valeur_eur` et `montant_eur` sont des colonnes
+  générées : la conversion n'est jamais saisie à la main.
+- **Aucun appel API payant en boucle** : cache agressif, refresh quotidien
+  suffit pour du patrimoine long terme.
+- L'écran de saisie hebdomadaire doit tenir en moins de 3 minutes. S'il est
+  pénible, il ne sera pas utilisé — c'est le critère de survie du produit.
 
 ## Gotchas
 
-- Le cache des cartes est dans `data/cache/*.json` (TTL 2h) et SQLite (`data/mytrader.db`) — certains fichiers référencent encore l'ancien nom "MyTrader"
-- Les données FMP ont des rate limits — toujours cacher avant d'appeler l'API
-- Le middleware Next.js protège `/dashboard` et `/ticker/*` — redirige vers `/login` si non authentifié
-- La limite freemium (5/jour) est à implémenter côté API route `/api/analyze` — le middleware actuel gère uniquement l'auth
+- **FMP est en 429 permanent** sur le plan actuel. `fundamentals_yf` court-circuite
+  FMP pour les tickers internationaux (suffixes Yahoo explicites, pour ne pas
+  exclure BRK.B) et bascule sur yfinance. `paper_mvp.py` est entièrement sur
+  yfinance pour la même raison.
+- **`alerts` et `portfolio_holdings` n'existent pas** dans le projet Supabase
+  (PGRST205), alors que le repo contient leur DDL et que le frontend les
+  interroge. Les appels échouent en silence. À trancher : créer, ou retirer
+  la surface.
+- Le cache des cartes est dans `data/cache/*.json` (TTL 2h) et SQLite
+  (`data/mytrader.db`) — certains fichiers portent encore l'ancien nom « MyTrader ».
+- L'app Flask v1 est archivée : tag `archive/flask-v1`, branche `archive/flask`.
+  Restauration : `git checkout archive/flask-v1 -- app/`.
+- `core/paper_portfolio/` est gelé (36 `NotImplementedError`). Ses 154 tests
+  échouent par construction — c'est la baseline, pas une régression.
+- `core/bitcoin/` est conservé en lecture seule comme source de données
+  optionnelle sur BTC, hors du chemin critique.

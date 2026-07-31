@@ -26,13 +26,15 @@ $$ LANGUAGE plpgsql;
 
 
 -- ── 1. supports ─────────────────────────────────────────────
--- Les 4 supports réels : Bitpanda, Revolut, Trade Republic, Ledger.
+-- UN SUPPORT N'EST PAS UN COMPTE, C'EST UNE POCHE HOMOGÈNE.
 --
--- `classe_dominante` sert au dashboard : un snapshot de niveau support ne
--- porte qu'un montant total, sans détail par classe d'actif. Sans cette
--- colonne, la répartition « actions / crypto / cash » serait impossible pour
--- un support saisi globalement (le cas nominal). Laisser NULL sur un support
--- réellement mixte : ses montants seront alors classés « indetermine ».
+-- Conséquence directe : un compte réellement mixte se déclare en plusieurs
+-- supports. Revolut devient « Revolut Actions » et « Revolut Crypto » — deux
+-- montants à saisir au lieu d'un, contre un écran de répartition sans trou.
+--
+-- C'est ce qui permet à `classe_dominante` d'être NOT NULL : il n'existe pas
+-- de catégorie « indéterminé » dans ce schéma. Toute valeur saisie tombe
+-- dans exactement une classe.
 
 CREATE TABLE IF NOT EXISTS supports (
     id               BIGSERIAL PRIMARY KEY,
@@ -40,7 +42,7 @@ CREATE TABLE IF NOT EXISTS supports (
     type             TEXT NOT NULL
                      CHECK (type IN ('exchange','broker','cold_wallet')),
     devise           TEXT NOT NULL DEFAULT 'EUR',
-    classe_dominante TEXT
+    classe_dominante TEXT NOT NULL
                      CHECK (classe_dominante IN ('actions','crypto','cash')),
     actif            BOOLEAN NOT NULL DEFAULT true,
     ordre            SMALLINT NOT NULL DEFAULT 0,  -- ordre d'affichage sur l'écran de saisie
@@ -85,17 +87,21 @@ CREATE TRIGGER tr_positions_touch BEFORE UPDATE ON positions
 --   support_id  → valeur totale du support (flux nominal, 1 chiffre/semaine)
 --   position_id → détail d'une ligne (optionnel, ponctuel)
 --
--- ⚠ RÈGLE DE NON-DOUBLE-COMPTAGE, à respecter côté lecture :
---   le total d'un support à une date est le snapshot de NIVEAU SUPPORT.
---   Les snapshots de niveau position sont du DÉTAIL : ils ne s'additionnent
---   jamais dans le total patrimonial. Si seul le détail existe pour une date,
---   c'est au lot 3 de décider d'agréger — la base ne le présume pas.
+-- RÈGLE DE NON-DOUBLE-COMPTAGE — MÉCANIQUE, PAS CONVENTIONNELLE.
+--   La colonne `niveau` rend la distinction explicite et interrogeable au
+--   lieu de la laisser déduire d'un NULL. Elle est cohérente avec les FK par
+--   contrainte, pas par discipline : on ne peut pas écrire un snapshot de
+--   niveau 'support' portant un position_id.
+--   Le total d'un support à une date est le snapshot de niveau 'support'.
+--   Le détail par position ne s'y additionne JAMAIS : il se RÉCONCILIE
+--   contre lui (cf. v_reconciliation_positions, §6).
 --
 -- valeur_eur est dérivée, jamais saisie : c'est la contrainte « devise de
 -- référence EUR, conversion au taux du jour » rendue non contournable.
 
 CREATE TABLE IF NOT EXISTS snapshots (
     id                  BIGSERIAL PRIMARY KEY,
+    niveau              TEXT NOT NULL CHECK (niveau IN ('support','position')),
     support_id          BIGINT REFERENCES supports(id)  ON DELETE CASCADE,
     position_id         BIGINT REFERENCES positions(id) ON DELETE CASCADE,
     date                DATE NOT NULL,
@@ -111,16 +117,21 @@ CREATE TABLE IF NOT EXISTS snapshots (
     note                TEXT,
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-    CONSTRAINT snapshot_cible_exclusive
-        CHECK (num_nonnulls(support_id, position_id) = 1)
+    -- `niveau` et les FK ne peuvent pas diverger.
+    CONSTRAINT snapshot_niveau_coherent CHECK (
+        (niveau = 'support'  AND support_id  IS NOT NULL AND position_id IS NULL)
+     OR (niveau = 'position' AND position_id IS NOT NULL AND support_id  IS NULL)
+    )
 );
 
--- Un seul snapshot par cible et par date — l'écran de saisie fait un upsert
--- dessus, corriger une valeur ne crée pas de doublon.
-CREATE UNIQUE INDEX IF NOT EXISTS uq_snapshots_support_date
-    ON snapshots(support_id, date)  WHERE support_id  IS NOT NULL;
-CREATE UNIQUE INDEX IF NOT EXISTS uq_snapshots_position_date
-    ON snapshots(position_id, date) WHERE position_id IS NOT NULL;
+-- Unicité demandée : (support_id, date, niveau). Au niveau position le
+-- support_id est NULL, donc la clé utile y est (position_id, date, niveau).
+-- L'écran de saisie fait un upsert dessus : corriger une valeur ne crée pas
+-- de doublon.
+CREATE UNIQUE INDEX IF NOT EXISTS uq_snapshots_support_date_niveau
+    ON snapshots(support_id, date, niveau)  WHERE niveau = 'support';
+CREATE UNIQUE INDEX IF NOT EXISTS uq_snapshots_position_date_niveau
+    ON snapshots(position_id, date, niveau) WHERE niveau = 'position';
 
 CREATE INDEX IF NOT EXISTS idx_snapshots_date ON snapshots(date DESC);
 
@@ -169,7 +180,83 @@ CREATE TRIGGER tr_societes_touch BEFORE UPDATE ON societes
     FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
 
 
--- ── 6. RLS ──────────────────────────────────────────────────
+-- ── 6. Vues — LE SEUL CHEMIN AUTORISÉ POUR UN TOTAL ─────────
+--
+-- Aucune agrégation ad hoc dans le code applicatif. Toute somme de valeurs
+-- passe par v_patrimoine_total. C'est ce qui empêche un futur écran de
+-- réinventer un SUM(valeur_eur) qui additionnerait support et positions.
+
+-- Dernier snapshot de niveau support connu pour chaque support.
+CREATE OR REPLACE VIEW v_support_dernier_snapshot AS
+SELECT DISTINCT ON (s.id)
+       s.id                AS support_id,
+       s.nom,
+       s.type,
+       s.devise,
+       s.classe_dominante,
+       s.actif,
+       s.ordre,
+       sn.date             AS derniere_date,
+       sn.valeur_eur       AS derniere_valeur_eur,
+       sn.is_opening_position,
+       (CURRENT_DATE - sn.date) AS anciennete_jours
+  FROM supports s
+  LEFT JOIN snapshots sn
+         ON sn.support_id = s.id
+        AND sn.niveau = 'support'
+ ORDER BY s.id, sn.date DESC;
+
+-- Total patrimonial par date : SOMME DES SNAPSHOTS DE NIVEAU SUPPORT
+-- UNIQUEMENT. Le niveau 'position' est structurellement exclu.
+CREATE OR REPLACE VIEW v_patrimoine_total AS
+SELECT sn.date,
+       SUM(sn.valeur_eur)                             AS total_eur,
+       COUNT(*)                                       AS supports_renseignes,
+       (SELECT COUNT(*) FROM supports WHERE actif)    AS supports_actifs
+  FROM snapshots sn
+ WHERE sn.niveau = 'support'
+ GROUP BY sn.date;
+
+-- Répartition par classe d'actif. Possible sans ventilation par snapshot
+-- précisément parce qu'un support est une poche homogène (classe_dominante
+-- NOT NULL) — c'est la contrepartie du split Revolut.
+CREATE OR REPLACE VIEW v_repartition_classe AS
+SELECT sn.date,
+       s.classe_dominante  AS classe,
+       SUM(sn.valeur_eur)  AS valeur_eur
+  FROM snapshots sn
+  JOIN supports s ON s.id = sn.support_id
+ WHERE sn.niveau = 'support'
+ GROUP BY sn.date, s.classe_dominante;
+
+-- Réconciliation : le détail par position CONTRE le total du support, jamais
+-- en plus. L'écart est une information, pas une erreur — il est normal quand
+-- le détail est partiel ou plus ancien que le total.
+CREATE OR REPLACE VIEW v_reconciliation_positions AS
+SELECT sup.date,
+       sup.support_id,
+       sup.total_support_eur,
+       det.total_positions_eur,
+       det.positions_couvertes,
+       (sup.total_support_eur - COALESCE(det.total_positions_eur, 0)) AS ecart_eur
+  FROM (
+        SELECT support_id, date, SUM(valeur_eur) AS total_support_eur
+          FROM snapshots WHERE niveau = 'support'
+         GROUP BY support_id, date
+       ) sup
+  LEFT JOIN (
+        SELECT p.support_id, sn.date,
+               SUM(sn.valeur_eur) AS total_positions_eur,
+               COUNT(*)           AS positions_couvertes
+          FROM snapshots sn
+          JOIN positions p ON p.id = sn.position_id
+         WHERE sn.niveau = 'position'
+         GROUP BY p.support_id, sn.date
+       ) det
+    ON det.support_id = sup.support_id AND det.date = sup.date;
+
+
+-- ── 7. RLS ──────────────────────────────────────────────────
 -- Ces tables sont écrites depuis le navigateur (écran de saisie), avec la
 -- clé anon + session utilisateur → rôle `authenticated`. Contrairement à
 -- ticker_scores (écrite par le daemon en service_role), elles ont donc
@@ -195,40 +282,40 @@ BEGIN
 END $$;
 
 
--- ── 7. Amorçage des 4 supports ──────────────────────────────
--- Les montants ne sont jamais dans le repo — seuls les contenants le sont.
+-- ── 8. Amorçage des supports ────────────────────────────────
+-- 5 supports pour 4 comptes : Revolut est scindé, un support = une poche
+-- homogène. Les montants ne sont jamais dans le repo, seuls les contenants.
 
 INSERT INTO supports (nom, type, devise, classe_dominante, ordre) VALUES
-    ('Bitpanda',       'exchange',    'EUR', 'crypto',  1),
-    ('Revolut',        'broker',      'EUR', NULL,      2),  -- mixte : classe indéterminée
-    ('Trade Republic', 'broker',      'EUR', 'actions', 3),
-    ('Ledger',         'cold_wallet', 'EUR', 'crypto',  4)
+    ('Bitpanda',        'exchange',    'EUR', 'crypto',  1),
+    ('Trade Republic',  'broker',      'EUR', 'actions', 2),
+    ('Revolut Actions', 'broker',      'EUR', 'actions', 3),
+    ('Revolut Crypto',  'broker',      'EUR', 'crypto',  4),
+    ('Ledger',          'cold_wallet', 'EUR', 'crypto',  5)
 ON CONFLICT (nom) DO NOTHING;
 
 
 -- ============================================================
--- 8. portfolio_holdings — NON MIGRÉE, NON SUPPRIMÉE
+-- 9. portfolio_holdings — SANS OBJET, LA TABLE N'EXISTE PAS
 -- ============================================================
--- Colonnes constatées via le code du frontend : id, user_id, ticker,
--- quantity, buy_price, added_at. Actions uniquement, aucune notion de
--- support : impossible de déduire automatiquement vers quel support
--- rattacher chaque ligne. La table est donc laissée intacte.
+-- Vérifié le 2026-07-31 contre le projet Supabase réel : PostgREST renvoie
+-- PGRST205, « Could not find the table 'public.portfolio_holdings' in the
+-- schema cache ». Elle n'a jamais été créée.
 --
--- Inspecter avant de décider :
+-- Le frontend l'interrogeait donc dans le vide : /portfolio et
+-- /api/portfolio échouaient en silence (le select renvoyait une erreur,
+-- `holdings` restait undefined, la page affichait une liste vide).
 --
---   SELECT ticker, quantity, buy_price, added_at
---     FROM portfolio_holdings
---    ORDER BY added_at DESC;
+-- Rien à dumper, rien à archiver, rien à supprimer. La demande « dump CSV
+-- puis DROP TABLE » est sans objet.
 --
--- Reprise manuelle, une fois le support choisi (exemple Trade Republic) :
+-- Reste à traiter au lot 2 : /portfolio et /api/portfolio sont du code mort
+-- pointant vers une table inexistante. Ils sont remplacés par l'écran de
+-- saisie, pas conservés.
 --
---   INSERT INTO positions (support_id, actif, classe, notes)
---   SELECT (SELECT id FROM supports WHERE nom = 'Trade Republic'),
---          h.ticker, 'actions',
---          'Repris de portfolio_holdings — PRU saisi ' || h.buy_price
---     FROM portfolio_holdings h
---   ON CONFLICT (support_id, actif) DO NOTHING;
---
--- Puis DROP TABLE portfolio_holdings; une fois la reprise vérifiée.
--- Les quantités ne sont volontairement pas reprises : le modèle veut un
--- snapshot daté, pas une quantité flottante sans date de constat.
+-- ⚠ `alerts` est dans le même cas (PGRST205). Conséquences en prod :
+--    - le daemon appelle write_alert() → échoue, log en WARNING, continue
+--    - AppNav compte les non-lues → catch → 0
+--    - le panneau d'alertes du dashboard est vide en permanence
+--   La fonctionnalité d'alertes n'a jamais tourné côté Supabase. À décider
+--   au lot 4 : créer la table, ou retirer la surface.
