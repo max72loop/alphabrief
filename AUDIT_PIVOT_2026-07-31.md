@@ -142,6 +142,28 @@ logique SaaS en sort.
 inacceptable dès que ces tables portent du patrimoine réel. **Toute policy
 `USING (true)` doit tomber au lot 1**, y compris sur les tables qu'on garde.
 
+### 3.1 bis — ÉCRITURE publique, trouvée en écrivant la migration du lot 0
+Plus grave que la lecture. `supabase_schema.sql` lignes 183-191 :
+
+```sql
+-- Policy écriture via service_role key (le backend utilise la clé secrète)
+CREATE POLICY "Service write ticker_scores" ON ticker_scores
+    FOR ALL USING (true) WITH CHECK (true);
+```
+
+Le commentaire annonce une policy pour `service_role`, mais **il n'y a pas de
+clause `TO`** : la policy s'applique au rôle `public`, donc à `anon`, dont la
+clé est publique par construction (`NEXT_PUBLIC_SUPABASE_ANON_KEY` est servie au
+navigateur). N'importe quel visiteur du site peut donc `INSERT` / `UPDATE` /
+`DELETE` sur `ticker_scores`, `score_history` et `alerts`. La policy est en plus
+**inutile** : `service_role` bypasse RLS par design et n'a jamais eu besoin
+d'une policy pour écrire.
+
+Traité par `migrations/2026_07_31_close_public_rls.sql` (écrite, **pas encore
+appliquée**). Réserve : cette migration est déduite des fichiers SQL du repo ;
+l'état réellement déployé peut avoir divergé, d'où la requête de vérification
+`pg_policies` au §4 du fichier, à lancer avant et après.
+
 ### 3.2 « Chiffré au repos » est ambigu
 Supabase chiffre les disques (AES-256) par défaut, mais ça ne protège de rien
 via l'API : quiconque a la `SUPABASE_SERVICE_ROLE_KEY` lit les montants en clair.
@@ -186,7 +208,29 @@ l'écosystème Alfred/Pixel Office — à garder en tête au lot 1.
 
 ---
 
-## 4. Ce que je propose comme séquence (sous réserve des réponses)
+## 4. Périmètre recadré par Max le 2026-07-31
+
+Le gestionnaire de patrimoine complet est abandonné. Cible réelle : voir 4
+supports (Bitpanda, Revolut, Trade Republic, Ledger) au même endroit, garder des
+notes éditables sur les sociétés suivies, brancher des sources de données
+additionnelles, et recevoir un rappel hebdomadaire Alfred/Telegram vers l'écran
+de saisie.
+
+**Hors périmètre** : fiscalité (aucun module), transactions à la ligne, PRU
+exact, TWR, XIRR, multi-devise historique, import courtier au lot 1.
+
+**Modèle de données cible** : `supports`, `positions`, `snapshots`, `flux`,
+`societes`, `sources_donnees`. Performance = valeur actuelle − somme des apports
+nets, plus une courbe issue des snapshots.
+
+Les sections 1 à 3 de ce document restent valides (la cartographie et les points
+durs ne dépendent pas du périmètre fonctionnel), à trois exceptions près :
+§3.2 (chiffrement) est tranché — disque Supabase + auth stricte, pas de
+chiffrement applicatif ; §3.5 (devise) se réduit à une conversion au taux du
+jour via les taux de référence BCE ; §3.3 (paper_portfolio gelé) devient sans
+objet, le bac à sable d'allocation n'est plus au programme.
+
+## 5. Séquence (ancienne, conservée pour trace)
 
 | Lot | Contenu | Dépend de |
 |---|---|---|
