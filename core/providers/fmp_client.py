@@ -123,6 +123,13 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
                 resp.raise_for_status()
                 data = resp.json()
 
+                if isinstance(data, (list, dict)) and not data:
+                    logger.info(json.dumps({
+                        "evt": "fmp_empty_response",
+                        "endpoint": endpoint,
+                        "symbol": symbol,
+                    }))
+
                 if isinstance(data, dict) and "Error Message" in data:
                     logger.error(json.dumps({
                         "evt": "fmp_api_error",

@@ -47,29 +47,22 @@ def _is_valid_number(val: Any) -> bool:
     return True
 
 
-def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
-    # Fetch all data from FMP stable API
-    income = fmp_get("income-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
-    balance = fmp_get("balance-sheet-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
-    cashflow = fmp_get("cash-flow-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
-    ratios = fmp_get("ratios-ttm", {"symbol": ticker})
-    metrics = fmp_get("key-metrics-ttm", {"symbol": ticker})
-    profile_list = fmp_get("profile", {"symbol": ticker})
-    ev_list = fmp_get("enterprise-values", {"symbol": ticker, "limit": "1"})
+# Suffixes Yahoo des bourses non couvertes par le tier Starter FMP. On ne fait
+# pas les 7 appels FMP pour ces tickers (ils retourneraient [] de toute façon)
+# et on bascule directement sur yfinance. Liste explicite plutôt que "contient
+# un point" pour ne pas exclure BRK.B, BF.B, etc.
+_INTL_SUFFIXES = (
+    ".HK", ".T", ".AX", ".L", ".PA", ".TO", ".V",
+    ".SS", ".SZ", ".KS", ".KQ", ".SI", ".SA", ".MX", ".BO", ".NS",
+)
 
-    # Normalize: FMP returns lists
-    inc: List[Dict] = income if isinstance(income, list) else []
-    bs: List[Dict] = balance if isinstance(balance, list) else []
-    cf: List[Dict] = cashflow if isinstance(cashflow, list) else []
-    rat: Dict = ratios[0] if isinstance(ratios, list) and ratios else {}
-    met: Dict = metrics[0] if isinstance(metrics, list) and metrics else {}
-    profile: Dict = profile_list[0] if isinstance(profile_list, list) and profile_list else {}
-    ev: Dict = ev_list[0] if isinstance(ev_list, list) and ev_list else {}
 
-    # Most recent income statement
-    inc0: Dict = inc[0] if inc else {}
+def _is_international(ticker: str) -> bool:
+    return ticker.upper().endswith(_INTL_SUFFIXES)
 
-    out: Dict[str, Any] = {
+
+def _empty_payload() -> Dict[str, Any]:
+    return {
         "financials": {
             "ebit_margin": None,
             "gross_margin": None,
@@ -105,6 +98,38 @@ def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
         },
         "source": "fmp",
     }
+
+
+def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
+    if _is_international(ticker):
+        out = _empty_payload()
+        _populate_ownership_from_yf(ticker, out)
+        _fill_from_yf_fallback(ticker, out)
+        out["source"] = "yf-direct"   # surcharge le "fmp+yf-fallback" posé par _fill
+        return out
+
+    # Fetch all data from FMP stable API
+    income = fmp_get("income-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
+    balance = fmp_get("balance-sheet-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
+    cashflow = fmp_get("cash-flow-statement", {"symbol": ticker, "period": "annual", "limit": "4"})
+    ratios = fmp_get("ratios-ttm", {"symbol": ticker})
+    metrics = fmp_get("key-metrics-ttm", {"symbol": ticker})
+    profile_list = fmp_get("profile", {"symbol": ticker})
+    ev_list = fmp_get("enterprise-values", {"symbol": ticker, "limit": "1"})
+
+    # Normalize: FMP returns lists
+    inc: List[Dict] = income if isinstance(income, list) else []
+    bs: List[Dict] = balance if isinstance(balance, list) else []
+    cf: List[Dict] = cashflow if isinstance(cashflow, list) else []
+    rat: Dict = ratios[0] if isinstance(ratios, list) and ratios else {}
+    met: Dict = metrics[0] if isinstance(metrics, list) and metrics else {}
+    profile: Dict = profile_list[0] if isinstance(profile_list, list) and profile_list else {}
+    ev: Dict = ev_list[0] if isinstance(ev_list, list) and ev_list else {}
+
+    # Most recent income statement
+    inc0: Dict = inc[0] if inc else {}
+
+    out: Dict[str, Any] = _empty_payload()
 
     revenue = _get(inc0, "revenue")
     ebitda = _get(inc0, "ebitda")
