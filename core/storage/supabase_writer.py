@@ -118,17 +118,23 @@ def write_score(ticker: str, card: Dict[str, Any]) -> bool:
         return False
 
     try:
+        # La colonne est `scored_at`, pas `recorded_at`. supabase_schema.sql
+        # déclare `recorded_at` et se trompe : la table déployée utilise
+        # `scored_at`, ce que lisait déjà le frontend. Chaque insert échouait
+        # donc en PGRST204 depuis toujours, avalé par le except ci-dessous.
         history_row = {
             "ticker": ticker.upper(),
             "score": potential,
             "confidence": confidence or 0,
-            "recorded_at": now,
+            "scored_at": now,
         }
         client.table("score_history").insert(history_row).execute()
         logger.info(f"Supabase insert score_history: {ticker}")
     except Exception as e:
-        # score_history may not exist yet, log but don't fail
-        logger.warning(f"Supabase insert score_history skipped for {ticker}: {e}")
+        # On continue — l'historique est secondaire face au score courant —
+        # mais en ERROR, pas en WARNING : un historique qui ne s'écrit plus
+        # ne doit pas se remarquer six mois plus tard sur un graphe plat.
+        logger.error(f"Supabase insert score_history ECHEC pour {ticker}: {e}")
 
     return True
 

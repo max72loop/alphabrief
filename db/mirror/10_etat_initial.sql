@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS score_history (
     ticker      TEXT NOT NULL,
     score       INTEGER,
     confidence  INTEGER,
-    recorded_at TIMESTAMPTZ DEFAULT now()
+    scored_at TIMESTAMPTZ DEFAULT now()
 );
 
 ALTER TABLE ticker_scores ENABLE ROW LEVEL SECURITY;

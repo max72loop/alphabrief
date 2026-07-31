@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS score_history (
     ticker TEXT NOT NULL,
     score INTEGER,
     confidence INTEGER,
-    recorded_at TIMESTAMPTZ DEFAULT now()
+    scored_at TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_score_history_ticker ON score_history(ticker);
-CREATE INDEX IF NOT EXISTS idx_score_history_recorded ON score_history(recorded_at DESC);
+CREATE INDEX IF NOT EXISTS idx_score_history_scored ON score_history(scored_at DESC);
 
 -- 3. Alertes
 CREATE TABLE IF NOT EXISTS alerts (
