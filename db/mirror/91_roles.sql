@@ -21,7 +21,12 @@ DECLARE
     msg TEXT;
 BEGIN
     -- Jeu d'essai posé en tant que propriétaire.
-    INSERT INTO ticker_scores (ticker, score_total) VALUES ('ZZTEST', 42)
+    -- Toutes les colonnes NOT NULL du schema REEL. L'ancienne miroir,
+    -- ecrite a la main, etait plus laxe : ce jeu d'essai n'aurait pas
+    -- tenu en prod.
+    INSERT INTO ticker_scores (ticker, score_total, score_fundamentals,
+                               score_technicals, score_momentum)
+    VALUES ('ZZTEST', 42, 42, 42, 42)
     ON CONFLICT (ticker) DO UPDATE SET score_total = 42;
 
     -- ── service_role : le daemon ────────────────────────────
@@ -85,7 +90,9 @@ BEGIN
     END;
 
     BEGIN
-        INSERT INTO ticker_scores (ticker, score_total) VALUES ('ZZANON', 1);
+        INSERT INTO ticker_scores (ticker, score_total, score_fundamentals,
+                                   score_technicals, score_momentum)
+        VALUES ('ZZANON', 1, 1, 1, 1);
         RAISE EXCEPTION 'ECHEC : anon a ECRIT dans ticker_scores';
     EXCEPTION
         WHEN insufficient_privilege THEN RAISE NOTICE 'OK  anon          N''ECRIT PAS ticker_scores';

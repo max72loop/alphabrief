@@ -62,6 +62,43 @@ BEGIN
     END LOOP;
     RAISE NOTICE 'OK 2b tables patrimoniales : authenticated LIT ET ECRIT les 5';
 
+    -- ── 2c. CHEMIN D'ÉCRITURE COMPLET : table ET séquence ───
+    -- Une policy correcte sur un objet sans GRANT donne un échec qui
+    -- RESSEMBLE à un problème de policy. On vérifie donc les privilèges
+    -- eux-mêmes, pour que la prochaine table créée ne repose pas sur le
+    -- souvenir du bug « permission denied for sequence supports_id_seq ».
+    FOREACH t IN ARRAY ARRAY['supports','positions','snapshots','flux','societes']
+    LOOP
+        -- Privilège sur la TABLE
+        IF NOT has_table_privilege('authenticated', t, 'INSERT')
+        OR NOT has_table_privilege('authenticated', t, 'UPDATE')
+        OR NOT has_table_privilege('authenticated', t, 'DELETE')
+        OR NOT has_table_privilege('authenticated', t, 'SELECT') THEN
+            RAISE EXCEPTION 'ECHEC 2c : authenticated n''a pas tous les privileges sur la table %', t;
+        END IF;
+
+        -- Privilège sur la SÉQUENCE qui alimente sa clé, s'il y en a une.
+        -- societes a une PK TEXT (ticker) et donc aucune colonne `id` :
+        -- pg_get_serial_sequence lèverait sur une colonne inexistante, on
+        -- vérifie donc d'abord qu'elle existe.
+        DECLARE seqname TEXT;
+        BEGIN
+            SELECT pg_get_serial_sequence('public.' || t, 'id') INTO seqname
+              WHERE EXISTS (
+                SELECT 1 FROM information_schema.columns
+                 WHERE table_schema = 'public' AND table_name = t AND column_name = 'id');
+            IF seqname IS NOT NULL THEN
+                IF NOT has_sequence_privilege('authenticated', seqname, 'USAGE') THEN
+                    RAISE EXCEPTION
+                        'ECHEC 2c : authenticated ne peut pas utiliser la sequence % — '
+                        'l''INSERT echouera en "permission denied for sequence", '
+                        'un message qui ne mentionne meme pas RLS', seqname;
+                END IF;
+            END IF;
+        END;
+    END LOOP;
+    RAISE NOTICE 'OK 2c chemin d''ecriture complet : privileges table ET sequence';
+
     -- ── 3. La migration a survécu à l'absence de `alerts` ────
     IF to_regclass('public.alerts') IS NOT NULL THEN
         RAISE EXCEPTION 'ECHEC 3 : alerts ne devrait pas exister dans l''etat miroir';

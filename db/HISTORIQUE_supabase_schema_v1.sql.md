@@ -1,3 +1,28 @@
+# DOCUMENT HISTORIQUE — NE PLUS UTILISER
+
+Ce fichier était `supabase_schema.sql` à la racine. Il a décrit le schéma
+Supabase jusqu'au 2026-07-31, puis a **dérivé de la base réelle sans que
+personne ne le remarque**.
+
+Ce que la dérive a coûté : `score_history` y était déclaré avec une colonne
+`recorded_at`, alors que la table déployée utilise `scored_at`. Chaque insert
+d'historique repartait donc en `PGRST204`, avalé par un `except` en WARNING.
+L'historique ne s'est jamais écrit par ce chemin. Et `ticker_scores` y décrivait
+une v1 (`potential_score`, `confidence_score`, `valuation`, `market`, `identity`)
+qui n'existe plus du tout.
+
+**La source de vérité est maintenant `db/schema.reference.sql`**, généré par
+introspection de la vraie base (`python db/introspect.py --write`) et vérifié en
+continu par `make db-drift`.
+
+Ce fichier n'est conservé que pour comprendre d'où venaient les bugs. Il est
+renommé en `.md` pour qu'aucun outil ne puisse plus l'exécuter par mégarde.
+
+---
+
+## Contenu d'origine
+
+```sql
 -- AlphaBrief — Schéma Supabase (état constaté)
 --
 -- ⚠ Ce fichier décrivait jusqu'au 2026-07-31 une v1 obsolète : un
@@ -58,3 +83,5 @@ CREATE INDEX IF NOT EXISTS idx_score_history_scored ON score_history(scored_at D
 -- Rappel du partage cible :
 --   ticker_scores, score_history               -> authenticated LIT, service_role ÉCRIT
 --   supports/positions/snapshots/flux/societes -> authenticated LIT ET ÉCRIT
+
+```
