@@ -2,6 +2,7 @@
 # Cas éclaté : racine canonique = la lib versionnée (/root/alphabrief) ;
 # l'entrypoint runtime est le daemon /root/agents/alphabrief/main.py.
 name: alphabrief
+title: "AlphaBrief"
 emoji: "📈"
 role: "Screener quantitatif"
 layer: metier

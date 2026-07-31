@@ -22,7 +22,10 @@
       "Bash(netstat:*)",
       "Bash(pip show:*)",
       "Bash(python3:*)",
-      "Read(//c/Users/Max/**)"
+      "Read(//c/Users/Max/**)",
+      "Read(//root/**)",
+      "Bash(pm2 list *)",
+      "Bash(grep -E \"\\\\.\\(py|json\\)$\")"
     ]
   }
 }
