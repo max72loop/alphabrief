@@ -212,7 +212,7 @@ def scoring_run():
     # Dual-write Supabase : import isolé, l'absence de credentials ne bloque pas
     # le scoring SQLite — write_score renvoie False si Config.SUPABASE_URL/KEY vide.
     try:
-        from app.storage.supabase_writer import write_score as sb_write_score
+        from core.storage.supabase_writer import write_score as sb_write_score
     except Exception as e:
         logger.error(f"supabase_writer import failed — Supabase dual-write disabled: {e}")
         sb_write_score = None
