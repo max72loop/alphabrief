@@ -96,40 +96,36 @@ END $$;
 -- Renommées sandbox_* au lot 1 ; on sécurise sous leur nom actuel.
 -- Les triggers append-only restent en place, ils sont orthogonaux à RLS.
 
-ALTER TABLE paper_portfolios        ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_positions         ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_rebalances        ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_nav_history       ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_metrics           ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_missed_rebalances ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_corporate_actions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE paper_sofr_rates        ENABLE ROW LEVEL SECURITY;
+-- Même forme que le §1 : rejouable. Un CREATE POLICY sec échouerait au
+-- second passage (« policy already exists ») — défaut attrapé par la base
+-- miroir, invisible pour un parseur de syntaxe.
 
-DROP POLICY IF EXISTS "Public read paper_portfolios"        ON paper_portfolios;
-DROP POLICY IF EXISTS "Public read paper_positions"         ON paper_positions;
-DROP POLICY IF EXISTS "Public read paper_rebalances"        ON paper_rebalances;
-DROP POLICY IF EXISTS "Public read paper_nav_history"       ON paper_nav_history;
-DROP POLICY IF EXISTS "Public read paper_metrics"           ON paper_metrics;
-DROP POLICY IF EXISTS "Public read paper_missed_rebalances" ON paper_missed_rebalances;
-DROP POLICY IF EXISTS "Public read paper_corporate_actions" ON paper_corporate_actions;
-DROP POLICY IF EXISTS "Public read paper_sofr_rates"        ON paper_sofr_rates;
+DO $$
+DECLARE
+    t TEXT;
+    absentes TEXT[] := '{}';
+BEGIN
+    FOREACH t IN ARRAY ARRAY['paper_portfolios','paper_positions','paper_rebalances',
+                             'paper_nav_history','paper_metrics','paper_missed_rebalances',
+                             'paper_corporate_actions','paper_sofr_rates']
+    LOOP
+        IF to_regclass('public.' || t) IS NULL THEN
+            absentes := absentes || t;
+            CONTINUE;
+        END IF;
 
-CREATE POLICY "authenticated read paper_portfolios" ON paper_portfolios
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_positions" ON paper_positions
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_rebalances" ON paper_rebalances
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_nav_history" ON paper_nav_history
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_metrics" ON paper_metrics
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_missed_rebalances" ON paper_missed_rebalances
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_corporate_actions" ON paper_corporate_actions
-    FOR SELECT TO authenticated USING (true);
-CREATE POLICY "authenticated read paper_sofr_rates" ON paper_sofr_rates
-    FOR SELECT TO authenticated USING (true);
+        EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'Public read ' || t, t);
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'authenticated read ' || t, t);
+        EXECUTE format(
+            'CREATE POLICY %I ON %I FOR SELECT TO authenticated USING (true)',
+            'authenticated read ' || t, t);
+    END LOOP;
+
+    IF array_length(absentes, 1) IS NOT NULL THEN
+        RAISE NOTICE 'Tables paper_* absentes, ignorées : %', array_to_string(absentes, ', ');
+    END IF;
+END $$;
 
 
 -- ── 3. HORS PÉRIMÈTRE ───────────────────────────────────────

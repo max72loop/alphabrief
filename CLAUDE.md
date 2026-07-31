@@ -77,15 +77,55 @@ de dossiers ment.
 
 ### Frontière d'autonomie
 
-Commits en local : libres.
+**Totale sur la base miroir. Nulle sur Supabase.**
+
+Commits en local : libres. Sur la miroir : appliquer, casser, recréer, rejouer
+depuis zéro autant de fois que nécessaire, sans rien demander.
 
 Demandent un feu vert explicite de Max :
 
 - **push sur la branche déployée** — Vercel déploie depuis `main` du frontend,
   donc un push est une mise en production, pas un geste de versioning
-- **application d'une migration**
+- **application d'une migration** sur Supabase
 - **modification de variables d'environnement**
 - **suppression de table**
+
+### Base miroir — `make db-reset`
+
+Postgres 16 local sur le VPS, base `alphabrief_mirror`, **jetable, sans aucune
+donnée réelle, jamais**. `db/mirror/` contient l'amorçage (rôles `anon` /
+`authenticated` / `service_role` et schéma `auth`, que Supabase fournit d'office
+et qu'un Postgres nu n'a pas), la reconstitution de l'état initial, et les
+assertions.
+
+```
+make db-reset      # base vide -> état cible, en une commande. Échoue au premier problème.
+make db-check      # rejoue les assertions seules
+make db-policies   # pg_policies, même requête qu'en prod
+```
+
+`db-reset` enchaîne : base jetable → bootstrap → état initial → migrations →
+assertions → **rejeu des migrations + assertions** (l'idempotence est vérifiée
+mécaniquement, pas par relecture).
+
+**Une migration ne part en prod qu'après être passée au vert sur la miroir, avec
+la sortie collée dans la livraison.** Le parseur `pglast` passe au second rang :
+il valide la syntaxe, pas la sémantique.
+
+Ce que la miroir a déjà attrapé et que `pglast` ne voyait pas : le bloc `paper_*`
+de la migration RLS créait ses policies sans `DROP` préalable — correct en
+syntaxe, `ERROR: policy already exists` au second passage.
+
+### Mémoire externe (mempalace)
+
+**Aucun montant réel, aucun solde, aucune valorisation ne doit atterrir dans un
+tiroir mempalace ni dans le journal.** Les décisions, les raisons et le code :
+oui. Les chiffres du patrimoine de Max : jamais. Cela vaut aussi pour les
+extraits de sortie SQL et les dumps collés dans une livraison.
+
+Vérifier le graphe à chaque checkpoint : un fait périmé qui reste `current`
+sera relu comme vrai plus tard. Invalider (`kg_invalidate`) plutôt que
+d'empiler une contradiction.
 
 ### Vérification
 

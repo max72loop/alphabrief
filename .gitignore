@@ -15,3 +15,6 @@ prompt_agent.txt.local
 
 # Sorties de backtest (artefacts régénérables)
 data/backtests/
+
+# Base miroir : artefacts locaux
+db/mirror/*.local.sql
