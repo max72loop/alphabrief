@@ -22,15 +22,29 @@
 
 -- ── Tables de scoring (supabase_schema.sql, SANS alerts) ────
 
+-- Structure REELLE, introspectee via PostgREST le 2026-07-31. Le
+-- supabase_schema.sql du repo en decrivait une autre, obsolete : la miroir
+-- reproduisait donc une table qui n'existe plus.
 CREATE TABLE IF NOT EXISTS ticker_scores (
-    ticker           TEXT PRIMARY KEY,
-    potential_score  INTEGER,
-    confidence_score INTEGER,
-    financials       JSONB DEFAULT '{}',
-    valuation        JSONB DEFAULT '{}',
-    market           JSONB DEFAULT '{}',
-    identity         JSONB DEFAULT '{}',
-    scored_at        TIMESTAMPTZ DEFAULT now()
+    id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ticker             TEXT UNIQUE NOT NULL,
+    company_name       TEXT,
+    sector             TEXT,
+    exchange           TEXT,
+    currency           TEXT,
+    market_cap         BIGINT,
+    one_liner          TEXT,
+    moat_tags          JSONB DEFAULT '[]',
+    score_total        INTEGER,
+    score_fundamentals INTEGER,
+    score_technicals   INTEGER,
+    score_momentum     INTEGER,
+    score_label        TEXT,
+    importance_items   JSONB DEFAULT '[]',
+    financials         JSONB DEFAULT '{}',
+    market_data        JSONB DEFAULT '{}',
+    score_date         DATE,
+    computed_at        TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS score_history (

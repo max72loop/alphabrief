@@ -17,19 +17,21 @@ help:
 # Rejouable depuis une base vide jusqu'à l'état cible, en une commande.
 # Échoue au premier problème : ON_ERROR_STOP partout.
 db-reset:
-	@echo "── 1/6  base jetable ────────────────────────────────"
+	@echo "── 1/7  base jetable ────────────────────────────────"
 	@$(PSQL) -c "DROP DATABASE IF EXISTS $(MIRROR_DB);"
 	@$(PSQL) -c "CREATE DATABASE $(MIRROR_DB);"
-	@echo "── 2/6  bootstrap (roles Supabase, schema auth) ─────"
+	@echo "── 2/7  bootstrap (roles Supabase, schema auth) ─────"
 	@$(PSQL_DB) -f $(REPO)/db/mirror/00_bootstrap.sql
-	@echo "── 3/6  etat initial (avant migrations, alerts absente)"
+	@echo "── 3/7  etat initial (avant migrations, alerts absente)"
 	@$(PSQL_DB) -f $(REPO)/db/mirror/10_etat_initial.sql
-	@echo "── 4/6  migrations du pivot, dans l'ordre ───────────"
+	@echo "── 4/7  migrations du pivot, dans l'ordre ───────────"
 	@$(PSQL_DB) -f $(REPO)/migrations/2026_07_31_close_public_rls.sql
 	@$(PSQL_DB) -f $(REPO)/migrations/2026_07_31_patrimoine_schema.sql
-	@echo "── 5/6  assertions ──────────────────────────────────"
+	@echo "── 5/7  assertions ──────────────────────────────────"
 	@$(PSQL_DB) -f $(REPO)/db/mirror/90_assertions.sql
-	@echo "── 6/6  idempotence : rejeu des migrations ──────────"
+	@echo "── 6/7  partage par role (lecture/ecriture reelles) ─"
+	@$(PSQL_DB) -f $(REPO)/db/mirror/91_roles.sql
+	@echo "── 7/7  idempotence : rejeu des migrations ──────────"
 	@$(PSQL_DB) -f $(REPO)/migrations/2026_07_31_close_public_rls.sql
 	@$(PSQL_DB) -f $(REPO)/migrations/2026_07_31_patrimoine_schema.sql
 	@$(PSQL_DB) -f $(REPO)/db/mirror/90_assertions.sql
@@ -38,6 +40,7 @@ db-reset:
 
 db-check:
 	@$(PSQL_DB) -f $(REPO)/db/mirror/90_assertions.sql
+	@$(PSQL_DB) -f $(REPO)/db/mirror/91_roles.sql
 
 db-policies:
 	@$(PSQL_DB) -c "SELECT tablename, policyname, roles, cmd \

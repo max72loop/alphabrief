@@ -12,7 +12,7 @@ DO $$
 DECLARE
     n INT;
     v NUMERIC;
-    ok BOOLEAN;
+    t TEXT;
 BEGIN
     -- ── 1. Plus aucune policy ouverte à public/anon ─────────
     SELECT count(*) INTO n
@@ -24,16 +24,43 @@ BEGIN
     END IF;
     RAISE NOTICE 'OK 1  aucune policy ouverte a public ou anon';
 
-    -- ── 2. Aucune écriture possible sur les tables de scoring ─
+    -- ── 2a. DONNÉES MACHINE : lecture seule pour authenticated ─
+    -- ticker_scores, score_history, paper_* sont écrites par le daemon en
+    -- service_role. Aucune raison de les modifier depuis le navigateur.
+    SELECT count(*) INTO n
+      FROM pg_policies
+     WHERE schemaname = 'public'
+       AND (tablename IN ('ticker_scores','score_history') OR tablename LIKE 'paper\_%')
+       AND cmd <> 'SELECT';
+    IF n <> 0 THEN
+        RAISE EXCEPTION 'ECHEC 2a : % policy(ies) d''ecriture sur des donnees machine', n;
+    END IF;
+
     SELECT count(*) INTO n
       FROM pg_policies
      WHERE schemaname = 'public'
        AND tablename IN ('ticker_scores','score_history')
-       AND cmd <> 'SELECT';
-    IF n <> 0 THEN
-        RAISE EXCEPTION 'ECHEC 2 : % policy(ies) d''ecriture subsistent sur les tables de scoring', n;
+       AND cmd = 'SELECT' AND 'authenticated' = ANY(roles);
+    IF n <> 2 THEN
+        RAISE EXCEPTION 'ECHEC 2a : authenticated ne peut pas LIRE les scores (% policy)', n;
     END IF;
-    RAISE NOTICE 'OK 2  ecriture reservee a service_role (aucune policy non-SELECT)';
+    RAISE NOTICE 'OK 2a donnees machine : authenticated LIT, seul service_role ECRIT';
+
+    -- ── 2b. TABLES PATRIMONIALES : lecture ET écriture ──────
+    -- Max est l'unique utilisateur, il les remplit depuis le navigateur.
+    -- Sans policy d'écriture pour authenticated, l'écran de saisie du lot 2
+    -- ne peut rien écrire — le cœur du produit serait mort.
+    FOREACH t IN ARRAY ARRAY['supports','positions','snapshots','flux','societes']
+    LOOP
+        SELECT count(*) INTO n
+          FROM pg_policies
+         WHERE schemaname = 'public' AND tablename = t
+           AND cmd = 'ALL' AND 'authenticated' = ANY(roles);
+        IF n <> 1 THEN
+            RAISE EXCEPTION 'ECHEC 2b : % n''est pas inscriptible par authenticated', t;
+        END IF;
+    END LOOP;
+    RAISE NOTICE 'OK 2b tables patrimoniales : authenticated LIT ET ECRIT les 5';
 
     -- ── 3. La migration a survécu à l'absence de `alerts` ────
     IF to_regclass('public.alerts') IS NOT NULL THEN

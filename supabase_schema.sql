@@ -1,65 +1,60 @@
--- AlphaBrief — Schema Supabase
--- Exécuter dans le SQL Editor de Supabase Dashboard
+-- AlphaBrief — Schéma Supabase (état constaté)
+--
+-- ⚠ Ce fichier décrivait jusqu'au 2026-07-31 une v1 obsolète : un
+--   ticker_scores à (potential_score, confidence_score, valuation, market,
+--   identity, scored_at) qui n'existe plus, et un score_history en
+--   `recorded_at` là où la table déployée utilise `scored_at`. C'est cette
+--   dérive qui faisait échouer en silence chaque insert d'historique.
+--
+--   Il est désormais aligné sur la base réelle, introspectée via PostgREST.
+--   Ne pas le modifier sans vérifier la base : c'est un constat, pas un
+--   souhait.
+--
+-- ⚠ `alerts` figurait ici mais n'a jamais été créée dans le projet
+--   (PGRST205). Elle est retirée plutôt que laissée à décrire une table
+--   fantôme. La feature d'alertes est à trancher au lot 4 : créer la table,
+--   ou retirer la surface côté frontend et daemon.
 
--- 1. Table principale des scores (upsert par ticker)
+-- ── 1. ticker_scores — écrite par le daemon (service_role) ──
 CREATE TABLE IF NOT EXISTS ticker_scores (
-    ticker TEXT PRIMARY KEY,
-    potential_score INTEGER,
-    confidence_score INTEGER,
-    financials JSONB DEFAULT '{}',
-    valuation JSONB DEFAULT '{}',
-    market JSONB DEFAULT '{}',
-    identity JSONB DEFAULT '{}',
-    scored_at TIMESTAMPTZ DEFAULT now()
+    id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ticker             TEXT UNIQUE NOT NULL,
+    company_name       TEXT,
+    sector             TEXT,
+    exchange           TEXT,
+    currency           TEXT,
+    market_cap         BIGINT,
+    one_liner          TEXT,
+    moat_tags          JSONB DEFAULT '[]',
+    score_total        INTEGER,
+    score_fundamentals INTEGER,
+    score_technicals   INTEGER,
+    score_momentum     INTEGER,
+    score_label        TEXT,
+    importance_items   JSONB DEFAULT '[]',
+    financials         JSONB DEFAULT '{}',
+    market_data        JSONB DEFAULT '{}',
+    score_date         DATE,
+    computed_at        TIMESTAMPTZ DEFAULT now()
 );
 
--- 2. Historique des scores
+-- ── 2. score_history — la colonne est scored_at ─────────────
 CREATE TABLE IF NOT EXISTS score_history (
-    id BIGSERIAL PRIMARY KEY,
-    ticker TEXT NOT NULL,
-    score INTEGER,
+    id         BIGSERIAL PRIMARY KEY,
+    ticker     TEXT NOT NULL,
+    score      INTEGER,
     confidence INTEGER,
-    scored_at TIMESTAMPTZ DEFAULT now()
+    scored_at  TIMESTAMPTZ DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_score_history_ticker ON score_history(ticker);
 CREATE INDEX IF NOT EXISTS idx_score_history_scored ON score_history(scored_at DESC);
 
--- 3. Alertes
-CREATE TABLE IF NOT EXISTS alerts (
-    id BIGSERIAL PRIMARY KEY,
-    ticker TEXT NOT NULL,
-    alert_type TEXT NOT NULL,
-    prev_score INTEGER,
-    new_score INTEGER,
-    message TEXT,
-    created_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE INDEX IF NOT EXISTS idx_alerts_ticker ON alerts(ticker);
-CREATE INDEX IF NOT EXISTS idx_alerts_created ON alerts(created_at DESC);
-
--- 4. RLS — lecture publique (scores publics pour freemium)
-ALTER TABLE ticker_scores ENABLE ROW LEVEL SECURITY;
-ALTER TABLE score_history ENABLE ROW LEVEL SECURITY;
-ALTER TABLE alerts ENABLE ROW LEVEL SECURITY;
-
--- Policy lecture publique
-CREATE POLICY "Public read ticker_scores" ON ticker_scores
-    FOR SELECT USING (true);
-
-CREATE POLICY "Public read score_history" ON score_history
-    FOR SELECT USING (true);
-
-CREATE POLICY "Public read alerts" ON alerts
-    FOR SELECT USING (true);
-
--- Policy écriture via service_role key (le backend utilise la clé secrète)
-CREATE POLICY "Service write ticker_scores" ON ticker_scores
-    FOR ALL USING (true) WITH CHECK (true);
-
-CREATE POLICY "Service write score_history" ON score_history
-    FOR ALL USING (true) WITH CHECK (true);
-
-CREATE POLICY "Service write alerts" ON alerts
-    FOR ALL USING (true) WITH CHECK (true);
+-- ── 3. RLS ──────────────────────────────────────────────────
+-- Les policies vivent dans migrations/2026_07_31_close_public_rls.sql.
+-- Ce fichier ne décrit plus que la structure : la sécurité a un seul
+-- endroit, versionné et testé sur la base miroir.
+--
+-- Rappel du partage cible :
+--   ticker_scores, score_history               -> authenticated LIT, service_role ÉCRIT
+--   supports/positions/snapshots/flux/societes -> authenticated LIT ET ÉCRIT

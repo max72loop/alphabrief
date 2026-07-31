@@ -281,6 +281,37 @@ BEGIN
     END LOOP;
 END $$;
 
+-- ── 7 bis. GRANTs — une policy ne suffit pas ────────────────
+--
+-- RLS filtre les LIGNES ; les GRANT autorisent l'OPÉRATION. Les deux sont
+-- nécessaires. Une table peut avoir une policy `FOR ALL TO authenticated`
+-- parfaite et refuser quand même l'INSERT, faute de privilège sur la table
+-- ou sur sa SÉQUENCE — l'erreur est alors « permission denied for sequence
+-- <table>_id_seq », qui ne mentionne même pas RLS.
+--
+-- Supabase pose des ALTER DEFAULT PRIVILEGES qui couvrent normalement ce
+-- cas. On ne s'y fie pas : si ces defaults ont été modifiés un jour, ou si
+-- les tables sont créées par un rôle dont les defaults diffèrent, l'écran
+-- de saisie échouerait à la première écriture avec un message trompeur.
+-- Défaut trouvé sur la base miroir, sur l'INSERT de supports.
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+    ON supports, positions, snapshots, flux, societes
+    TO authenticated, service_role;
+
+-- societes a une PK TEXT : pas de séquence.
+GRANT USAGE, SELECT
+    ON SEQUENCE supports_id_seq, positions_id_seq, snapshots_id_seq, flux_id_seq
+    TO authenticated, service_role;
+
+-- Données machine : authenticated lit, n'écrit pas. Le GRANT le dit aussi,
+-- il ne se repose pas que sur l'absence de policy.
+REVOKE INSERT, UPDATE, DELETE ON ticker_scores, score_history FROM authenticated;
+GRANT SELECT ON ticker_scores, score_history TO authenticated;
+
+-- anon n'a rien, sur rien.
+REVOKE ALL ON supports, positions, snapshots, flux, societes FROM anon;
+
 
 -- ── 8. Amorçage des supports ────────────────────────────────
 -- 5 supports pour 4 comptes : Revolut est scindé, un support = une poche

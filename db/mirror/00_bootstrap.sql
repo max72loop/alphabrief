@@ -23,9 +23,17 @@ BEGIN
     END IF;
 END $$;
 
+-- Reproduit les ALTER DEFAULT PRIVILEGES que Supabase pose sur un projet
+-- neuf : TABLES, SEQUENCES *et* FUNCTIONS. Oublier SEQUENCES donnait
+-- « permission denied for sequence supports_id_seq » à l'INSERT — une
+-- erreur qui ne mentionne même pas RLS et envoie chercher au mauvais endroit.
 GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
     GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT ALL ON FUNCTIONS TO anon, authenticated, service_role;
 
 -- Schéma `auth` minimal : auth.uid() est référencé par le durcissement
 -- optionnel des policies.
