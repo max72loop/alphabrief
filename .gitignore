@@ -12,3 +12,6 @@ mempalace.yaml
 
 # Local agent prompt drafts (committed copies are fine, drafts are not)
 prompt_agent.txt.local
+
+# Sorties de backtest (artefacts régénérables)
+data/backtests/
