@@ -34,9 +34,12 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 
-# Reuse paper_mvp's supabase + fmp init (DRY)
+# Reuse paper_mvp's quote fetching (DRY)
 sys.path.insert(0, "/root/agents/alphabrief")
-from paper_mvp import _supabase, _fetch_quote, INITIAL_CAPITAL
+sys.path.insert(0, "/root/alphabrief")
+from paper_mvp import _fetch_quote, INITIAL_CAPITAL
+
+from core.storage import db
 
 
 PORTFOLIO_NAME = "TOP10"
@@ -49,25 +52,24 @@ def _err(msg: str, code: int = 1) -> None:
 
 
 def build() -> dict:
-    sb = _supabase()
-
     # 1. Portfolio
-    portfolios = sb.table("paper_portfolios").select("*").eq("name", PORTFOLIO_NAME).limit(1).execute()
-    if not portfolios.data:
+    portfolio = db.query_one(
+        "SELECT * FROM paper_portfolios WHERE name = %s LIMIT 1", [PORTFOLIO_NAME]
+    )
+    if not portfolio:
         _err(f"portfolio '{PORTFOLIO_NAME}' not found")
-    portfolio = portfolios.data[0]
     pid = portfolio["id"]
 
     # 2. Positions courantes
-    pos_rows = (sb.table("paper_positions").select("*")
-                .eq("portfolio_id", pid).execute()).data
+    pos_rows = db.query("SELECT * FROM paper_positions WHERE portfolio_id = %s", [pid])
 
     # 3. NAV history (HISTORY_DAYS derniers jours, tri date asc pour la courbe)
-    nav_rows = (sb.table("paper_nav_history").select("date, nav, cash_balance")
-                .eq("portfolio_id", pid)
-                .order("date", desc=True).limit(HISTORY_DAYS).execute()).data
+    nav_rows = db.query(
+        "SELECT date, nav, cash_balance FROM paper_nav_history "
+        "WHERE portfolio_id = %s ORDER BY date DESC LIMIT %s", [pid, HISTORY_DAYS]
+    )
     nav_rows.reverse()  # asc pour le sparkline
-    nav_history = [{"date": r["date"], "nav": float(r["nav"])} for r in nav_rows]
+    nav_history = [{"date": r["date"].isoformat(), "nav": float(r["nav"])} for r in nav_rows]
 
     # Derniere NAV stockee (avant mark-to-market)
     nav_stored = float(nav_rows[-1]["nav"]) if nav_rows else float(portfolio["initial_capital"])
@@ -78,9 +80,11 @@ def build() -> dict:
     name_map: dict[str, Optional[str]] = {}
     if tickers:
         try:
-            name_rows = (sb.table("ticker_scores").select("ticker, company_name")
-                         .in_("ticker", tickers).execute()).data
-            name_map = {r["ticker"]: r.get("company_name") for r in name_rows}
+            name_rows = db.query(
+                "SELECT ticker, company_name FROM ticker_scores WHERE ticker = ANY(%s)",
+                [tickers],
+            )
+            name_map = {r["ticker"]: r["company_name"] for r in name_rows}
         except Exception:
             name_map = {}
 
@@ -121,9 +125,8 @@ def build() -> dict:
     positions_out.sort(key=lambda r: r["notional_live"], reverse=True)
 
     # 5. Fees cumules (approximation : count rebalances * 9.99, ou somme exacte si dispo)
-    fees_rows = (sb.table("paper_rebalances").select("fees")
-                 .eq("portfolio_id", pid).execute()).data
-    fees_paid = round(sum(float(r.get("fees", 0) or 0) for r in fees_rows), 2)
+    fees_rows = db.query("SELECT fees FROM paper_rebalances WHERE portfolio_id = %s", [pid])
+    fees_paid = round(sum(float(r["fees"] or 0) for r in fees_rows), 2)
 
     nav_live = round(long_value_live + cash_stored, 2)
     # Poids = part de la NAV totale (long_value + cash), pas seulement de l'equity

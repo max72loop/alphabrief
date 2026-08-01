@@ -8,8 +8,9 @@ LONG only, équipondéré 10% NAV, fees 10 bps per leg, no slippage, no SL,
 no hash-chain (placeholder row_hash to satisfy DB UNIQUE constraint), no
 corporate actions, no metrics.
 
-Tables Supabase réutilisées : paper_portfolios, paper_positions (mutable),
-paper_rebalances/paper_nav_history/paper_missed_rebalances (append-only).
+Tables réutilisées (Postgres local) : paper_portfolios, paper_positions
+(mutable), paper_rebalances/paper_nav_history/paper_missed_rebalances
+(append-only, protégées par trigger).
 """
 from __future__ import annotations
 
@@ -22,7 +23,10 @@ from typing import Optional
 sys.path.insert(0, "/root/alphabrief")
 sys.path.insert(0, "/root")
 
+from psycopg.types.json import Jsonb
+
 from alfred.shared.logger import get_logger
+from core.storage import db
 
 logger = get_logger("paper_mvp")
 
@@ -32,17 +36,6 @@ INITIAL_CAPITAL = float(os.environ.get("PAPER_MVP_INITIAL_CAPITAL", "100000"))
 TARGET_COUNT = 10
 SCORE_PREFERENCE_THRESHOLD = 75
 FEES_BPS = 10
-
-_supabase_client = None
-
-
-def _supabase():
-    global _supabase_client
-    if _supabase_client is None:
-        from supabase import create_client
-        from config import Config
-        _supabase_client = create_client(Config.SUPABASE_URL, Config.SUPABASE_KEY)
-    return _supabase_client
 
 
 def _placeholder_row_hash(portfolio_id: int, d: str, ticker: str, action: str, shares: float) -> str:
@@ -66,44 +59,48 @@ def _fetch_quote(ticker: str) -> Optional[float]:
 
 def bootstrap_portfolio() -> int:
     """Idempotent: creates MVP_TOP10 row on first run, returns its id."""
-    sb = _supabase()
-    existing = sb.table("paper_portfolios").select("id, started_at").eq("name", PORTFOLIO_NAME).execute()
-    if existing.data:
-        pid = existing.data[0]["id"]
-        if existing.data[0].get("started_at") is None:
-            sb.table("paper_portfolios").update({"started_at": date.today().isoformat()}).eq("id", pid).execute()
+    existing = db.query_one(
+        "SELECT id, started_at FROM paper_portfolios WHERE name = %s", [PORTFOLIO_NAME]
+    )
+    if existing:
+        pid = existing["id"]
+        if existing["started_at"] is None:
+            db.execute("UPDATE paper_portfolios SET started_at = %s WHERE id = %s",
+                       [date.today(), pid])
         return pid
-    inserted = sb.table("paper_portfolios").insert({
-        "name": PORTFOLIO_NAME,
-        "strategy": PORTFOLIO_STRATEGY,
-        "initial_capital": INITIAL_CAPITAL,
-        "started_at": date.today().isoformat(),
-    }).execute()
-    pid = inserted.data[0]["id"]
+    row = db.query_one(
+        "INSERT INTO paper_portfolios (name, strategy, initial_capital, started_at) "
+        "VALUES (%s, %s, %s, %s) RETURNING id",
+        [PORTFOLIO_NAME, PORTFOLIO_STRATEGY, INITIAL_CAPITAL, date.today()],
+    )
+    pid = row["id"]
     logger.info(f"paper_portfolios[{pid}] = {PORTFOLIO_NAME} bootstrapped, capital ${INITIAL_CAPITAL:.0f}")
     return pid
 
 
 def _load_top_n_scores(n: int = TARGET_COUNT) -> list[dict]:
-    res = (_supabase().table("ticker_scores")
-           .select("ticker, score_total").order("score_total", desc=True).limit(n).execute())
-    rows = res.data or []
-    high = [r for r in rows if (r.get("score_total") or 0) >= SCORE_PREFERENCE_THRESHOLD]
+    rows = db.query(
+        "SELECT ticker, score_total FROM ticker_scores "
+        "ORDER BY score_total DESC NULLS LAST LIMIT %s", [n]
+    )
+    high = [r for r in rows if (r["score_total"] or 0) >= SCORE_PREFERENCE_THRESHOLD]
     if len(high) < n:
         logger.warning(f"Univers réduit: {len(high)}/{n} ticker(s) ≥ score {SCORE_PREFERENCE_THRESHOLD}, on prend les meilleurs")
-    return [{"ticker": r["ticker"], "score": r.get("score_total")} for r in rows]
+    return [{"ticker": r["ticker"], "score": r["score_total"]} for r in rows]
 
 
 def _load_open_positions(portfolio_id: int) -> dict[str, dict]:
-    res = _supabase().table("paper_positions").select("*").eq("portfolio_id", portfolio_id).execute()
-    return {r["ticker"]: r for r in (res.data or [])}
+    rows = db.query("SELECT * FROM paper_positions WHERE portfolio_id = %s", [portfolio_id])
+    return {r["ticker"]: r for r in rows}
 
 
 def _last_nav(portfolio_id: int) -> tuple[float, float]:
-    res = (_supabase().table("paper_nav_history").select("nav, cash_balance")
-           .eq("portfolio_id", portfolio_id).order("date", desc=True).limit(1).execute())
-    if res.data:
-        return float(res.data[0]["nav"]), float(res.data[0]["cash_balance"])
+    row = db.query_one(
+        "SELECT nav, cash_balance FROM paper_nav_history "
+        "WHERE portfolio_id = %s ORDER BY date DESC LIMIT 1", [portfolio_id]
+    )
+    if row:
+        return float(row["nav"]), float(row["cash_balance"])
     return INITIAL_CAPITAL, INITIAL_CAPITAL
 
 
@@ -113,11 +110,13 @@ def _compute_cash(portfolio_id: int) -> float:
     Source de vérité unique. paper_nav_history.cash_balance peut diverger
     temporairement (NAV daily écrite avant un rebalance du même jour).
     """
-    sb = _supabase()
-    pf = sb.table("paper_portfolios").select("initial_capital").eq("id", portfolio_id).execute().data
-    cash = float(pf[0]["initial_capital"]) if pf else INITIAL_CAPITAL
-    trades = (sb.table("paper_rebalances").select("action, shares, price, fees")
-                .eq("portfolio_id", portfolio_id).execute().data) or []
+    pf = db.query_one("SELECT initial_capital FROM paper_portfolios WHERE id = %s",
+                      [portfolio_id])
+    cash = float(pf["initial_capital"]) if pf else INITIAL_CAPITAL
+    trades = db.query(
+        "SELECT action, shares, price, fees FROM paper_rebalances WHERE portfolio_id = %s",
+        [portfolio_id],
+    )
     for t in trades:
         gross = float(t["shares"]) * float(t["price"])
         fees = float(t["fees"])
@@ -130,10 +129,11 @@ def _compute_cash(portfolio_id: int) -> float:
 
 def _log_missed(portfolio_id: int, scheduled: date, reason: str, details: dict) -> None:
     try:
-        _supabase().table("paper_missed_rebalances").insert({
-            "portfolio_id": portfolio_id, "scheduled_date": scheduled.isoformat(),
-            "reason": reason, "details": details,
-        }).execute()
+        db.execute(
+            "INSERT INTO paper_missed_rebalances (portfolio_id, scheduled_date, reason, details) "
+            "VALUES (%s, %s, %s, %s)",
+            [portfolio_id, scheduled, reason, Jsonb(details)],
+        )
     except Exception as e:
         logger.error(f"failed to log missed rebalance: {e}")
 
@@ -154,7 +154,6 @@ def run_weekly_rebalance() -> None:
     current = _load_open_positions(portfolio_id)
     last_nav, _ = _last_nav(portfolio_id)
     cash_available = _compute_cash(portfolio_id)
-    sb = _supabase()
     trades = 0
 
     # SELL: positions hors top 10
@@ -168,15 +167,15 @@ def run_weekly_rebalance() -> None:
         shares = float(pos["shares"])
         gross = shares * price
         fees = gross * FEES_BPS / 10000
-        sb.table("paper_rebalances").insert({
-            "portfolio_id": portfolio_id, "rebalance_date": today_iso,
-            "action": "SELL", "ticker": ticker, "shares": shares, "price": price,
-            "fees": fees, "slippage": 0,
-            "score_at_decision": None, "rationale": "Out of top 10",
-            "prev_hash": None,
-            "row_hash": _placeholder_row_hash(portfolio_id, today_iso, ticker, "SELL", shares),
-        }).execute()
-        sb.table("paper_positions").delete().eq("portfolio_id", portfolio_id).eq("ticker", ticker).execute()
+        db.execute(
+            "INSERT INTO paper_rebalances (portfolio_id, rebalance_date, action, ticker, "
+            "shares, price, fees, slippage, score_at_decision, rationale, prev_hash, row_hash) "
+            "VALUES (%s, %s, 'SELL', %s, %s, %s, %s, 0, NULL, 'Out of top 10', NULL, %s)",
+            [portfolio_id, today_iso, ticker, shares, price, fees,
+             _placeholder_row_hash(portfolio_id, today_iso, ticker, "SELL", shares)],
+        )
+        db.execute("DELETE FROM paper_positions WHERE portfolio_id = %s AND ticker = %s",
+                   [portfolio_id, ticker])
         cash_available += gross - fees
         trades += 1
         logger.info(f"SELL  {ticker:6s} {shares:8.4f} @ {price:8.2f} = ${gross-fees:.2f} (fees ${fees:.2f})")
@@ -200,19 +199,22 @@ def run_weekly_rebalance() -> None:
         gross = shares * price
         fees = gross * FEES_BPS / 10000
         cost = gross + fees
-        sb.table("paper_rebalances").insert({
-            "portfolio_id": portfolio_id, "rebalance_date": today_iso,
-            "action": "BUY", "ticker": ticker, "shares": shares, "price": price,
-            "fees": fees, "slippage": 0,
-            "score_at_decision": entry["score"],
-            "rationale": f"Top 10 entry (score {entry['score']})",
-            "prev_hash": None,
-            "row_hash": _placeholder_row_hash(portfolio_id, today_iso, ticker, "BUY", shares),
-        }).execute()
-        sb.table("paper_positions").upsert({
-            "portfolio_id": portfolio_id, "ticker": ticker, "side": "LONG",
-            "shares": shares, "entry_price": price, "entry_date": today_iso,
-        }, on_conflict="portfolio_id,ticker").execute()
+        db.execute(
+            "INSERT INTO paper_rebalances (portfolio_id, rebalance_date, action, ticker, "
+            "shares, price, fees, slippage, score_at_decision, rationale, prev_hash, row_hash) "
+            "VALUES (%s, %s, 'BUY', %s, %s, %s, %s, 0, %s, %s, NULL, %s)",
+            [portfolio_id, today_iso, ticker, shares, price, fees, entry["score"],
+             f"Top 10 entry (score {entry['score']})",
+             _placeholder_row_hash(portfolio_id, today_iso, ticker, "BUY", shares)],
+        )
+        db.execute(
+            "INSERT INTO paper_positions (portfolio_id, ticker, side, shares, entry_price, entry_date) "
+            "VALUES (%s, %s, 'LONG', %s, %s, %s) "
+            "ON CONFLICT (portfolio_id, ticker) DO UPDATE "
+            "   SET shares = EXCLUDED.shares, entry_price = EXCLUDED.entry_price, "
+            "       entry_date = EXCLUDED.entry_date, updated_at = now()",
+            [portfolio_id, ticker, shares, price, today_iso],
+        )
         cash_available -= cost
         trades += 1
         logger.info(f"BUY   {ticker:6s} {shares:8.4f} @ {price:8.2f} = ${cost:.2f} (fees ${fees:.2f}, score {entry['score']})")
@@ -227,22 +229,24 @@ def run_weekly_rebalance() -> None:
     # reflete les achats des semaines passees (PAS le prix du jour), donc on ecrirait
     # une NAV figee et on bloquerait run_daily_nav du soir par idempotency. Sans
     # trade, on laisse run_daily_nav (22h UTC) faire son mark-to-market normalement.
-    has_today_nav = (sb.table("paper_nav_history").select("id")
-                       .eq("portfolio_id", portfolio_id).eq("date", today_iso).limit(1).execute()).data
+    has_today_nav = db.query_one(
+        "SELECT id FROM paper_nav_history WHERE portfolio_id = %s AND date = %s LIMIT 1",
+        [portfolio_id, today_iso],
+    )
     if trades > 0 and not has_today_nav:
         # NAV at rebalance close = positions valued at their just-paid entry price
         # + cash residual. Equals the pre-rebalance NAV minus fees.
         post_positions = _load_open_positions(portfolio_id)
         long_at_entry = sum(float(p["shares"]) * float(p["entry_price"]) for p in post_positions.values())
         new_nav = long_at_entry + cash_available
-        sb.table("paper_nav_history").insert({
-            "portfolio_id": portfolio_id, "date": today_iso,
-            "nav": round(new_nav, 2), "cash_balance": round(cash_available, 2),
-            "cash_interest": 0, "borrow_cost": 0,
-            "daily_return": round((new_nav / last_nav - 1) if last_nav > 0 else 0.0, 6),
-            "cumulative_return": round(new_nav / INITIAL_CAPITAL - 1, 6),
-            "drawdown": None,
-        }).execute()
+        db.execute(
+            "INSERT INTO paper_nav_history (portfolio_id, date, nav, cash_balance, "
+            "cash_interest, borrow_cost, daily_return, cumulative_return, drawdown) "
+            "VALUES (%s, %s, %s, %s, 0, 0, %s, %s, NULL)",
+            [portfolio_id, today_iso, round(new_nav, 2), round(cash_available, 2),
+             round((new_nav / last_nav - 1) if last_nav > 0 else 0.0, 6),
+             round(new_nav / INITIAL_CAPITAL - 1, 6)],
+        )
         logger.info(f"NAV row written at rebalance close: ${new_nav:.2f} (long ${long_at_entry:.2f} + cash ${cash_available:.2f})")
 
     logger.info(f"=== REBALANCE done: {trades} trade(s), cash now ~${cash_available:.2f} ===")
@@ -252,10 +256,9 @@ def run_daily_nav() -> None:
     """Mark-to-market positions, append paper_nav_history (idempotent per day)."""
     portfolio_id = bootstrap_portfolio()
     today_iso = date.today().isoformat()
-    sb = _supabase()
 
-    if (sb.table("paper_nav_history").select("id")
-          .eq("portfolio_id", portfolio_id).eq("date", today_iso).limit(1).execute()).data:
+    if db.query_one("SELECT id FROM paper_nav_history WHERE portfolio_id = %s AND date = %s LIMIT 1",
+                    [portfolio_id, today_iso]):
         logger.info(f"NAV {today_iso} already recorded — skip (append-only)")
         return
 
@@ -270,14 +273,13 @@ def run_daily_nav() -> None:
     nav = long_value + cash
     daily_return = (nav / last_nav - 1) if last_nav > 0 else 0.0
 
-    sb.table("paper_nav_history").insert({
-        "portfolio_id": portfolio_id, "date": today_iso,
-        "nav": round(nav, 2), "cash_balance": round(cash, 2),
-        "cash_interest": 0, "borrow_cost": 0,
-        "daily_return": round(daily_return, 6),
-        "cumulative_return": round(nav / INITIAL_CAPITAL - 1, 6),
-        "drawdown": None,
-    }).execute()
+    db.execute(
+        "INSERT INTO paper_nav_history (portfolio_id, date, nav, cash_balance, "
+        "cash_interest, borrow_cost, daily_return, cumulative_return, drawdown) "
+        "VALUES (%s, %s, %s, %s, 0, 0, %s, %s, NULL)",
+        [portfolio_id, today_iso, round(nav, 2), round(cash, 2),
+         round(daily_return, 6), round(nav / INITIAL_CAPITAL - 1, 6)],
+    )
     logger.info(f"NAV {today_iso}: ${nav:.2f} (long ${long_value:.2f} + cash ${cash:.2f}), daily {daily_return:+.4%}")
 
 

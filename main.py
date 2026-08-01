@@ -209,13 +209,13 @@ def scoring_run():
     # Import du scoring pipeline AlphaBrief
     from core.generator import generate_card
     from core.providers import fmp_client
-    # Dual-write Supabase : import isolé, l'absence de credentials ne bloque pas
-    # le scoring SQLite — write_score renvoie False si Config.SUPABASE_URL/KEY vide.
+    # Dual-write Postgres local : import isolé, une base indisponible ne doit
+    # pas emporter le scoring SQLite avec elle.
     try:
-        from core.storage.supabase_writer import write_score as sb_write_score
+        from core.storage.writer import write_score as pg_write_score
     except Exception as e:
-        logger.error(f"supabase_writer import failed — Supabase dual-write disabled: {e}")
-        sb_write_score = None
+        logger.error(f"writer import failed — Postgres dual-write disabled: {e}")
+        pg_write_score = None
 
     try:
         from core.providers.events_yf import sync_events_for as sb_sync_events
@@ -227,8 +227,8 @@ def scoring_run():
     publish_event("alphabrief:scoring_started", {"count": len(tickers)})
 
     scored = 0
-    sb_ok = 0
-    sb_failed = 0
+    pg_ok = 0
+    pg_failed = 0
     alerts_generated = []
 
     with ThreadPoolExecutor(max_workers=2) as executor:
@@ -244,7 +244,7 @@ def scoring_run():
                 "confidence": None,
                 "duration_ms": None,
                 "error": None,
-                "supabase": "skipped",
+                "db": "skipped",
             }
             try:
                 card = future.result()
@@ -269,20 +269,20 @@ def scoring_run():
                 if alert:
                     alerts_generated.append(alert)
 
-                # Dual-write Supabase — isolé par ticker
-                if sb_write_score is not None:
+                # Dual-write Postgres — isolé par ticker
+                if pg_write_score is not None:
                     try:
-                        ok = sb_write_score(ticker, card)
+                        ok = pg_write_score(ticker, card)
                         if ok:
-                            sb_ok += 1
-                            log_row["supabase"] = "ok"
+                            pg_ok += 1
+                            log_row["db"] = "ok"
                         else:
-                            sb_failed += 1
-                            log_row["supabase"] = "failed"
-                    except Exception as sb_err:
-                        sb_failed += 1
-                        log_row["supabase"] = f"error: {sb_err}"
-                        logger.error(f"Supabase write {ticker}: {sb_err}")
+                            pg_failed += 1
+                            log_row["db"] = "failed"
+                    except Exception as pg_err:
+                        pg_failed += 1
+                        log_row["db"] = f"error: {pg_err}"
+                        logger.error(f"Postgres write {ticker}: {pg_err}")
 
                 # Sync ticker_events (earnings + dividend) — isolé, échec silencieux
                 if sb_sync_events is not None:
@@ -304,8 +304,8 @@ def scoring_run():
     fmp_client.clear_cache()   # le daemon vit en continu, on évite la croissance silencieuse du _cache process-wide
 
     summary = f"📊 Scoring terminé : {scored}/{len(tickers)} tickers"
-    if sb_write_score is not None:
-        summary += f" | Supabase: {sb_ok} OK / {sb_failed} KO"
+    if pg_write_score is not None:
+        summary += f" | Base: {pg_ok} OK / {pg_failed} KO"
     summary += f" | FMP calls: {fmp_calls}"
     if alerts_generated:
         summary += f"\n🔔 {len(alerts_generated)} alerte(s) :"
@@ -315,16 +315,16 @@ def scoring_run():
     logger.info(summary)
     publish_event("alphabrief:scoring_done", {
         "scored": scored, "total": len(tickers),
-        "supabase_ok": sb_ok, "supabase_failed": sb_failed,
+        "db_ok": pg_ok, "db_failed": pg_failed,
         "alerts": len(alerts_generated),
         "fmp_calls": fmp_calls,
     })
     return {
         "scored": scored,
         "total": len(tickers),
-        "sb_ok": sb_ok,
-        "sb_failed": sb_failed,
-        "sb_enabled": sb_write_score is not None,
+        "db_ok": pg_ok,
+        "db_failed": pg_failed,
+        "db_enabled": pg_write_score is not None,
         "alerts_generated": alerts_generated,
     }
 
@@ -461,8 +461,8 @@ def daily_report(scoring_stats: dict | None = None):
 
     if scoring_stats:
         scoring_line = f"✅ Scoring : {scoring_stats['scored']}/{scoring_stats['total']} tickers"
-        if scoring_stats.get("sb_enabled"):
-            scoring_line += f" (Supabase {scoring_stats['sb_ok']} OK / {scoring_stats['sb_failed']} KO)"
+        if scoring_stats.get("db_enabled"):
+            scoring_line += f" (Base {scoring_stats['db_ok']} OK / {scoring_stats['db_failed']} KO)"
         lines.append(scoring_line)
 
     lines.append(f"📊 Watchlist : {len(tickers)} tickers | {len(scores)} scorés aujourd'hui")

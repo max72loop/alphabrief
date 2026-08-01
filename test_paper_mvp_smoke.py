@@ -1,138 +1,123 @@
 """Smoke test for paper_mvp — happy path only.
 
-Runs in isolation (no real Supabase, no real FMP). Mocks at the module-level
-boundary: _fetch_quote and _supabase.
+Tourne contre la base MIROIR (`alphabrief_mirror`), jamais contre la vraie :
+`ALPHABRIEF_DSN` est positionné avant l'import de paper_mvp, et une garde
+vérifie qu'on n'est pas connecté à `alphabrief`. Seul yfinance reste mocké,
+parce qu'il sort de la machine.
 
-Run:  python3 -m pytest /root/agents/alphabrief/test_paper_mvp_smoke.py -v
+AVANT (Supabase) ce test rejouait un faux client fluent — `FakeQuery` avec
+select/insert/upsert/eq/order/limit — et n'assertait donc que sur les appels
+émis, pas sur leur effet. Un ON CONFLICT mal écrit, une colonne absente, une
+contrainte manquante : le mock disait OK. Une vraie base dit non.
+
+Prérequis :  make db-reset
+Run       :  python3 -m pytest /root/agents/alphabrief/test_paper_mvp_smoke.py -v
 """
 from __future__ import annotations
 
+import os
 import sys
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
+
+import pytest
+
+# Doit précéder l'import de paper_mvp : core.storage.db lit le DSN à l'import.
+os.environ["ALPHABRIEF_DSN"] = os.environ.get(
+    "ALPHABRIEF_TEST_DSN", "dbname=alphabrief_mirror"
+)
 
 sys.path.insert(0, "/root/agents/alphabrief")
 sys.path.insert(0, "/root/alphabrief")
 sys.path.insert(0, "/root")
 
-
-class FakeQuery:
-    """Minimal fluent stub of supabase-py table().select().eq()...execute().
-
-    Records every operation in `calls` (shared list) so the test can assert
-    what was issued. Configure return data via `data_map` keyed by table name."""
-
-    def __init__(self, table: str, calls: list, data_map: dict):
-        self.table = table
-        self.calls = calls
-        self.data_map = data_map
-        self._mode = None             # 'select' | 'insert' | 'upsert' | 'update' | 'delete'
-        self._payload = None
-        self._filters: list[tuple] = []
-
-    # builders
-    def select(self, *a, **k):       self._mode = "select"; return self
-    def insert(self, payload):       self._mode = "insert"; self._payload = payload; return self
-    def upsert(self, payload, on_conflict=None):
-        self._mode = "upsert"; self._payload = payload; return self
-    def update(self, payload):       self._mode = "update"; self._payload = payload; return self
-    def delete(self):                self._mode = "delete"; return self
-    def eq(self, col, val):          self._filters.append(("eq", col, val)); return self
-    def order(self, *a, **k):        return self
-    def limit(self, n):              return self
-
-    def execute(self):
-        self.calls.append({
-            "table": self.table, "mode": self._mode,
-            "payload": self._payload, "filters": list(self._filters),
-        })
-        # Return-shape mimics supabase-py: object with .data
-        if self._mode == "select":
-            data = self.data_map.get(self.table, [])
-            # Apply filters naively
-            for op, col, val in self._filters:
-                if op == "eq":
-                    data = [r for r in data if r.get(col) == val]
-            return MagicMock(data=data)
-        if self._mode == "insert":
-            row = dict(self._payload)
-            row.setdefault("id", len(self.data_map.get(self.table, [])) + 1)
-            self.data_map.setdefault(self.table, []).append(row)
-            return MagicMock(data=[row])
-        return MagicMock(data=[])
+from core.storage import db  # noqa: E402
 
 
-class FakeSupabase:
-    def __init__(self, data_map: dict):
-        self.calls: list = []
-        self.data_map = data_map
-    def table(self, name: str):
-        return FakeQuery(name, self.calls, self.data_map)
+@pytest.fixture(autouse=True)
+def base_jetable():
+    """Garde-fou + table rase.
+
+    Un test qui écrit ne doit jamais pouvoir toucher la vraie base : c'est la
+    règle posée après l'incident des objectifs de la semaine écrasés par un
+    test sur la semaine en cours.
+    """
+    current = db.query_one("SELECT current_database() AS d")["d"]
+    if current != "alphabrief_mirror":
+        pytest.fail(
+            f"REFUS : le test ecrit et il est connecte a '{current}'. "
+            f"Attendu 'alphabrief_mirror'."
+        )
+    for table in ("paper_nav_history", "paper_rebalances", "paper_positions",
+                  "paper_missed_rebalances", "paper_portfolios", "ticker_scores"):
+        db.execute(f"ALTER TABLE {table} DISABLE TRIGGER USER")
+        db.execute(f"DELETE FROM {table}")
+        db.execute(f"ALTER TABLE {table} ENABLE TRIGGER USER")
+    yield
 
 
 def test_rebalance_smoke():
-    """12 fictive tickers in ticker_scores, prices given, expect 10 BUY trades."""
-    from paper_mvp import run_weekly_rebalance, FEES_BPS, INITIAL_CAPITAL, PORTFOLIO_NAME
+    """12 tickers fictifs dans ticker_scores, prix fixés, on attend 10 achats."""
+    from paper_mvp import (run_weekly_rebalance, FEES_BPS, INITIAL_CAPITAL,
+                           PORTFOLIO_NAME, TARGET_COUNT)
 
-    # 12 tickers with scores 85..74 — top 10 should be FAKE0..FAKE9
-    scores_rows = [
-        {"ticker": f"FAKE{i}", "score_total": 85 - i}
-        for i in range(12)
-    ]
-    data_map = {
-        "ticker_scores": scores_rows,
-        "paper_portfolios": [],   # bootstrap will create
-        "paper_positions": [],    # empty (first rebalance)
-        "paper_rebalances": [],
-        "paper_nav_history": [],
-        "paper_missed_rebalances": [],
-    }
-    fake_sb = FakeSupabase(data_map)
+    # 12 tickers, scores 85..74 — le top 10 doit être FAKE0..FAKE9
+    for i in range(12):
+        db.execute(
+            "INSERT INTO ticker_scores (ticker, score_total, score_fundamentals, "
+            "score_technicals, score_momentum) VALUES (%s, %s, %s, %s, %s)",
+            [f"FAKE{i}", 85 - i, 85 - i, 85 - i, 85 - i],
+        )
 
-    # All FMP quotes return $100 for simplicity → equipondéré exact
-    def fake_quote(ticker):
-        return 100.0
-
-    with patch("paper_mvp._supabase", return_value=fake_sb), \
-         patch("paper_mvp._fetch_quote", side_effect=fake_quote):
+    with patch("paper_mvp._fetch_quote", side_effect=lambda t: 100.0):
         run_weekly_rebalance()
 
-    # ── Assertions ─────────────────────────────────────────────────────
-    rebalances = [c for c in fake_sb.calls if c["table"] == "paper_rebalances" and c["mode"] == "insert"]
-    assert len(rebalances) == 10, f"expected 10 BUY rows, got {len(rebalances)}"
+    # ── Le portefeuille a été amorcé une fois ───────────────────────────
+    portfolios = db.query("SELECT * FROM paper_portfolios")
+    assert len(portfolios) == 1
+    assert portfolios[0]["name"] == PORTFOLIO_NAME
+    assert float(portfolios[0]["initial_capital"]) == INITIAL_CAPITAL
+    assert portfolios[0]["started_at"] is not None
 
-    actions = {r["payload"]["action"] for r in rebalances}
-    assert actions == {"BUY"}, f"first rebalance should be 100% BUY (no positions to sell), got {actions}"
+    # ── 10 achats, sur le bon top 10 ────────────────────────────────────
+    trades = db.query("SELECT * FROM paper_rebalances ORDER BY ticker")
+    assert len(trades) == TARGET_COUNT, f"attendu 10 lignes BUY, obtenu {len(trades)}"
+    assert {t["action"] for t in trades} == {"BUY"}
+    assert [t["ticker"] for t in trades] == sorted(f"FAKE{i}" for i in range(10))
 
-    tickers_bought = sorted(r["payload"]["ticker"] for r in rebalances)
-    expected = sorted(f"FAKE{i}" for i in range(10))
-    assert tickers_bought == expected, f"top 10 mismatch: {tickers_bought} vs {expected}"
+    # ── Équipondération, frais compris ──────────────────────────────────
+    # budget par ligne = INITIAL_CAPITAL / 10 ; cost_factor = 100 * (1 + 10/10000)
+    expected_shares = (INITIAL_CAPITAL / TARGET_COUNT) / (100 * (1 + FEES_BPS / 10000))
+    expected_fees = expected_shares * 100 * FEES_BPS / 10000
+    for t in trades:
+        assert abs(float(t["shares"]) - expected_shares) < 0.001
+        assert float(t["price"]) == 100.0
+        assert abs(float(t["fees"]) - expected_fees) < 0.001
+        # row_hash porte une contrainte UNIQUE en base : ici c'est la base qui
+        # l'aurait refusé, pas une assertion de complaisance.
+        assert t["row_hash"] and len(t["row_hash"]) == 64
 
-    # Equipondération: budget par position = INITIAL_CAPITAL / 10 = $10k
-    # cost_factor = price * (1 + 10/10000) = 100.10
-    # shares = 10000 / 100.10 ≈ 99.9001
-    # gross = 99.9001 * 100 = 9990.01
-    # fees = 9990.01 * 10/10000 = 9.99
-    # cost = 9990.01 + 9.99 = 9999.999... ≈ 10000 ✓
-    expected_shares = (INITIAL_CAPITAL / 10) / (100 * (1 + FEES_BPS / 10000))
-    for r in rebalances:
-        actual = r["payload"]["shares"]
-        assert abs(actual - expected_shares) < 0.001, \
-            f"shares for {r['payload']['ticker']}: {actual} vs expected {expected_shares}"
-        assert r["payload"]["price"] == 100.0
-        # fees ≈ shares * price * 10/10000
-        expected_fees = expected_shares * 100 * FEES_BPS / 10000
-        assert abs(r["payload"]["fees"] - expected_fees) < 0.001
-        # row_hash must be present (UNIQUE constraint at DB level)
-        assert r["payload"]["row_hash"] and len(r["payload"]["row_hash"]) == 64
+    # ── 10 positions ouvertes, toutes LONG ──────────────────────────────
+    positions = db.query("SELECT * FROM paper_positions")
+    assert len(positions) == TARGET_COUNT
+    assert {p["side"] for p in positions} == {"LONG"}
 
-    # paper_positions doivent avoir 10 UPSERTs LONG
-    upserts = [c for c in fake_sb.calls if c["table"] == "paper_positions" and c["mode"] == "upsert"]
-    assert len(upserts) == 10
-    assert all(u["payload"]["side"] == "LONG" for u in upserts)
 
-    # paper_portfolios bootstrap inséré 1 fois avec started_at fixé
-    pf_inserts = [c for c in fake_sb.calls if c["table"] == "paper_portfolios" and c["mode"] == "insert"]
-    assert len(pf_inserts) == 1
-    assert pf_inserts[0]["payload"]["name"] == PORTFOLIO_NAME
-    assert pf_inserts[0]["payload"]["initial_capital"] == INITIAL_CAPITAL
-    assert pf_inserts[0]["payload"]["started_at"] is not None
+def test_rebalance_est_idempotent_sur_le_top_stable():
+    """Rejouer avec le même top 10 ne doit générer aucun trade supplémentaire."""
+    from paper_mvp import run_weekly_rebalance, TARGET_COUNT
+
+    for i in range(12):
+        db.execute(
+            "INSERT INTO ticker_scores (ticker, score_total, score_fundamentals, "
+            "score_technicals, score_momentum) VALUES (%s, %s, %s, %s, %s)",
+            [f"FAKE{i}", 85 - i, 85 - i, 85 - i, 85 - i],
+        )
+
+    with patch("paper_mvp._fetch_quote", side_effect=lambda t: 100.0):
+        run_weekly_rebalance()
+        run_weekly_rebalance()
+
+    trades = db.query("SELECT count(*) AS n FROM paper_rebalances")[0]["n"]
+    positions = db.query("SELECT count(*) AS n FROM paper_positions")[0]["n"]
+    assert trades == TARGET_COUNT, f"le 2e passage a rejoue des trades : {trades}"
+    assert positions == TARGET_COUNT
