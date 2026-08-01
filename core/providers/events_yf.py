@@ -1,6 +1,6 @@
 """
 Récupère les événements d'un ticker depuis yfinance et les upsert dans
-la table Supabase `ticker_events`.
+la table `ticker_events` du Postgres local.
 
 Types d'events stockés :
 - 'earnings' : dates de publication (passées + à venir)
@@ -8,15 +8,13 @@ Types d'events stockés :
 """
 from __future__ import annotations
 
-import json
 import logging
-import os
-import urllib.error
-import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
 import yfinance as yf
+
+from core.storage import db
 
 logger = logging.getLogger(__name__)
 
@@ -81,41 +79,29 @@ def _fetch_next_dividend(ticker: str) -> dict[str, Any] | None:
         return None
 
 
-def _sb_upsert(url: str, key: str, events: list[dict[str, Any]]) -> bool:
-    if not url or not key or not events:
+def _upsert_events(events: list[dict[str, Any]]) -> bool:
+    """Upsert sur (ticker, event_date, kind) — voir la contrainte du même nom
+    dans db/schema.sql, qui est ce qui rend ce ON CONFLICT possible."""
+    if not events:
         return False
-    endpoint = f"{url.rstrip('/')}/rest/v1/ticker_events?on_conflict=ticker,event_date,kind"
-    body = json.dumps(events).encode("utf-8")
-    req = urllib.request.Request(endpoint, data=body, method="POST", headers={
-        "apikey": key,
-        "Authorization": f"Bearer {key}",
-        "Content-Type": "application/json",
-        "Prefer": "resolution=merge-duplicates",
-    })
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            return 200 <= resp.status < 300
-    except urllib.error.HTTPError as e:
-        logger.warning(f"Supabase upsert ticker_events → HTTP {e.code}: {e.read()[:200]}")
-        return False
+        with db.connection() as conn:
+            with conn.cursor() as cur:
+                cur.executemany(
+                    "INSERT INTO ticker_events (ticker, event_date, label, kind, source) "
+                    "VALUES (%(ticker)s, %(event_date)s, %(label)s, %(kind)s, %(source)s) "
+                    "ON CONFLICT (ticker, event_date, kind) DO UPDATE "
+                    "   SET label = EXCLUDED.label, source = EXCLUDED.source",
+                    events,
+                )
+        return True
     except Exception as e:
-        logger.warning(f"Supabase upsert ticker_events failed: {e}")
+        logger.warning(f"upsert ticker_events failed: {e}")
         return False
 
 
 def sync_events_for(ticker: str) -> int:
-    """
-    Sync les événements d'un ticker. Renvoie le nombre d'events envoyés.
-    No-op si SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY absents.
-    """
-    sb_url = os.environ.get("SUPABASE_URL", "")
-    sb_key = (
-        os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-        or os.environ.get("SUPABASE_KEY", "")
-    )
-    if not sb_url or not sb_key:
-        return 0
-
+    """Sync les événements d'un ticker. Renvoie le nombre d'events écrits."""
     upper = ticker.upper()
     payload: list[dict[str, Any]] = []
 
@@ -129,7 +115,7 @@ def sync_events_for(ticker: str) -> int:
     if not payload:
         return 0
 
-    ok = _sb_upsert(sb_url, sb_key, payload)
+    ok = _upsert_events(payload)
     if ok:
         logger.info(f"  ↳ {upper}: synchronisé {len(payload)} événement(s)")
     return len(payload) if ok else 0

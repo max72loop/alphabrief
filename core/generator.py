@@ -15,7 +15,6 @@ from core.providers.fundamentals_yf import fetch_core_fundamentals
 from core.providers.llm_enricher import enrich_with_llm
 from core.scoring.importance import build_importance_items
 from core.scoring.confidence import compute_confidence_score
-from core.supabase_sink import upsert_ticker_score
 from utils import cache as _cache
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -323,12 +322,12 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     card["scores"]["score_label"] = _score_label(int(round(breakdown["total"])))
     _cb("Analyse terminée !")
 
-    # Upsert vers Supabase (no-op si non configuré)
-    try:
-        upsert_ticker_score(card)
-    except Exception as e:
-        logger.error(f"Supabase upsert failed for {ticker}: {e}")
-
+    # Aucune écriture ici : generate_card calcule, il ne persiste pas.
+    # L'appel à core.supabase_sink.upsert_ticker_score() qui vivait à cet
+    # endroit lisait SUPABASE_SERVICE_ROLE_KEY, une variable qui n'a jamais
+    # été définie sur le VPS — il était donc no-op depuis toujours, et le
+    # retirer ne fait perdre aucune écriture. La persistance est faite par
+    # l'appelant (daemon ou CLI) via core.storage.writer.write_score().
     return card
 
 

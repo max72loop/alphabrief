@@ -7,12 +7,9 @@ AlphaBrief CLI — usage local
 """
 from __future__ import annotations
 
-import json
 import os
 import sys
 import time
-import urllib.error
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -36,12 +33,11 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 from core.generator import generate_card  # noqa: E402
+from core.storage import db  # noqa: E402
+from core.storage.writer import write_score  # noqa: E402
 
 
-# ── Supabase REST + sélection des tickers ─────────────────────────────────────
-
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+# ── Base locale + sélection des tickers ───────────────────────────────────────
 
 STALE_AFTER_H = 20
 DELAY_S = 2
@@ -52,44 +48,24 @@ DEFAULT_TICKERS: list[str] = [
 ]
 
 
-def _sb_get(path: str) -> list[dict]:
-    if not SUPABASE_URL or not SUPABASE_KEY:
-        return []
-    url = f"{SUPABASE_URL}/rest/v1/{path}"
-    req = urllib.request.Request(url, headers={
-        "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}",
-        "Accept": "application/json",
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            return json.loads(resp.read())
-    except (urllib.error.HTTPError, urllib.error.URLError, OSError):
-        return []
-
-
 def fetch_tickers_to_score() -> list[str]:
     tickers: set[str] = set(DEFAULT_TICKERS)
 
-    for r in _sb_get("watchlist_tickers?select=ticker"):
-        if r.get("ticker"):
+    for r in db.query("SELECT ticker FROM watchlist_tickers"):
+        if r["ticker"]:
             tickers.add(r["ticker"].upper())
 
     now = datetime.now(timezone.utc)
     skip: set[str] = set()
-    for r in _sb_get("ticker_scores?select=ticker,computed_at"):
-        ticker = (r.get("ticker") or "").upper()
+    for r in db.query("SELECT ticker, computed_at FROM ticker_scores"):
+        ticker = (r["ticker"] or "").upper()
         if not ticker:
             continue
         tickers.add(ticker)
-        computed_at = r.get("computed_at")
-        if computed_at:
-            try:
-                dt = datetime.fromisoformat(computed_at.replace("Z", "+00:00"))
-                if (now - dt) < timedelta(hours=STALE_AFTER_H):
-                    skip.add(ticker)
-            except Exception:
-                pass
+        # computed_at est un timestamptz : psycopg le rend en datetime aware,
+        # plus de parsing de chaîne ni de « Z » à remplacer.
+        if r["computed_at"] and (now - r["computed_at"]) < timedelta(hours=STALE_AFTER_H):
+            skip.add(ticker)
 
     return sorted(tickers - skip)
 
@@ -110,7 +86,12 @@ def _analyze_tickers(tickers: list[str]) -> None:
             card = generate_card(ticker)
             score = card.get("scores", {}).get("potential_score", "?")
             label = card.get("scores", {}).get("score_label", "")
-            print(f"OK  {score}/100 ({label})")
+            # generate_card ne persiste plus rien : l'appelant écrit, comme le
+            # daemon. Avant, le CLI passait par core.supabase_sink, qui lisait
+            # une variable jamais définie — il affichait « OK » sans avoir rien
+            # écrit, depuis toujours.
+            written = write_score(ticker, card)
+            print(f"OK  {score}/100 ({label})" + ("" if written else "  [NON ÉCRIT]"))
             success.append(ticker)
         except KeyboardInterrupt:
             print("\nInterrompu.")
@@ -149,13 +130,12 @@ def cmd_run_all() -> None:
 
 
 def cmd_status() -> None:
-    _print_header("Statut des tickers (Supabase)")
+    _print_header("Statut des tickers")
 
-    if not SUPABASE_URL or not SUPABASE_KEY:
-        print("⚠  SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY manquants dans .env")
-        sys.exit(1)
-
-    rows = _sb_get("ticker_scores?select=ticker,company_name,score_total,computed_at&order=computed_at.desc")
+    rows = db.query(
+        "SELECT ticker, company_name, score_total, computed_at "
+        "  FROM ticker_scores ORDER BY computed_at DESC"
+    )
 
     if not rows:
         print("Aucune donnée en base.")
@@ -166,21 +146,16 @@ def cmd_status() -> None:
 
     fresh, stale = [], []
     for r in rows:
-        ticker = r.get("ticker", "?")
-        name = (r.get("company_name") or "")[:28]
-        score = r.get("score_total", "?")
-        computed_at = r.get("computed_at") or ""
+        ticker = r["ticker"] or "?"
+        name = (r["company_name"] or "")[:28]
+        score = r["score_total"] if r["score_total"] is not None else "?"
         age_str = "jamais"
         is_stale = True
-        if computed_at:
-            try:
-                dt = datetime.fromisoformat(computed_at.replace("Z", "+00:00"))
-                age = now - dt
-                hours = int(age.total_seconds() / 3600)
-                age_str = f"{hours}h" if hours < 48 else f"{age.days}j"
-                is_stale = age > stale_limit
-            except Exception:
-                pass
+        if r["computed_at"]:
+            age = now - r["computed_at"]
+            hours = int(age.total_seconds() / 3600)
+            age_str = f"{hours}h" if hours < 48 else f"{age.days}j"
+            is_stale = age > stale_limit
         entry = (ticker, name, score, age_str)
         (stale if is_stale else fresh).append(entry)
 

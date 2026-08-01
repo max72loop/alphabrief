@@ -1,12 +1,13 @@
 -- ============================================================
 -- AlphaBrief — Lot 1 : schéma patrimoine personnel
--- À exécuter dans le SQL Editor du dashboard Supabase
--- APRÈS 2026_07_31_close_public_rls.sql
+-- Appliqué sur le Postgres local du VPS par `make db-apply`
+-- APRÈS db/schema.sql
 -- ============================================================
 --
 -- 5 tables : supports, positions, snapshots, flux, societes.
--- Mono-utilisateur : aucune colonne user_id. L'isolation vient de l'auth
--- Supabase + RLS `authenticated`, pas d'un discriminant par ligne.
+-- Mono-utilisateur : aucune colonne user_id. L'isolation vient du réseau
+-- (Postgres n'écoute que localhost) et de la session applicative, pas d'un
+-- discriminant par ligne — voir §7.
 --
 -- Devise de référence EUR. Chaque montant est stocké dans sa devise native
 -- avec le taux appliqué, et la valeur EUR est dérivée — jamais saisie.
@@ -256,61 +257,21 @@ SELECT sup.date,
     ON det.support_id = sup.support_id AND det.date = sup.date;
 
 
--- ── 7. RLS ──────────────────────────────────────────────────
--- Ces tables sont écrites depuis le navigateur (écran de saisie), avec la
--- clé anon + session utilisateur → rôle `authenticated`. Contrairement à
--- ticker_scores (écrite par le daemon en service_role), elles ont donc
--- besoin de policies d'écriture pour `authenticated`.
--- Aucune policy pour `anon` : non authentifié = rien.
-
-ALTER TABLE supports  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE positions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE snapshots ENABLE ROW LEVEL SECURITY;
-ALTER TABLE flux      ENABLE ROW LEVEL SECURITY;
-ALTER TABLE societes  ENABLE ROW LEVEL SECURITY;
-
-DO $$
-DECLARE t TEXT;
-BEGIN
-    FOREACH t IN ARRAY ARRAY['supports','positions','snapshots','flux','societes']
-    LOOP
-        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', 'authenticated all ' || t, t);
-        EXECUTE format(
-            'CREATE POLICY %I ON %I FOR ALL TO authenticated USING (true) WITH CHECK (true)',
-            'authenticated all ' || t, t);
-    END LOOP;
-END $$;
-
--- ── 7 bis. GRANTs — une policy ne suffit pas ────────────────
+-- ── 7. Isolation ────────────────────────────────────────────
+-- Il n'y a ni RLS, ni policies, ni rôles ici — et c'est le sujet, pas un
+-- oubli.
 --
--- RLS filtre les LIGNES ; les GRANT autorisent l'OPÉRATION. Les deux sont
--- nécessaires. Une table peut avoir une policy `FOR ALL TO authenticated`
--- parfaite et refuser quand même l'INSERT, faute de privilège sur la table
--- ou sur sa SÉQUENCE — l'erreur est alors « permission denied for sequence
--- <table>_id_seq », qui ne mentionne même pas RLS.
+-- Ces objets existaient pour Supabase, dont le modèle expose la base à
+-- l'Internet et fait donc porter l'isolation à la couche SQL. Cette base-ci
+-- écoute sur localhost, sur une machine à un seul utilisateur : l'isolation
+-- est celle du réseau et de la session applicative, en amont.
 --
--- Supabase pose des ALTER DEFAULT PRIVILEGES qui couvrent normalement ce
--- cas. On ne s'y fie pas : si ces defaults ont été modifiés un jour, ou si
--- les tables sont créées par un rôle dont les defaults diffèrent, l'écran
--- de saisie échouerait à la première écriture avec un message trompeur.
--- Défaut trouvé sur la base miroir, sur l'INSERT de supports.
-
-GRANT SELECT, INSERT, UPDATE, DELETE
-    ON supports, positions, snapshots, flux, societes
-    TO authenticated, service_role;
-
--- societes a une PK TEXT : pas de séquence.
-GRANT USAGE, SELECT
-    ON SEQUENCE supports_id_seq, positions_id_seq, snapshots_id_seq, flux_id_seq
-    TO authenticated, service_role;
-
--- Données machine : authenticated lit, n'écrit pas. Le GRANT le dit aussi,
--- il ne se repose pas que sur l'absence de policy.
-REVOKE INSERT, UPDATE, DELETE ON ticker_scores, score_history FROM authenticated;
-GRANT SELECT ON ticker_scores, score_history TO authenticated;
-
--- anon n'a rien, sur rien.
-REVOKE ALL ON supports, positions, snapshots, flux, societes FROM anon;
+-- Écrire des policies par-dessus ne renforcerait rien. Ce serait une
+-- deuxième serrure sur une porte intérieure, avec le coût de maintenance
+-- d'une vraie et la protection d'aucune. Le seul chemin d'écriture est
+-- l'application, qui est déjà derrière l'authentification.
+--
+-- Voir db/schema.sql, même raisonnement pour les tables machine.
 
 
 -- ── 8. Amorçage des supports ────────────────────────────────
