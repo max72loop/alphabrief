@@ -522,10 +522,116 @@ def daily_report(scoring_stats: dict | None = None):
         )
 
 
+def verifier_resultat():
+    """Vérifie que le travail a PRODUIT quelque chose, pas que les outils vivent.
+
+    health_check() teste que SQLite s'ouvre, que yfinance répond, que le cache
+    est frais. C'est utile, mais ça ne dit rien du seul sujet qui compte : le
+    scoring a-t-il écrit ? Entre le 25 et le 29 juillet, score_history a reçu
+    5, 6, 6 puis 5 lignes pour une watchlist de 34 tickers — 85 % du travail ne
+    se faisait pas — et le health check a répondu « tout est vert » toutes les
+    trente minutes pendant ces quatre jours.
+
+    D'où l'inversion : ici on ne notifie QUE si quelque chose manque. Le
+    silence redevient une information au lieu d'être un bruit de fond.
+    """
+    from core.storage import db
+
+    logger.info("=== VERIFICATION DU RESULTAT ===")
+    anomalies: list[str] = []
+
+    # 1. Le scoring du jour a-t-il couvert la watchlist ?
+    try:
+        attendus = {t.upper() for t in _get_watchlist()}
+        ecrits = {
+            r["ticker"].upper()
+            for r in db.query(
+                "SELECT DISTINCT ticker FROM score_history "
+                " WHERE scored_at >= date_trunc('day', now())"
+            )
+        }
+        manquants = attendus - ecrits
+        if attendus and len(ecrits & attendus) < len(attendus) * 0.9:
+            apercu = ", ".join(sorted(manquants)[:8])
+            suite = f" (+{len(manquants) - 8})" if len(manquants) > 8 else ""
+            anomalies.append(
+                f"Scoring incomplet : {len(ecrits & attendus)}/{len(attendus)} "
+                f"tickers écrits.\nManquants : {apercu}{suite}"
+            )
+    except Exception as e:
+        anomalies.append(f"Impossible de vérifier le scoring du jour : {e}")
+
+    # 2. Une carte figée depuis plus de 48 h est une carte morte.
+    try:
+        perimes = db.query(
+            "SELECT ticker, EXTRACT(EPOCH FROM (now() - computed_at))/3600 AS h "
+            "  FROM ticker_scores WHERE computed_at < now() - interval '48 hours' "
+            " ORDER BY computed_at LIMIT 10"
+        )
+        if perimes:
+            pire = perimes[0]
+            anomalies.append(
+                f"{len(perimes)} score(s) figé(s) depuis plus de 48 h — "
+                f"le pire : {pire['ticker']} ({int(pire['h'])} h)"
+            )
+    except Exception as e:
+        anomalies.append(f"Impossible de vérifier la fraîcheur des scores : {e}")
+
+    # 3. Le forward-test avance-t-il ? (jours ouvrés uniquement)
+    try:
+        if datetime.now(timezone.utc).weekday() < 5:
+            derniere = db.query_one("SELECT max(date) AS d FROM paper_nav_history")
+            if derniere and derniere["d"]:
+                retard = (datetime.now(timezone.utc).date() - derniere["d"]).days
+                if retard > 3:
+                    anomalies.append(
+                        f"Forward-test : aucune NAV depuis {retard} jours "
+                        f"(dernière le {derniere['d']})"
+                    )
+    except Exception as e:
+        anomalies.append(f"Impossible de vérifier la NAV du forward-test : {e}")
+
+    # 4. Saisie du patrimoine périmée.
+    #    Ne se déclenche que sur les supports DÉJÀ renseignés au moins une fois :
+    #    avant la première saisie, il n'y a rien à relancer, et une alerte
+    #    quotidienne sur un écran qui n'existe pas encore serait du bruit pur.
+    try:
+        vieux = db.query(
+            "SELECT nom, anciennete_jours FROM v_support_dernier_snapshot "
+            " WHERE anciennete_jours > 10 ORDER BY anciennete_jours DESC"
+        )
+        if vieux:
+            detail = ", ".join(f"{v['nom']} ({v['anciennete_jours']} j)" for v in vieux)
+            anomalies.append(f"Patrimoine à mettre à jour : {detail}")
+    except Exception as e:
+        logger.warning(f"verification patrimoine ignoree : {e}")
+
+    if not anomalies:
+        logger.info("Verification du resultat : tout a bien ete produit")
+        return
+
+    for a in anomalies:
+        logger.error(f"ANOMALIE — {a}")
+    try:
+        notify(
+            "<b>AlphaBrief — le travail n'a pas produit ce qu'il devait</b>\n\n"
+            + "\n\n".join(anomalies),
+            priority=Priority.URGENT,
+            agent="alphabrief",
+        )
+    except Exception as e:
+        logger.error(f"Alerte Telegram impossible : {e}")
+
+
 def scoring_and_report():
-    """Wrapper : scoring puis rapport, en un seul message Telegram."""
+    """Wrapper : scoring, rapport, puis vérification de ce qui a été produit."""
     stats = scoring_run()
     daily_report(scoring_stats=stats)
+    try:
+        verifier_resultat()
+    except Exception as e:
+        # La vérification ne doit jamais emporter le scoring qu'elle observe.
+        logger.error(f"Verification du resultat en echec : {e}")
 
 
 # ── Couche 4 — Cache cleanup ─────────────────────────────────────────────
