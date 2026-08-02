@@ -1,4 +1,4 @@
-.PHONY: db-apply db-reset db-check db-diff db-backup db-shell db-shell-mirror help
+.PHONY: db-apply db-reset db-check db-diff db-backup db-restore-check db-shell db-shell-mirror help
 
 # ── Bases ───────────────────────────────────────────────────
 # DB     : la vraie. Contient le patrimoine. Jamais détruite par une cible.
@@ -21,6 +21,7 @@ help:
 	@echo "db-check    rejoue les assertions sur la miroir existante"
 	@echo "db-diff     compare le DDL reel de la vraie base a celui de la miroir"
 	@echo "db-backup   pg_dump horodate de la vraie base vers /root/backups"
+	@echo "db-restore-check  restaure la derniere sauvegarde et la verifie"
 	@echo "db-shell    psql sur la vraie base"
 
 # Garde-fou : db-reset fait un DROP DATABASE. Si MIRROR_DB pointait un jour
@@ -99,6 +100,11 @@ db-backup:
 	@ls -1t /root/backups/alphabrief-db/alphabrief_*.sql.gz 2>/dev/null \
 		| tail -n +31 | xargs -r rm --
 	@echo "$$(ls -1 /root/backups/alphabrief-db/*.sql.gz 2>/dev/null | wc -l) sauvegarde(s) conservee(s)"
+
+# Une sauvegarde jamais restaurée est une hypothèse, pas une sauvegarde.
+# `db-backup` ne prouve qu'une chose : un fichier non vide a été écrit.
+db-restore-check:
+	@python3 $(REPO)/db/restore_check.py
 
 db-shell:
 	@psql -d $(DB)
