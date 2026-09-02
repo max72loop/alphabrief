@@ -23,6 +23,7 @@ import time
 import sqlite3
 import argparse
 import threading
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -34,6 +35,8 @@ from alfred.shared.logger import get_logger
 from alfred.shared.telegram import notify, Priority
 from alfred.shared.redis_client import redis_client, publish_event
 from alfred.shared.heartbeat import publish_heartbeat
+from core.providers.sage_advisor import generate_daily_advice
+from core.scoring import bands
 
 logger = get_logger("alphabrief")
 
@@ -65,7 +68,12 @@ CONFIG_PATH = AGENT_DIR / "config.json"
 DEFAULT_CONFIG = {
     "thresholds": {
         "alert_score_delta": 15,
-        "strong_buy_score": 75,
+        # `strong_buy_score` n'est plus une valeur libre : c'est la borne de la
+        # bande « Exceptionnel » du barème unique (core/scoring/bands.py), soit
+        # le p95 de la distribution réelle. Elle vivait ici en double, ce qui
+        # avait laissé le daemon alerter « Score exceptionnel » sur des titres
+        # que le backend étiquetait « Modéré ».
+        "strong_buy_score": bands.STRONG_BUY_MIN,
         "cache_max_age_hours": 48,
     },
     "crons": {
@@ -73,18 +81,37 @@ DEFAULT_CONFIG = {
         "report_hour": 9,
         "health_check_min": 30,
         "cache_cleanup_hour": 3,
+        "sage_hour": 8,
+        # Phase du cycle économique : avant le scoring, pour que le rapport du
+        # jour et l'écran Pixel Office lisent une phase fraîche. Le détecteur
+        # cache 24 h de son côté, ce passage ne coûte donc qu'un run par jour.
+        "cycle_hour": 6,
     },
 }
 
 
 def _load_config() -> dict:
+    """Config du daemon, fusionnée sur les défauts.
+
+    La fusion (et pas un simple `return json.loads(...)`) permet d'ajouter une
+    clé à DEFAULT_CONFIG sans casser au démarrage sur un config.json plus ancien
+    qui ne la connaît pas — un fichier écrit en mai ne doit pas empêcher le
+    daemon de lire une option ajoutée en septembre.
+    """
+    merged = {k: dict(v) if isinstance(v, dict) else v for k, v in DEFAULT_CONFIG.items()}
     if CONFIG_PATH.exists():
         try:
-            return json.loads(CONFIG_PATH.read_text())
+            stored = json.loads(CONFIG_PATH.read_text())
         except Exception:
-            pass
-    CONFIG_PATH.write_text(json.dumps(DEFAULT_CONFIG, indent=2))
-    return DEFAULT_CONFIG
+            stored = {}
+        for section, values in stored.items():
+            if isinstance(values, dict) and isinstance(merged.get(section), dict):
+                merged[section].update(values)
+            else:
+                merged[section] = values
+    else:
+        CONFIG_PATH.write_text(json.dumps(merged, indent=2))
+    return merged
 
 
 acfg = _load_config()
@@ -383,10 +410,32 @@ def health_check():
         results["yfinance"] = {"ok": False, "latency_ms": round(latency_ms), "error": str(e)}
         issues.append(f"🔴 yfinance erreur : {e}")
 
-    # 3) FMP call counter (depuis le démarrage du process)
+    # 3) FMP — compteur d'appels ET état du coupe-circuit.
+    # Le compteur seul ne disait rien d'utile : il montait joyeusement pendant
+    # que chaque appel se faisait refuser en 429. Le plan FMP est resté épuisé
+    # des mois sans que le health check ne le signale, et les fondamentaux
+    # manquants ont comprimé tous les scores pendant ce temps.
     try:
-        from core.providers.fmp_client import get_call_count
-        results["fmp"] = {"calls_since_start": get_call_count()}
+        from core.providers.fmp_client import get_call_count, plan_exhausted, fmp_get
+        # Le coupe-circuit démarre fermé dans un process neuf : sans sonde, la
+        # panne resterait invisible jusqu'au scoring de 7h. Une requête toutes
+        # les 30 min au plus (aucune quand le circuit est déjà ouvert), et si
+        # elle échoue elle ouvre le circuit — le scoring qui suit y gagne.
+        if not plan_exhausted():
+            fmp_get("profile", {"symbol": "AAPL"}, cache=False)
+        exhausted = plan_exhausted()
+        results["fmp"] = {
+            "calls_since_start": get_call_count(),
+            "plan_exhausted": exhausted,
+        }
+        # Volontairement PAS ajouté à `issues` : `issues` déclenche une
+        # notification Telegram à chaque passage, soit toutes les 30 min. Or le
+        # quota FMP épuisé est un état stable et sans conséquence depuis que
+        # yfinance couvre tous les champs du scoring — le signaler en boucle
+        # apprendrait surtout à ignorer les health checks. L'information reste
+        # lisible dans le payload, le snapshot et la carte Santé du cockpit.
+        if exhausted:
+            logger.info("FMP : quota du plan atteint — fondamentaux via yfinance")
     except Exception as e:
         results["fmp"] = {"error": str(e)}
 
@@ -577,21 +626,7 @@ def verifier_resultat():
     except Exception as e:
         anomalies.append(f"Impossible de vérifier la fraîcheur des scores : {e}")
 
-    # 3. Le forward-test avance-t-il ? (jours ouvrés uniquement)
-    try:
-        if datetime.now(timezone.utc).weekday() < 5:
-            derniere = db.query_one("SELECT max(date) AS d FROM paper_nav_history")
-            if derniere and derniere["d"]:
-                retard = (datetime.now(timezone.utc).date() - derniere["d"]).days
-                if retard > 3:
-                    anomalies.append(
-                        f"Forward-test : aucune NAV depuis {retard} jours "
-                        f"(dernière le {derniere['d']})"
-                    )
-    except Exception as e:
-        anomalies.append(f"Impossible de vérifier la NAV du forward-test : {e}")
-
-    # 4. Saisie du patrimoine périmée.
+    # 3. Saisie du patrimoine périmée.
     #    Ne se déclenche que sur les supports DÉJÀ renseignés au moins une fois :
     #    avant la première saisie, il n'y a rien à relancer, et une alerte
     #    quotidienne sur un écran qui n'existe pas encore serait du bruit pur.
@@ -692,34 +727,6 @@ def show_stats():
     return stats
 
 
-# ── Paper MVP wrappers — never propagate to scheduler ─────────────────────
-
-def _paper_weekly_safe():
-    """Wrapper around paper_mvp.run_weekly_rebalance with lazy import + Telegram alert on crash."""
-    try:
-        from paper_mvp import run_weekly_rebalance
-        run_weekly_rebalance()
-    except Exception as e:
-        logger.exception(f"paper_mvp_weekly crashed: {e}")
-        try:
-            notify(f"⚠️ paper_mvp_weekly crashed: {e}", Priority.URGENT, agent="alphabrief")
-        except Exception:
-            pass  # notification best-effort, ne pas masquer l'erreur d'origine
-
-
-def _paper_nav_safe():
-    """Wrapper around paper_mvp.run_daily_nav with lazy import + Telegram alert on crash."""
-    try:
-        from paper_mvp import run_daily_nav
-        run_daily_nav()
-    except Exception as e:
-        logger.exception(f"paper_mvp_nav_daily crashed: {e}")
-        try:
-            notify(f"⚠️ paper_mvp_nav_daily crashed: {e}", Priority.URGENT, agent="alphabrief")
-        except Exception:
-            pass
-
-
 # ── Redis command listener ────────────────────────────────────────────────
 
 def _start_command_listener():
@@ -753,6 +760,76 @@ def _start_command_listener():
     logger.info("Redis command listener started")
 
 
+# ── Sage — conseil quotidien, lecture seule ─────────────────────────────────
+
+def _local_get_json(path: str) -> dict | None:
+    """GET local sur l'API Pixel Office (127.0.0.1:4300, non authentifié pour
+    les routes read-only). Retourne None si l'API est indisponible plutôt que
+    de faire tomber le job appelant."""
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:4300{path}", timeout=5) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        logger.warning(f"Sage: GET {path} failed: {e}")
+        return None
+
+
+def refresh_economic_cycle() -> dict | None:
+    """Rafraîchit la phase du cycle économique mondial.
+
+    Le détecteur (core/bitcoin/cycle_detector.py) existait depuis mars mais
+    n'était appelé par rien : l'app Flask qui l'affichait a été supprimée au
+    pivot, et son cache est resté figé au 2026-02-28. Ce job le remet en
+    service et c'est le SEUL producteur de la donnée — l'API Pixel Office se
+    contente de lire le JSON, sans jamais lancer de Python dans la boucle
+    d'événements (un execSync y gèle l'API entière).
+
+    Silencieux par conception : une phase indisponible n'est pas un incident,
+    l'écran affiche simplement la dernière connue avec sa date.
+    """
+    from core.bitcoin.cycle_detector import detect_economic_phase
+
+    try:
+        result = detect_economic_phase(force_refresh=True)
+    except Exception as e:
+        logger.warning(f"cycle économique — détection échouée : {e}")
+        return None
+
+    if result.get("error"):
+        logger.warning(f"cycle économique — {result['error']}")
+        return None
+
+    logger.info(
+        f"cycle économique : {result.get('phase_label')} "
+        f"(confiance {result.get('confidence')}%, "
+        f"{len(result.get('indicators') or {})} indicateurs)"
+    )
+    publish_event("alphabrief:cycle_detected", {
+        "phase": result.get("phase"),
+        "confidence": result.get("confidence"),
+    })
+    return result
+
+
+def sage_daily_advice() -> None:
+    """Message Telegram quotidien de Sage — conseil uniquement, aucune
+    écriture, aucune exécution. Silencieux (pas de message) si une source de
+    données ou la génération LLM échoue : jamais de message vide/cassé."""
+    patrimoine = _local_get_json("/api/patrimoine")
+    if not patrimoine:
+        logger.warning("Sage: pas de données patrimoine, message du jour annulé")
+        return
+    agent_pref = _local_get_json("/api/alphabrief/agent") or {"agent": "sage", "risk": 3}
+
+    text = generate_daily_advice(patrimoine, agent_pref)
+    if not text:
+        logger.warning("Sage: génération du conseil du jour échouée, rien envoyé")
+        return
+
+    notify(text, Priority.INFO, agent="sage")
+    logger.info("Sage: conseil du jour envoyé")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main():
@@ -762,6 +839,8 @@ def main():
     parser.add_argument("--health", action="store_true", help="Health check immédiat")
     parser.add_argument("--stats", action="store_true", help="Statistiques rapides")
     parser.add_argument("--cleanup", action="store_true", help="Cache cleanup immédiat")
+    parser.add_argument("--sage", action="store_true", help="Conseil Sage immédiat (test)")
+    parser.add_argument("--cycle", action="store_true", help="Détection immédiate de la phase du cycle économique")
     parser.add_argument("--daemon", action="store_true", help="Mode daemon avec scheduling")
     args = parser.parse_args()
 
@@ -785,10 +864,32 @@ def main():
         cache_cleanup()
         return
 
+    if args.sage:
+        sage_daily_advice()
+        return
+
+    if args.cycle:
+        r = refresh_economic_cycle()
+        if r:
+            print(f"{r['phase_label']} — confiance {r['confidence']}%")
+            for k, v in (r.get("indicators") or {}).items():
+                print(f"  {v['name']:<32} {v['vote_label']:<16} {v['signal']}")
+        else:
+            print("phase indisponible")
+        return
+
     if args.daemon:
         notify("📊 AlphaBrief Agent démarré en mode daemon", Priority.INFO, agent="alphabrief")
 
         _start_command_listener()
+
+        # Barème de notation exporté au boot : l'API Pixel Office lit ce JSON
+        # plutôt que de redéclarer ses seuils. Régénéré à chaque démarrage pour
+        # qu'une modification de bands.py se propage au simple `pm2 restart`.
+        try:
+            bands.export()
+        except Exception as e:
+            logger.warning(f"export du barème échoué : {e}")
 
         scheduler = BlockingScheduler(timezone="Europe/Paris")
 
@@ -801,23 +902,22 @@ def main():
         # Cache cleanup — 3h du matin
         scheduler.add_job(cache_cleanup, "cron", hour=CRONS["cache_cleanup_hour"], minute=0, id="ab_cleanup")
 
-        # Paper MVP — explicit UTC (scheduler global tz=Europe/Paris, DST proof)
-        scheduler.add_job(
-            _paper_weekly_safe, "cron", day_of_week="mon", hour=14, minute=0,
-            id="paper_mvp_weekly", timezone="UTC",
-        )
-        scheduler.add_job(
-            _paper_nav_safe, "cron", day_of_week="mon-fri", hour=22, minute=0,
-            id="paper_mvp_nav_daily", timezone="UTC",
-        )
+        # Cycle économique — 6h, avant le scoring : le rapport du jour et
+        # l'écran Pixel Office lisent ainsi une phase du matin, pas de la veille.
+        scheduler.add_job(refresh_economic_cycle, "cron", hour=CRONS.get("cycle_hour", 6), minute=0, id="ab_cycle")
+
+        # Sage — conseil quotidien, 8h (après le scoring de 7h)
+        scheduler.add_job(sage_daily_advice, "cron", hour=CRONS.get("sage_hour", 8), minute=0, id="ab_sage_advice")
+
         # Heartbeat normalisé (modèle projet) — 30s, découplé des jobs métier.
         scheduler.add_job(_ab_heartbeat, "interval", seconds=30, id="ab_heartbeat")
 
         try:
             logger.info(
-                f"Daemon — scoring+rapport {CRONS['scoring_hour']}h (fusionnes), "
+                f"Daemon — cycle {CRONS.get('cycle_hour', 6)}h, "
+                f"scoring+rapport {CRONS['scoring_hour']}h (fusionnes), "
                 f"health /{CRONS['health_check_min']}min, cleanup {CRONS['cache_cleanup_hour']}h, "
-                f"paper_mvp lun 14h UTC + nav lun-ven 22h UTC"
+                f"sage {CRONS.get('sage_hour', 8)}h"
             )
             # Health check immédiat au démarrage
             health_check()

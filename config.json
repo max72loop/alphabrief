@@ -1,14 +1,14 @@
 {
   "thresholds": {
     "alert_score_delta": 15,
-    "strong_buy_score": 60,
     "cache_max_age_hours": 48
   },
   "crons": {
     "scoring_hour": 7,
     "report_hour": 9,
     "health_check_min": 30,
-    "cache_cleanup_hour": 3
+    "cache_cleanup_hour": 3,
+    "cycle_hour": 6
   },
-  "_notes": "strong_buy_score abaissé 75 → 60 le 2026-05-21. Cause : le provider FMP ne récupère pas revenue/fcf_margin/fcf_absolute/growth_3y pour plusieurs mega-caps (NVDA, AAPL, TSM, GOOG observés). Sans ces inputs, les piliers Value/Growth/Cash tombent à 50 neutre et plafonnent fundamentals ~55-60. Top observé : NVDA/TSM 57. Le seuil 60 reste prudent (alertes rares) sans bloquer toute alerte. TODO data quality : auditer fundamentals_yf.py + fmp_client.py pour expliciter les endpoints lacunaires."
+  "_notes": "strong_buy_score a été RETIRÉ d'ici le 2026-09-02 : il vit désormais dans /root/alphabrief/core/scoring/bands.py (borne de la bande « Exceptionnel »). Il valait 60 ici et 80/65 dans core/generator.py, si bien qu'un titre à 60 déclenchait « Score exceptionnel » tout en étant étiqueté « Modéré ». La valeur effective reste 60 — elle correspond au p95 de la distribution réelle (2795 scores sur 90 j, min 32, max 68, médiane 48), donc l'abaissement pragmatique 75 → 60 du 2026-05-21 se trouve confirmé, mais motivé cette fois. Toute clé absente de ce fichier retombe sur DEFAULT_CONFIG dans main.py. TODO data quality inchangé : le provider FMP ne remonte pas revenue/fcf_margin/fcf_absolute/growth_3y sur plusieurs mega-caps (NVDA, AAPL, TSM, GOOG), ce qui plafonne les scores — auditer fundamentals_yf.py + fmp_client.py. Le jour où ce sera corrigé, relancer `python3 -m core.scoring.bands --check` : la distribution aura bougé et les bornes devront suivre."
 }
