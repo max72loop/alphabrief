@@ -196,6 +196,16 @@ d'empiler une contradiction.
   dont `revenue_cagr_3y` (0,45 du pilier Croissance à lui seul) et
   `fcf_yield_ttm` (le composant le plus lourd de Valeur). Confiance moyenne
   passée de 68 à 88. `paper_mvp.py` est sur yfinance pour la même raison.
+- **`price_identity` suit exactement le même contrat depuis le 2026-09-02.**
+  C'était le dernier chemin encore branché sur FMP seul : 224 des 232 cartes
+  en cache n'avaient ni nom, ni secteur, ni capitalisation, ni prix (18 champs
+  vides sur 23), les 8 rescapées étant les tickers internationaux, seuls à
+  bénéficier du repli. `fetch_identity_and_market` part maintenant direct sur
+  yfinance quand `plan_exhausted()` est vrai, et complète sinon les champs
+  vides via `_complete_from_yf` sans écraser ce qu'FMP a donné. Comme pour les
+  fondamentaux : **après un changement ici, purger `data/cache/*_identity.json`**,
+  sinon le correctif reste invisible 6 h. `Ticker.info` est mémoïsé par process
+  (`clear_info_cache()`) — trois chemins le demandaient pour un même ticker.
 - **Le barème de notation a une source de vérité unique** : `core/scoring/bands.py`.
   Tout ce qui étiquette, colore ou alerte sur un score importe d'ici — rien ne
   redéfinit ses propres bornes. Avant, le même score portait quatre verdicts
