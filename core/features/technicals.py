@@ -1,8 +1,20 @@
 from __future__ import annotations
 
+import math
+
 import pandas as pd
 import yfinance as yf
 from typing import Dict, Optional
+
+
+def _safe_float(x) -> Optional[float]:
+    """NaN/inf ne sont pas du JSON valide — Postgres rejette l'upsert
+    (« Token "NaN" is invalid ») si on les laisse passer tels quels."""
+    val = float(x)
+    if math.isnan(val) or math.isinf(val):
+        return None
+    return val
+
 
 def compute_technicals(ticker: str) -> Dict[str, Optional[float]]:
     """
@@ -37,12 +49,12 @@ def compute_technicals(ticker: str) -> Dict[str, Optional[float]]:
         # SMA 50
         if len(close) >= 50:
             sma_50 = close.rolling(window=50).mean()
-            output["sma_50"] = float(sma_50.iloc[-1])
+            output["sma_50"] = _safe_float(sma_50.iloc[-1])
 
         # SMA 200
         if len(close) >= 200:
             sma_200 = close.rolling(window=200).mean()
-            output["sma_200"] = float(sma_200.iloc[-1])
+            output["sma_200"] = _safe_float(sma_200.iloc[-1])
 
         # MACD (12, 26, 9) — lissé sur 3 jours pour réduire la volatilité
         if len(close) >= 35:  # Need at least 26 + 9 points
@@ -51,9 +63,9 @@ def compute_technicals(ticker: str) -> Dict[str, Optional[float]]:
             macd_line = ema_12 - ema_26
             macd_signal = macd_line.ewm(span=9, adjust=False).mean()
             macd_histogram = macd_line - macd_signal
-            output["macd_line"] = float(macd_line.iloc[-3:].mean())
-            output["macd_signal"] = float(macd_signal.iloc[-3:].mean())
-            output["macd_histogram"] = float(macd_histogram.iloc[-3:].mean())
+            output["macd_line"] = _safe_float(macd_line.iloc[-3:].mean())
+            output["macd_signal"] = _safe_float(macd_signal.iloc[-3:].mean())
+            output["macd_histogram"] = _safe_float(macd_histogram.iloc[-3:].mean())
 
         # Volatility 1Y (annualized std of daily returns)
         if len(close) >= 252:
@@ -63,13 +75,13 @@ def compute_technicals(ticker: str) -> Dict[str, Optional[float]]:
         if len(close_1y) >= 20:
             daily_returns = close_1y.pct_change().dropna()
             if len(daily_returns) >= 20:
-                output["volatility_1y"] = float(daily_returns.std() * (252 ** 0.5) * 100)  # en %
+                output["volatility_1y"] = _safe_float(daily_returns.std() * (252 ** 0.5) * 100)  # en %
 
         # Max Drawdown 1Y
         if len(close_1y) >= 20:
             cummax = close_1y.cummax()
             drawdown = (close_1y - cummax) / cummax
-            output["max_drawdown_1y"] = float(drawdown.min() * 100)  # en % (négatif)
+            output["max_drawdown_1y"] = _safe_float(drawdown.min() * 100)  # en % (négatif)
 
         # RSI 14 — lissé sur 3 jours pour réduire la volatilité
         if len(close) >= 15:
@@ -84,7 +96,7 @@ def compute_technicals(ticker: str) -> Dict[str, Optional[float]]:
 
             rs = ma_up / ma_down
             rsi = 100 - (100 / (1 + rs))
-            output["rsi_14"] = float(rsi.iloc[-3:].mean())
+            output["rsi_14"] = _safe_float(rsi.iloc[-3:].mean())
             
     except Exception:
         pass
