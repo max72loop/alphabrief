@@ -35,8 +35,16 @@ REBALANCE_HOUR_ET: Final[int] = 9
 REBALANCE_MINUTE_ET: Final[int] = 30
 
 # ── Sélection ──────────────────────────────────────────────────────────
-SCORE_THRESHOLD_TOP: Final[int] = 80
-SCORE_THRESHOLD_BOTTOM: Final[int] = 30
+# SCORE_THRESHOLD_TOP (80) et SCORE_THRESHOLD_BOTTOM (30) ont été retirés le
+# 2026-09-02. C'étaient des seuils morts à double titre : ce module est gelé
+# (36 NotImplementedError, et le recadrage du 2026-07-31 a sorti le bac à sable
+# d'allocation du périmètre), et surtout 80 était inatteignable — le moteur n'a
+# jamais dépassé 68 en neuf mois, si bien que `select_top10` n'aurait jamais pu
+# retenir un seul titre.
+#
+# Si ce module reprend un jour du service, il doit importer ses bornes de
+# core.scoring.bands (barème unique calibré sur la distribution réelle) plutôt
+# que d'en redéclarer : bands.BANDS[0]["min_score"] pour le haut du panier.
 TOP_COUNT: Final[int] = 10
 BOTTOM_COUNT: Final[int] = 10
 BENCHMARK_TICKER: Final[str] = "SPY"

@@ -45,6 +45,71 @@ _MAX_RETRIES = 4
 _BACKOFF_STEPS = (5, 15, 45)   # secondes, appliqué après les tentatives 1, 2, 3
 _RETRY_AFTER_CAP_S = 120       # plafond au cas où FMP renvoie une valeur absurde
 
+# ── Coupe-circuit « plan épuisé » ────────────────────────────────────────
+# FMP renvoie 429 pour deux causes très différentes :
+#
+#   a) trop de requêtes par seconde  → transitoire, le backoff a du sens ;
+#   b) quota du plan atteint         → PERMANENT jusqu'au reset ou à un upgrade,
+#      corps « Limit Reach . Please upgrade your plan ».
+#
+# Le client traitait les deux pareil. Résultat au 2026-09-02, où tous les
+# endpoints (y compris `profile`) répondent (b) : chaque ticker brûlait
+# 5+15+45 = 65 s de sommeil par endpoint, soit ~7,5 min pour les 7 appels, avant
+# de tomber sur le repli yfinance qui, lui, marche. Sur 31 tickers à 2 workers,
+# ça représentait près de deux heures de scoring passées à dormir.
+#
+# On distingue donc les deux cas : sur (b), on ouvre le circuit pour tout le
+# process et on rend la main immédiatement. Le cooldown laisse une chance à un
+# reset de quota ou à un changement de plan sans jamais bloquer un run.
+_PLAN_EXHAUSTED_COOLDOWN_S = 3600.0
+_plan_exhausted_until = 0.0
+_plan_exhausted_logged = False
+_plan_lock = threading.Lock()
+
+# Signatures du corps de réponse propres au cas (b).
+_PLAN_LIMIT_MARKERS = ("limit reach", "upgrade your plan", "exceeded your rate limit")
+
+
+def _looks_like_plan_limit(body: str) -> bool:
+    low = (body or "").lower()
+    return any(m in low for m in _PLAN_LIMIT_MARKERS)
+
+
+def _trip_plan_breaker(endpoint: str, symbol: str) -> None:
+    """Ouvre le circuit après un 429 « quota du plan »."""
+    global _plan_exhausted_until, _plan_exhausted_logged
+    with _plan_lock:
+        _plan_exhausted_until = time.monotonic() + _PLAN_EXHAUSTED_COOLDOWN_S
+        already = _plan_exhausted_logged
+        _plan_exhausted_logged = True
+    if not already:
+        logger.error(json.dumps({
+            "evt": "fmp_plan_exhausted",
+            "endpoint": endpoint,
+            "symbol": symbol,
+            "cooldown_s": _PLAN_EXHAUSTED_COOLDOWN_S,
+            "note": "quota du plan atteint — appels FMP court-circuités, "
+                    "les fondamentaux passent par yfinance",
+        }))
+
+
+def _breaker_open() -> bool:
+    with _plan_lock:
+        return time.monotonic() < _plan_exhausted_until
+
+
+def plan_exhausted() -> bool:
+    """Exposé pour le health check et les audits : FMP est-il court-circuité ?"""
+    return _breaker_open()
+
+
+def reset_plan_breaker() -> None:
+    """Referme le circuit — utile après un changement de plan, et dans les tests."""
+    global _plan_exhausted_until, _plan_exhausted_logged
+    with _plan_lock:
+        _plan_exhausted_until = 0.0
+        _plan_exhausted_logged = False
+
 
 def _throttle() -> None:
     """Enforce un délai minimum global entre deux requêtes FMP."""
@@ -89,6 +154,11 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
 
     symbol = full_params.get("symbol", "?")
 
+    # Circuit ouvert : le quota du plan est atteint, inutile de payer le
+    # backoff. On rend la main tout de suite, l'appelant complètera via yfinance.
+    if _breaker_open():
+        return None
+
     for attempt in range(_MAX_RETRIES):
         with _fmp_gate:
             _throttle()
@@ -97,6 +167,12 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
                 resp = requests.get(url, params=full_params, timeout=15)
 
                 if resp.status_code == 429:
+                    # Quota du plan (permanent) vs rafale (transitoire) : seul le
+                    # second mérite qu'on attende.
+                    if _looks_like_plan_limit(resp.text):
+                        _trip_plan_breaker(endpoint, symbol)
+                        return None
+
                     retry_after = _parse_retry_after(resp)
                     wait = retry_after if retry_after is not None else (
                         _BACKOFF_STEPS[min(attempt, len(_BACKOFF_STEPS) - 1)]

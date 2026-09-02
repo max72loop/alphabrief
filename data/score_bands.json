@@ -1,0 +1,53 @@
+{
+  "bands": [
+    {
+      "key": "exceptionnel",
+      "label": "Exceptionnel",
+      "min_score": 60,
+      "percentile": 95,
+      "share_pct": 5,
+      "tone": "positive",
+      "blurb": "Dans les 5 % les mieux notés — mérite un regard aujourd'hui."
+    },
+    {
+      "key": "fort",
+      "label": "Fort",
+      "min_score": 56,
+      "percentile": 80,
+      "share_pct": 15,
+      "tone": "positive-soft",
+      "blurb": "Dans le premier quintile."
+    },
+    {
+      "key": "modere",
+      "label": "Modéré",
+      "min_score": 50,
+      "percentile": 40,
+      "share_pct": 40,
+      "tone": "neutral",
+      "blurb": "Le gros du peloton — rien à signaler."
+    },
+    {
+      "key": "faible",
+      "label": "Faible",
+      "min_score": 44,
+      "percentile": 10,
+      "share_pct": 30,
+      "tone": "warning",
+      "blurb": "Sous la moyenne de l'univers suivi."
+    },
+    {
+      "key": "eviter",
+      "label": "À éviter",
+      "min_score": 0,
+      "percentile": 0,
+      "share_pct": 10,
+      "tone": "negative",
+      "blurb": "Dans les 10 % les moins bien notés."
+    }
+  ],
+  "strong_buy_min": 60,
+  "calibration_window_days": 90,
+  "note": "Bornes = percentiles de la distribution réelle du moteur. Le score ne se distribue pas sur [0, 100] : lire le rang, pas la note.",
+  "_generated_by": "core/scoring/bands.py --export"
+}

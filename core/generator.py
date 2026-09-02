@@ -15,6 +15,7 @@ from core.providers.fundamentals_yf import fetch_core_fundamentals
 from core.providers.llm_enricher import enrich_with_llm
 from core.scoring.importance import build_importance_items
 from core.scoring.confidence import compute_confidence_score
+from core.scoring import bands
 from utils import cache as _cache
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -22,19 +23,13 @@ logger = logging.getLogger(__name__)
 
 
 def _score_label(score: Optional[int]) -> str:
-    if score is None:
-        return "N/A"
-    if score >= 80:
-        return "Exceptionnel"
-    if score >= 65:
-        return "Fort"
-    if score >= 50:
-        return "Modéré"
-    if score >= 35:
-        return "Neutre"
-    if score >= 20:
-        return "Faible"
-    return "À éviter"
+    """Délègue au barème unique (core.scoring.bands).
+
+    Les seuils vivaient ici en dur (80/65/50/35/20) et contredisaient les trois
+    autres barèmes du système — dont deux étaient inatteignables : le moteur n'a
+    jamais produit plus de 68 en neuf mois. Voir core/scoring/bands.py.
+    """
+    return bands.score_label(score)
 
 
 def empty_card(ticker: str) -> Dict[str, Any]:
@@ -319,7 +314,14 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     # factor) plutôt que sur le score affiché. Garantit qu'une entreprise de
     # fondamentaux solides reste étiquetée "Fort" même quand la confidence est
     # basse (données partielles), sans gonfler artificiellement le score.
-    card["scores"]["score_label"] = _score_label(int(round(breakdown["total"])))
+    _raw_total = int(round(breakdown["total"]))
+    card["scores"]["score_label"] = _score_label(_raw_total)
+    # Bande complète (clé, rang, ton) à côté du libellé : les surfaces d'affichage
+    # n'ont plus à redériver un verdict depuis le nombre — c'est exactement ce
+    # qui avait fait diverger le front Vercel et Pixel Office du backend.
+    _band = bands.band(_raw_total)
+    card["scores"]["score_band"] = _band["key"]
+    card["scores"]["score_percentile"] = _band["percentile"]
     _cb("Analyse terminée !")
 
     # Aucune écriture ici : generate_card calcule, il ne persiste pas.

@@ -55,17 +55,18 @@ class RebalancePlan:
 
 
 def select_top10(scores: list[ScoredTicker]) -> list[ScoredTicker]:
-    """Top 10 par score desc, tous ≥ SCORE_THRESHOLD_TOP.
+    """Top 10 par score desc, bornés par la bande haute du barème.
 
-    Raises UniverseEmptyError si < 10 tickers ≥ 80.
+    Les bornes 80/30 ont été retirées de config.py (seuils morts : le moteur
+    plafonne à 68). Une reprise de ce module doit lire core.scoring.bands.
     """
     raise NotImplementedError
 
 
 def select_bottom10(scores: list[ScoredTicker]) -> list[ScoredTicker]:
-    """Bottom 10 par score asc, tous ≤ SCORE_THRESHOLD_BOTTOM.
+    """Bottom 10 par score asc, bornés par la bande basse du barème.
 
-    Raises UniverseEmptyError si < 10 tickers ≤ 30.
+    Voir select_top10 : bornes à reprendre de core.scoring.bands.
     """
     raise NotImplementedError
 

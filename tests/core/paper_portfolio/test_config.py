@@ -30,10 +30,14 @@ class TestDefaults:
     def test_portfolio_names_exactly_four(self):
         assert cfg.PORTFOLIO_NAMES == ("TOP10", "BOTTOM10", "LONG_SHORT", "SPY_BENCHMARK")
 
-    def test_score_thresholds_bracket_extremes(self):
-        assert cfg.SCORE_THRESHOLD_TOP == 80
-        assert cfg.SCORE_THRESHOLD_BOTTOM == 30
-        assert cfg.SCORE_THRESHOLD_BOTTOM < cfg.SCORE_THRESHOLD_TOP
+    def test_score_thresholds_are_gone(self):
+        """Les seuils 80/30 ont été retirés le 2026-09-02 (seuils morts).
+
+        Ce test garde la porte fermée : les rouvrir ici signifierait redéclarer
+        un barème à côté de core.scoring.bands, ce que la refonte a supprimé.
+        """
+        assert not hasattr(cfg, "SCORE_THRESHOLD_TOP")
+        assert not hasattr(cfg, "SCORE_THRESHOLD_BOTTOM")
 
     def test_metrics_gating_thresholds_ordered(self):
         assert cfg.METRICS_SAMPLE_DAYS_MIN == 30

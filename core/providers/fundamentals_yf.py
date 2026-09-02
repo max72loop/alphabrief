@@ -103,8 +103,7 @@ def _empty_payload() -> Dict[str, Any]:
 def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
     if _is_international(ticker):
         out = _empty_payload()
-        _populate_ownership_from_yf(ticker, out)
-        _fill_from_yf_fallback(ticker, out)
+        _complete_from_yf(ticker, out)
         out["source"] = "yf-direct"   # surcharge le "fmp+yf-fallback" posé par _fill
         return out
 
@@ -445,93 +444,320 @@ def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
     except Exception:
         pass
 
-    # --- OWNERSHIP & SHORT INTEREST (FIX I3) ---
-    # FMP ne fournit pas ces champs sur le tier Starter (endpoints
-    # institutional-holders / insider-trading sont payants).
-    # On délègue à yfinance pour cette section uniquement.
-    _populate_ownership_from_yf(ticker, out)
-
-    # --- I2 FALLBACK: si FMP n'a quasi rien renvoyé, compléter via yfinance ---
-    n_valid = sum(
-        1 for v in {**out["financials"], **out["valuation"]}.values() if v is not None
-    )
-    if n_valid < 5:
-        _fill_from_yf_fallback(ticker, out)
+    # --- COMPLÉTION yfinance (2026-09-02) ---
+    # Inconditionnelle, et non plus soumise à `n_valid < 5`. On ne complète que
+    # les champs restés vides, donc FMP garde autorité partout où il répond.
+    # Voir le commentaire de _complete_from_yf pour le détail du raisonnement.
+    _complete_from_yf(ticker, out)
 
     return out
 
 
-def _populate_ownership_from_yf(ticker: str, out: Dict[str, Any]) -> None:
-    """Récupère insider/short/institutional ownership via yfinance.
 
-    Champs ciblés (clés Yahoo Ticker.info):
-    - heldPercentInsiders → insider_ownership
-    - shortPercentOfFloat → short_interest
-    - heldPercentInstitutions → institutional_ownership
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Complétion yfinance
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Historique : cette couche s'appelait « fallback » et ne se déclenchait que si
+# FMP n'avait « quasi rien » renvoyé (`n_valid < 5`). Deux défauts l'ont rendue
+# inopérante là où elle comptait le plus :
+#
+#   1. Elle ne couvrait que 13 champs — pas ceux qui manquaient réellement.
+#      Relevé du 2026-09-02 sur les 39 cartes en cache : fcf_margin,
+#      fcf_absolute, net_income, fcf_yield_ttm, revenue_cagr_3y,
+#      revenue_yoy_rates, interest_coverage, payout_ratio, share_dilution_3y,
+#      net_debt_to_ebitda, price_to_ocf, gross_margin_trend, accruals_ratio et
+#      altman_z manquaient sur 29 à 32 cartes sur 39. Aucun n'était comblé ici.
+#
+#      En poids de scoring, ça retirait ~80 % du pilier Croissance (le CAGR 3 ans
+#      pèse 0,45 à lui seul et `compute_cagr_score_sector_aware(None)` renvoie 50
+#      neutre), ~45 % du Risque et ~41 % de la Qualité. C'est l'explication
+#      complète de la compression des scores entre 32 et 68.
+#
+#   2. Le seuil `n_valid < 5` était compté APRÈS que l'ownership yfinance ait
+#      déjà rempli jusqu'à 3 champs, donc le compteur mesurait en partie le
+#      travail de yfinance lui-même avant de décider s'il fallait appeler
+#      yfinance. Fragile par construction.
+#
+# FMP est par ailleurs mort : au 2026-09-02 tous les endpoints répondent
+# HTTP 429 « Limit Reach . Please upgrade your plan », y compris `profile`.
+# Ce n'est pas un rate-limit transitoire — le backoff 5s/15s/45s du client ne
+# peut pas aboutir. yfinance n'est donc plus un secours mais la source réelle.
+#
+# D'où le renversement : on complète TOUJOURS, sans condition. C'est sans risque
+# puisqu'on n'écrase jamais une valeur déjà posée (FMP garde autorité s'il
+# répond un jour), et c'est idempotent. Un seul objet `yf.Ticker` sert les
+# quatre jeux de données — avant, deux fonctions en créaient chacune un et
+# refaisaient l'appel `.info`.
+
+
+def _f(x: Any) -> Optional[float]:
+    """float() tolérant : None, NaN, chaînes vides et pandas NA donnent None."""
+    if x is None:
+        return None
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return None if v != v else v  # NaN
+
+
+def _col(df: Any, label: str, idx: int = 0) -> Optional[float]:
+    """Valeur d'une ligne d'états financiers yfinance à la colonne `idx`.
+
+    Les colonnes sont ordonnées du plus récent au plus ancien — même convention
+    que les listes FMP, donc les calculs en aval se transposent tels quels.
     """
     try:
-        import yfinance as yf
-        info = yf.Ticker(ticker).info or {}
-
-        insider = info.get("heldPercentInsiders")
-        if insider is not None and _is_valid_number(insider):
-            out["financials"]["insider_ownership"] = _safe_pct(insider)
-
-        short_pct = info.get("shortPercentOfFloat")
-        if short_pct is not None and _is_valid_number(short_pct):
-            out["financials"]["short_interest"] = _safe_pct(short_pct)
-
-        inst = info.get("heldPercentInstitutions")
-        if inst is not None and _is_valid_number(inst):
-            out["financials"]["institutional_ownership"] = _safe_pct(inst)
-    except Exception as e:
-        logger.debug(f"ownership fallback failed for {ticker}: {e}")
+        if df is None or getattr(df, "empty", True) or label not in df.index:
+            return None
+        row = df.loc[label]
+        if idx >= len(row):
+            return None
+        return _f(row.iloc[idx])
+    except Exception:
+        return None
 
 
-def _fill_from_yf_fallback(ticker: str, out: Dict[str, Any]) -> None:
-    """Comble les champs manquants en interrogeant yfinance (Ticker.info).
+def _ncols(df: Any) -> int:
+    try:
+        return 0 if df is None or getattr(df, "empty", True) else len(df.columns)
+    except Exception:
+        return 0
 
-    Utile pour les tickers internationaux (1211.HK, RIO.AX, 6758.T, etc.) où
-    le plan FMP Starter ne fournit pas les fundamentals. On ne remplace JAMAIS
-    une valeur déjà présente (FMP fait autorité quand il répond).
 
-    Marque la source = "fmp+yf-fallback" pour traçabilité dans les audits.
+def _yf_bundle(ticker: str) -> Dict[str, Any]:
+    """`.info` + les trois états financiers, en un seul objet Ticker.
+
+    Chaque jeu est isolé : yfinance échoue régulièrement sur un état précis
+    (petites capitalisations, tickers internationaux) sans que les autres soient
+    affectés. Un échec partiel doit dégrader le résultat, pas l'annuler.
     """
+    bundle: Dict[str, Any] = {"info": {}, "income": None, "balance": None, "cash": None}
     try:
         import yfinance as yf
-        info = yf.Ticker(ticker).info or {}
-        if not info:
-            return
-
-        fin = out["financials"]
-        val = out["valuation"]
-
-        def _set_fin(key: str, raw: Any, pct: bool = False) -> None:
-            if fin.get(key) is None and raw is not None and _is_valid_number(raw):
-                fin[key] = _safe_pct(raw) if pct else float(raw)
-
-        def _set_val(key: str, raw: Any) -> None:
-            if val.get(key) is None and raw is not None and _is_valid_number(raw):
-                val[key] = float(raw)
-
-        # Marges et rentabilité
-        _set_fin("ebit_margin", info.get("operatingMargins"), pct=True)
-        _set_fin("gross_margin", info.get("grossMargins"), pct=True)
-        _set_fin("net_margin", info.get("profitMargins"), pct=True)
-        _set_fin("roe", info.get("returnOnEquity"), pct=True)
-        _set_fin("roic", info.get("returnOnAssets"), pct=True)
-        _set_fin("eps_growth", info.get("earningsGrowth"), pct=True)
-        _set_fin("current_ratio", info.get("currentRatio"))
-
-        # Valuation
-        _set_val("pe_ttm", info.get("trailingPE"))
-        _set_val("forward_pe", info.get("forwardPE"))
-        _set_val("peg_ratio", info.get("pegRatio"))
-        _set_val("ev_ebitda_ttm", info.get("enterpriseToEbitda"))
-        _set_val("ev_sales_ttm", info.get("enterpriseToRevenue"))
-        _set_val("pb_ratio", info.get("priceToBook"))
-
-        # Si on a effectivement complété, marquer la source pour le debug audit
-        out["source"] = "fmp+yf-fallback"
+        tk = yf.Ticker(ticker)
     except Exception as e:
-        logger.debug(f"yf fallback failed for {ticker}: {e}")
+        logger.debug(f"yfinance indisponible pour {ticker}: {e}")
+        return bundle
+
+    try:
+        bundle["info"] = tk.info or {}
+    except Exception as e:
+        logger.debug(f"yf info {ticker}: {e}")
+    for key, attr in (("income", "income_stmt"), ("balance", "balance_sheet"), ("cash", "cashflow")):
+        try:
+            bundle[key] = getattr(tk, attr)
+        except Exception as e:
+            logger.debug(f"yf {attr} {ticker}: {e}")
+    return bundle
+
+
+def _complete_from_yf(ticker: str, out: Dict[str, Any]) -> None:
+    """Comble tout champ encore vide à partir de yfinance.
+
+    N'écrase JAMAIS une valeur déjà présente. Chaque champ est calculé dans son
+    propre try/except : un état financier biscornu ne doit pas emporter les
+    treize autres champs avec lui.
+    """
+    b = _yf_bundle(ticker)
+    info, inc, bal, cf = b["info"], b["income"], b["balance"], b["cash"]
+    if not info and _ncols(inc) == 0:
+        return
+
+    fin = out["financials"]
+    val = out["valuation"]
+    filled: list[str] = []
+
+    def put_fin(key: str, value: Optional[float]) -> None:
+        if fin.get(key) is None and value is not None and _is_valid_number(value):
+            fin[key] = float(value)
+            filled.append(key)
+
+    def put_val(key: str, value: Optional[float]) -> None:
+        if val.get(key) is None and value is not None and _is_valid_number(value):
+            val[key] = float(value)
+            filled.append(key)
+
+    # ── Détention et flottant ────────────────────────────────────────────────
+    # FMP ne les vend pas sur le tier Starter (institutional-holders et
+    # insider-trading sont des endpoints payants) : yfinance en est la seule
+    # source depuis le début.
+    put_fin("insider_ownership", _safe_pct(_f(info.get("heldPercentInsiders"))))
+    put_fin("short_interest", _safe_pct(_f(info.get("shortPercentOfFloat"))))
+    put_fin("institutional_ownership", _safe_pct(_f(info.get("heldPercentInstitutions"))))
+
+    # ── Marges et rentabilité ────────────────────────────────────────────────
+    put_fin("ebit_margin", _safe_pct(_f(info.get("operatingMargins"))))
+    put_fin("gross_margin", _safe_pct(_f(info.get("grossMargins"))))
+    put_fin("net_margin", _safe_pct(_f(info.get("profitMargins"))))
+    put_fin("roe", _safe_pct(_f(info.get("returnOnEquity"))))
+    put_fin("roic", _safe_pct(_f(info.get("returnOnAssets"))))
+    put_fin("eps_growth", _safe_pct(_f(info.get("earningsGrowth"))))
+    put_fin("current_ratio", _f(info.get("currentRatio")))
+    put_fin("payout_ratio", _safe_pct(_f(info.get("payoutRatio"))))
+
+    # ── Multiples ────────────────────────────────────────────────────────────
+    put_val("pe_ttm", _f(info.get("trailingPE")))
+    put_val("forward_pe", _f(info.get("forwardPE")))
+    put_val("peg_ratio", _f(info.get("pegRatio")))
+    put_val("ev_ebitda_ttm", _f(info.get("enterpriseToEbitda")))
+    put_val("ev_sales_ttm", _f(info.get("enterpriseToRevenue")))
+    put_val("pb_ratio", _f(info.get("priceToBook")))
+
+    revenue_ttm = _f(info.get("totalRevenue"))
+    mcap = _f(info.get("marketCap"))
+    fcf = _f(info.get("freeCashflow"))
+    ocf = _f(info.get("operatingCashflow"))
+    net_inc = _f(info.get("netIncomeToCommon"))
+
+    # ── Trésorerie : le trou le plus coûteux ─────────────────────────────────
+    # fcf_margin pèse 0,18 dans Qualité, fcf_yield_ttm 0,16 dans Valeur (son
+    # composant le plus lourd), et cash_conv 0,15 exige fcf_absolute ET
+    # net_income ensemble.
+    put_fin("fcf_absolute", fcf)
+    put_fin("net_income", net_inc)
+    try:
+        if fcf is not None and revenue_ttm and revenue_ttm > 0:
+            put_fin("fcf_margin", 100.0 * fcf / revenue_ttm)
+    except Exception:
+        pass
+    try:
+        if fcf is not None and mcap and mcap > 0:
+            put_val("fcf_yield_ttm", 100.0 * fcf / mcap)
+    except Exception:
+        pass
+    try:
+        if ocf and ocf > 0 and mcap and mcap > 0:
+            put_val("price_to_ocf", mcap / ocf)
+    except Exception:
+        pass
+
+    # ── Levier ───────────────────────────────────────────────────────────────
+    try:
+        debt = _f(info.get("totalDebt"))
+        cash_ = _f(info.get("totalCash"))
+        ebitda = _f(info.get("ebitda"))
+        if debt is not None and ebitda and ebitda > 0:
+            net_debt = debt - (cash_ or 0.0)
+            put_fin("net_debt_to_ebitda", net_debt / ebitda)
+    except Exception:
+        pass
+
+    # ── Séries de revenus ────────────────────────────────────────────────────
+    # 0,45 du pilier Croissance à lui seul, plus 0,20 de tendance et 0,15 de
+    # stabilité qui dérivent de la même série. Sans elle, Croissance vaut 50
+    # neutre quel que soit le titre.
+    revs = []
+    if _ncols(inc) >= 2:
+        revs = [_col(inc, "Total Revenue", i) for i in range(_ncols(inc))]
+
+    try:
+        # Colonnes du plus récent au plus ancien, comme les listes FMP.
+        if len(revs) >= 4 and revs[0] and revs[3]:
+            put_fin("revenue_cagr_3y", _cagr(revs[3], revs[0], years=3.0))
+        elif len(revs) >= 3 and revs[0] and revs[2]:
+            # Repli sur 2 ans annualisés plutôt que rien : une société qui n'a
+            # que trois exercices publiés reste jugeable sur sa croissance.
+            put_fin("revenue_cagr_3y", _cagr(revs[2], revs[0], years=2.0))
+    except Exception:
+        pass
+
+    try:
+        if len(revs) >= 3:
+            yoy = []
+            for i in range(len(revs) - 1):
+                recent, older = revs[i], revs[i + 1]
+                if recent and older and older > 0:
+                    yoy.append(100.0 * (recent - older) / older)
+            yoy.reverse()  # du plus ancien au plus récent, convention FMP
+            if len(yoy) >= 2 and fin.get("revenue_yoy_rates") is None:
+                fin["revenue_yoy_rates"] = yoy
+                filled.append("revenue_yoy_rates")
+    except Exception:
+        pass
+
+    # ── Couverture des intérêts ──────────────────────────────────────────────
+    # yfinance laisse « Interest Expense » vide sur les exercices récents de
+    # certaines sociétés : on balaie les colonnes jusqu'à en trouver une, plutôt
+    # que d'abandonner sur la première.
+    try:
+        ebit_val = _col(inc, "Operating Income", 0)
+        interest = None
+        for i in range(_ncols(inc)):
+            cand = _col(inc, "Interest Expense", i)
+            if cand:
+                interest = abs(cand)
+                break
+        if ebit_val is not None and interest:
+            put_fin("interest_coverage", ebit_val / interest)
+    except Exception:
+        pass
+
+    # ── Tendance de marge brute (variation sur 2 ans, en points) ─────────────
+    try:
+        if _ncols(inc) >= 3:
+            def gm(i: int) -> Optional[float]:
+                gp, rv = _col(inc, "Gross Profit", i), _col(inc, "Total Revenue", i)
+                return 100.0 * gp / rv if gp is not None and rv and rv > 0 else None
+            gm0, gm2 = gm(0), gm(2)
+            if gm0 is not None and gm2 is not None:
+                put_fin("gross_margin_trend", gm0 - gm2)
+    except Exception:
+        pass
+
+    # ── Dilution sur 3 ans ───────────────────────────────────────────────────
+    try:
+        if _ncols(inc) >= 4:
+            label = "Diluted Average Shares" if "Diluted Average Shares" in getattr(inc, "index", []) \
+                else "Basic Average Shares"
+            s_now, s_old = _col(inc, label, 0), _col(inc, label, 3)
+            if s_now and s_old and s_old > 0:
+                put_fin("share_dilution_3y", 100.0 * (s_now - s_old) / s_old)
+    except Exception:
+        pass
+
+    # ── Accruals (Sloan 1996) ────────────────────────────────────────────────
+    try:
+        ni_a = _col(inc, "Net Income", 0) or net_inc
+        ocf_a = _col(cf, "Operating Cash Flow", 0) or ocf
+        ta = _col(bal, "Total Assets", 0)
+        if ni_a is not None and ocf_a is not None and ta and ta > 0:
+            put_fin("accruals_ratio", 100.0 * (ni_a - ocf_a) / ta)
+    except Exception:
+        pass
+
+    # ── Altman Z ─────────────────────────────────────────────────────────────
+    # Sans objet pour les banques et assureurs : leur bilan n'a ni fonds de
+    # roulement ni structure de passif comparables à ceux d'une société
+    # industrielle. Même exclusion que la branche FMP, et même exclusion que
+    # `is_financial` dans potential.py.
+    try:
+        industry = (info.get("industry") or "").lower()
+        sector = info.get("sector") or ""
+        is_bank_or_ins = ("bank" in industry or "insurance" in industry or "mortgage" in industry)
+        if not (sector in {"Financials", "Financial Services"} and is_bank_or_ins):
+            ta = _col(bal, "Total Assets", 0)
+            tca = _col(bal, "Current Assets", 0)
+            tcl = _col(bal, "Current Liabilities", 0)
+            re_ = _col(bal, "Retained Earnings", 0)
+            tl = _col(bal, "Total Liabilities Net Minority Interest", 0)
+            ebit_z = _col(inc, "Operating Income", 0)
+            sales = _col(inc, "Total Revenue", 0) or revenue_ttm
+            if (ta and ta > 0 and tca is not None and tcl is not None and re_ is not None
+                    and ebit_z is not None and mcap and tl and tl > 0 and sales):
+                z = (1.2 * ((tca - tcl) / ta)
+                     + 1.4 * (re_ / ta)
+                     + 3.3 * (ebit_z / ta)
+                     + 0.6 * (mcap / tl)
+                     + 1.0 * (sales / ta))
+                put_fin("altman_z", z)
+    except Exception:
+        pass
+
+    if filled:
+        base = out.get("source") or "fmp"
+        if "yf" not in base:
+            out["source"] = f"{base}+yf"
+        logger.debug(f"{ticker}: {len(filled)} champs complétés par yfinance")
