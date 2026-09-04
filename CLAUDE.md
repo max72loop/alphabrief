@@ -12,15 +12,17 @@ retirée au lot 1 (2026-07-31).
 
 - **Backend** : Python (lib de scoring importée par le daemon — voir « Runtime »)
 - **Base** : **Postgres 16 local**, base `alphabrief`, sur le VPS
-- **Frontend** : Next.js 16 (React 19, Tailwind v4) — migration hors Vercel en cours
+- **Interface** : les cartes AlphaBrief du cockpit Pixel Office (API 127.0.0.1:4300)
 - **Data** : yfinance pour les fondamentaux, FMP hors service — voir « Gotchas »
 - **LLM** : DeepSeek — enrichissement business snapshot
 
 **Supabase a été abandonné le 2026-08-01.** Un service managé multi-utilisateur
 n'apportait rien à un produit mono-utilisateur et coûtait une clé partagée,
 une couche RLS entière et une étape manuelle pour appliquer chaque migration.
-La reprise est faite : 2367 lignes, export dans
-`/root/backups/alphabrief_supabase_20260801`.
+La reprise est faite : 2367 lignes. Les exports JSON de reprise ont été
+détruits le 2026-09-04 avec le reste du SaaS — ils contenaient un e-mail en
+clair, un `plan: premium` et un `stripe_customer_id`. Le Postgres local et ses
+dumps quotidiens (`make db-backup`, cron 03:20) sont la seule source à sauver.
 
 ### Connexion — il n'y a pas de secret
 
@@ -50,8 +52,6 @@ Ce repo est une **librairie** (`core/`, `utils/`) consommée par deux runtimes :
       le rappel hebdomadaire du lot 4 s'appuie dessus.
 
 core/cli.py   ← outil local (python -m core.cli analyze/run-all/status)
-
-Frontend Next.js (repo séparé alphabrief-frontend/)
 ```
 
 Le dépôt distant du daemon (`alphabrief-agent`) n'existe pas sur GitHub. Son
@@ -116,15 +116,15 @@ depuis zéro autant de fois que nécessaire, sans rien demander.
 
 Demandent un feu vert explicite de Max :
 
-- **push sur la branche déployée** — Vercel déploie depuis `main` du frontend,
-  donc un push est une mise en production, pas un geste de versioning
+- **push sur `main`** — le daemon tourne sur le code du VPS ; un push reste un
+  geste de versioning, mais tout `git clean` dans ce repo est proscrit (des
+  modules atteints par le daemon y ont déjà traîné non versionnés)
 - **toute écriture sur la base `alphabrief`** dès qu'elle portera des montants
   réels. Le fait que la base soit maintenant locale ne dissout pas ce veto :
   il portait sur les données de Max, pas sur l'hébergeur. `make db-apply` est
   idempotent et ne supprime rien, mais il reste soumis à cette règle.
 - **modification de variables d'environnement**
 - **suppression de table**
-- **décommissionnement** du projet Supabase et du déploiement Vercel
 
 ### Les deux bases — `alphabrief` et `alphabrief_mirror`
 
@@ -233,7 +233,8 @@ d'empiler une contradiction.
   Le daemon écrit SQLite `mytrader.db::scores_history` (`_save_score`) — c'est ce
   que lit l'API Pixel Office, donc le cockpit. `core/cli.py` écrit, lui, le
   Postgres `ticker_scores` + `score_history` (`core/storage/writer.py`) — c'est ce
-  que lit le frontend Next.js. Un `python -m core.cli analyze TICKER` ne fait donc
+  que lit la carte Ticker du cockpit (`alphabrief_card.js`). Un
+  `python -m core.cli analyze TICKER` ne fait donc
   PAS apparaître la note dans le cockpit, et réciproquement. Pour alimenter les
   deux, passer par le chemin du daemon (`_save_card` + `_save_score`) en plus.
 - **Le libellé se lit sur le score AFFICHÉ, pas sur le score brut.** Le FIX I4
@@ -246,7 +247,7 @@ d'empiler une contradiction.
 - **Le barème de notation a une source de vérité unique** : `core/scoring/bands.py`.
   Tout ce qui étiquette, colore ou alerte sur un score importe d'ici — rien ne
   redéfinit ses propres bornes. Avant, le même score portait quatre verdicts
-  contradictoires (generator 80/65/50/35/20, front Vercel 55/48/42/35, alerte
+  contradictoires (generator 80/65/50/35/20, ancien front Vercel 55/48/42/35, alerte
   Telegram 60, Pixel Office 60/45) et deux des seuils étaient inatteignables.
   Les bornes sont des percentiles d'un échantillon **transversal** (173 sociétés :
   S&P 500 stratifié par secteur + watchlist), pas d'un historique : les 2795
@@ -260,9 +261,9 @@ d'empiler une contradiction.
   Ses fonctions de rebalance (`run_weekly_rebalance`, `run_daily_nav`) ne sont
   plus appelées par personne — ne pas les relancer sans en reparler à Max.
 - **`alerts` et `portfolio_holdings` n'existent pas**, et ne sont pas recréées
-  dans le schéma local. Le frontend interroge pourtant `alerts` à 5 endroits.
-  La fonctionnalité d'alertes n'a jamais tourné. On ne recrée pas une table
-  pour faire taire du code mort : la surface se tranche au lot 4.
+  dans le schéma local. La fonctionnalité d'alertes n'a jamais tourné. Le seul
+  code qui les interrogeait était le frontend Next.js, supprimé avec le SaaS le
+  2026-09-04 : on ne recrée pas une table pour faire taire du code mort.
 - **Les séquences sont invisibles à l'introspection OpenAPI.** C'est le piège
   qui a failli coûter cher à la reprise : les `id` sont des identités, et
   insérer les lignes reprises avec leur `id` ne fait pas avancer le compteur.

@@ -5,6 +5,7 @@ Avant ce module, le même score portait quatre verdicts contradictoires :
 
     core/generator.py        80 / 65 / 50 / 35 / 20   (Exceptionnel → À éviter)
     alphabrief-frontend      55 / 48 / 42 / 35        (design.ts, front Vercel)
+                                                       — supprimé le 2026-09-04
     agents/alphabrief        60                        (alerte STRONG_BUY)
     pixel-office alphaShared 60 / 45                   (couleur de la note)
 

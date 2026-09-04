@@ -27,9 +27,9 @@
 --
 -- CE QUI N'EST PAS RECRÉÉ NON PLUS : `alerts` et `portfolio_holdings`.
 -- Elles n'existaient déjà pas dans Supabase (PGRST205, vérifié le
--- 2026-07-31) alors que le frontend les interroge — 5 appels pour `alerts`.
+-- 2026-07-31) alors que le frontend les interrogeait — 5 appels pour `alerts`.
 -- La fonctionnalité d'alertes n'a jamais tourné. On ne recrée pas une table
--- pour faire taire du code mort : la surface se tranche au lot 4.
+-- pour faire taire du code mort : ce frontend a été supprimé le 2026-09-04.
 -- ============================================================
 
 
@@ -128,13 +128,12 @@ ALTER TABLE ticker_events ADD  CONSTRAINT ticker_events_ticker_date_kind_key
 
 
 -- ── watchlists / watchlist_tickers ──────────────────────────
--- `user_id` est conservé tel quel : la reprise de données porte la valeur
--- existante, et l'aplatir demanderait de réécrire les 9 lignes pour un gain
--- nul. La colonne devient un vestige inerte, pas un discriminant.
+-- `user_id` a été supprimé le 2026-09-04 avec le reste du SaaS : dernière
+-- colonne multi-utilisateur d'une base qui n'en sert qu'un. Aucun code ne la
+-- lisait. Migration : ALTER TABLE watchlists DROP COLUMN user_id;
 
 CREATE TABLE IF NOT EXISTS watchlists (
     id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id     UUID NOT NULL,
     name        TEXT NOT NULL DEFAULT 'Ma watchlist',
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );

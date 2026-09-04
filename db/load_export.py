@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
-"""Reprise des données Supabase dans le Postgres local.
+"""Reprise des données Supabase dans le Postgres local — SCRIPT HISTORIQUE.
 
-    python db/load_export.py /root/backups/alphabrief_supabase_20260801
+    python db/load_export.py <dossier d'export JSON>
+
+La reprise a eu lieu le 2026-08-01 (2367 lignes) et les exports source ont été
+détruits le 2026-09-04 avec le reste du SaaS. Ce script n'a plus d'entrée : il
+est conservé pour le `setval` des séquences (voir CLAUDE.md, « Gotchas »), pas
+pour être rejoué. Pour restaurer la base, passer par `make db-backup` /
+`db/restore_check.py`.
 
 Idempotent : chaque table est vidée avant rechargement, donc rejouable
 autant de fois que nécessaire tant que la reprise n'est pas figée.
