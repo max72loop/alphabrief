@@ -310,16 +310,28 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     card["scores"]["technicals_score"]   = int(round(breakdown["technicals"]   * factor))
     card["scores"]["momentum_score"]     = int(round(breakdown["momentum"]     * factor))
 
-    # FIX I4 (audit 2026-05-13) : appliquer le label sur le score brut (avant
-    # factor) plutôt que sur le score affiché. Garantit qu'une entreprise de
-    # fondamentaux solides reste étiquetée "Fort" même quand la confidence est
-    # basse (données partielles), sans gonfler artificiellement le score.
-    _raw_total = int(round(breakdown["total"]))
-    card["scores"]["score_label"] = _score_label(_raw_total)
+    # Le libellé porte sur le score AFFICHÉ, pas sur le score brut.
+    #
+    # Le FIX I4 (audit 2026-05-13) faisait l'inverse : il étiquetait `breakdown
+    # ["total"]` avant `factor`, pour qu'une société bien notée sur des données
+    # partielles garde son verdict. L'intention était bonne, l'effet visible ne
+    # l'était pas — l'écran affichait le nombre d'après et le mot d'avant, donc
+    # se contredisait dès que la confiance n'était pas à 100 :
+    #
+    #     HOOD  « 59 · Exceptionnel »   alors qu'Exceptionnel commence à 60
+    #     CS.PA « 55 · Fort »           alors que Fort commence à 56
+    #     DPZ   « 42 · Faible »         alors que Faible commence à 44
+    #
+    # Sept des trente-huit cartes étaient dans ce cas au 2026-09-03. Un barème
+    # publié que la carte dément à côté ne vaut pas mieux que les quatre barèmes
+    # contradictoires que bands.py a remplacés : le lecteur ne peut plus le
+    # vérifier. La confiance reste lisible telle quelle dans `confidence`.
+    _total = card["scores"]["potential_score"]
+    card["scores"]["score_label"] = _score_label(_total)
     # Bande complète (clé, rang, ton) à côté du libellé : les surfaces d'affichage
     # n'ont plus à redériver un verdict depuis le nombre — c'est exactement ce
     # qui avait fait diverger le front Vercel et Pixel Office du backend.
-    _band = bands.band(_raw_total)
+    _band = bands.band(_total)
     card["scores"]["score_band"] = _band["key"]
     card["scores"]["score_percentile"] = _band["percentile"]
     _cb("Analyse terminée !")

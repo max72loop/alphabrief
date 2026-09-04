@@ -18,3 +18,7 @@ data/backtests/
 
 # Base miroir : artefacts locaux
 db/mirror/*.local.sql
+
+# Artefacts WAL SQLite — jamais versionnés
+data/*.db-shm
+data/*.db-wal

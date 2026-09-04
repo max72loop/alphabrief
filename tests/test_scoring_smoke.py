@@ -93,3 +93,67 @@ def test_msft_score_positive():
     # Score affiché = raw * factor, factor ≥ 0.8 maintenant. raw ≥ 60 → score ≥ 48.
     assert score is not None and score >= 48, f"MSFT score too low: {score}"
     assert conf is not None and conf >= 80, f"MSFT confidence too low: {conf}"
+
+
+# ---------------------------------------------------------------------------
+# Test 4 — le libellé ne doit jamais contredire le nombre affiché
+# ---------------------------------------------------------------------------
+
+def test_label_matches_displayed_score():
+    """`score_label` se lit sur le score AFFICHÉ, pas sur le score brut.
+
+    Le FIX I4 étiquetait le total avant le facteur de confiance : la carte
+    affichait « 59 · Exceptionnel » alors que le barème publié fait commencer
+    Exceptionnel à 60. Sept cartes sur trente-huit se contredisaient ainsi au
+    2026-09-03. Ce test verrouille l'invariant que le lecteur peut vérifier.
+    """
+    from core.scoring import bands
+
+    for score in range(0, 101):
+        label = bands.score_label(score)
+        band = bands.band(score)
+        matching = [b for b in bands.BANDS if score >= b["min_score"]]
+        assert label == matching[0]["label"], f"{score} → {label}"
+        assert band["key"] == matching[0]["key"]
+
+    # Les bornes elles-mêmes, inclusives, dans les deux sens.
+    assert bands.score_label(60) == "Exceptionnel"
+    assert bands.score_label(59) == "Fort"
+    assert bands.score_label(56) == "Fort"
+    assert bands.score_label(55) == "Modéré"
+    assert bands.score_label(44) == "Faible"
+    assert bands.score_label(43) == "À éviter"
+
+
+def test_listing_equivalences_point_to_scored_tickers():
+    """Une équivalence ne vaut que si sa cible est réellement notée.
+
+    Sinon on remplace une note absente par une note absente, en ayant l'air de
+    l'avoir corrigée. Les quatre lignes du portefeuille cotées ailleurs
+    (BYDDY, GOOGL, ASURB.MX, RIO) doivent viser un ticker de la watchlist.
+    """
+    import sqlite3
+    from pathlib import Path
+
+    from core.scoring import listings
+
+    db = Path(__file__).resolve().parent.parent / "data" / "mytrader.db"
+    if not db.exists():
+        pytest.skip("base de scoring absente")
+
+    con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        watchlist = {r[0] for r in con.execute("SELECT ticker FROM watchlist")}
+    finally:
+        con.close()
+
+    for held, scored in listings.EQUIVALENCES.items():
+        assert scored in watchlist, f"{held} → {scored} : cible hors watchlist"
+        assert held not in watchlist, f"{held} est noté ET aliasé — deux verdicts"
+        assert listings.resolve(held) == scored
+        assert listings.is_alias(held)
+
+    # Un ticker sans équivalence se résout en lui-même, sans exception.
+    assert listings.resolve("TSM") == "TSM"
+    assert listings.resolve(None) is None
+    assert not listings.is_alias("TSM")

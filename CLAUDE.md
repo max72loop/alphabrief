@@ -77,6 +77,18 @@ une erreur.
 le code applicatif — c'est ce qui empêche un futur écran de réinventer un
 `SUM(valeur_eur)` qui mélangerait les deux niveaux.
 
+**Exception unique et cadrée : le total live** (`pixel-office-api/routes/patrimoine.js
+::totalLive`, 2026-09-03, demandé par Max). `v_patrimoine_total` ne bouge qu'à la
+saisie ; il était resté figé au 24 août pendant que le détail par position changeait
+tous les jours, ce qui se lisait comme une panne. Le total live suit les cotations
+et respecte la même règle de non-double-comptage : **pour un support donné, SOIT la
+somme de ses positions, SOIT son snapshot de niveau `support`, jamais les deux.**
+Une position sans cotation (le cash, un ticker inconnu de yfinance) retombe sur sa
+dernière valeur saisie et alimente `estime_eur`, affiché comme « dont N € non coté »
+— sans ce repli, une poche non cotée disparaîtrait du total. Si aucune ligne n'est
+réellement cotée, la route renvoie `null` et l'écran retombe sur la saisie : mieux
+vaut ça qu'une copie des saisies déguisée en temps réel.
+
 ## Règles de travail
 
 ### Suppression — critère mécanique, jamais l'intuition
@@ -206,6 +218,31 @@ d'empiler une contradiction.
   fondamentaux : **après un changement ici, purger `data/cache/*_identity.json`**,
   sinon le correctif reste invisible 6 h. `Ticker.info` est mémoïsé par process
   (`clear_info_cache()`) — trois chemins le demandaient pour un même ticker.
+- **Le portefeuille et le moteur ne parlent pas le même symbole.** `positions.actif`
+  porte la cotation où Max détient réellement le titre ; la watchlist porte celle
+  qu'on analyse. Pour quatre sociétés ce n'est pas le même : `BYDDY`→`1211.HK`,
+  `GOOGL`→`GOOG`, `ASURB.MX`→`ASR`, `RIO`→`RIO.AX`. Le cockpit résout la note par
+  correspondance EXACTE (`scoreByTicker[position.actif]`), donc ces quatre lignes
+  n'affichaient AUCUNE notation alors que le score existait sous un autre nom.
+  Les équivalences vivent dans `core/scoring/listings.py`, exportées en JSON au
+  boot du daemon (comme le barème) et lues par l'API. **Ne jamais résoudre en
+  ajoutant le symbole détenu à la watchlist** : on obtiendrait deux verdicts pour
+  une même société — c'est exactement ce qu'a produit l'ancienne ligne `GOOGL`
+  (63 « Modéré ») restée à côté de `GOOG` (61 « Exceptionnel »).
+- **Il y a DEUX stores de scores, et ils ne servent pas les mêmes écrans.**
+  Le daemon écrit SQLite `mytrader.db::scores_history` (`_save_score`) — c'est ce
+  que lit l'API Pixel Office, donc le cockpit. `core/cli.py` écrit, lui, le
+  Postgres `ticker_scores` + `score_history` (`core/storage/writer.py`) — c'est ce
+  que lit le frontend Next.js. Un `python -m core.cli analyze TICKER` ne fait donc
+  PAS apparaître la note dans le cockpit, et réciproquement. Pour alimenter les
+  deux, passer par le chemin du daemon (`_save_card` + `_save_score`) en plus.
+- **Le libellé se lit sur le score AFFICHÉ, pas sur le score brut.** Le FIX I4
+  (audit 2026-05-13) étiquetait `breakdown["total"]` avant le facteur de confiance,
+  si bien que la carte montrait le nombre d'après et le mot d'avant : « HOOD 59 ·
+  Exceptionnel » quand Exceptionnel commence à 60. Sept cartes sur 38 étaient dans
+  ce cas au 2026-09-03. Un barème publié que la carte dément ne vaut pas mieux que
+  les quatre barèmes contradictoires que `bands.py` a remplacés. Verrouillé par
+  `tests/test_scoring_smoke.py::test_label_matches_displayed_score`.
 - **Le barème de notation a une source de vérité unique** : `core/scoring/bands.py`.
   Tout ce qui étiquette, colore ou alerte sur un score importe d'ici — rien ne
   redéfinit ses propres bornes. Avant, le même score portait quatre verdicts
