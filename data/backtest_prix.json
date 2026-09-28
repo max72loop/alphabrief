@@ -1,0 +1,82 @@
+{
+  "genere_le": "2026-09-28T10:01:25+00:00",
+  "univers": "S&P 500 actuel (402 titres), excès sur ETF secteur",
+  "periode": "2016-01-29 → 2026-09-25",
+  "observations": 49939,
+  "resultats": {
+    "21j": {
+      "prod (T+M actuel)": {
+        "ic_moyen": -0.0047,
+        "t": -0.29,
+        "mois_ic_positif": 0.52,
+        "ecart_q5_q1_pct": -0.06,
+        "n_mois": 127
+      },
+      "technique seule": {
+        "ic_moyen": -0.0075,
+        "t": -0.75,
+        "mois_ic_positif": 0.488,
+        "ecart_q5_q1_pct": 0.08,
+        "n_mois": 127
+      },
+      "momentum seul": {
+        "ic_moyen": -0.0037,
+        "t": -0.22,
+        "mois_ic_positif": 0.488,
+        "ecart_q5_q1_pct": -0.04,
+        "n_mois": 127
+      },
+      "RSI brut": {
+        "ic_moyen": 0.0025,
+        "t": 0.22,
+        "mois_ic_positif": 0.543,
+        "ecart_q5_q1_pct": -0.09,
+        "n_mois": 127
+      },
+      "12-1 relatif secteur": {
+        "ic_moyen": -0.007,
+        "t": -0.43,
+        "mois_ic_positif": 0.488,
+        "ecart_q5_q1_pct": -0.04,
+        "n_mois": 127
+      }
+    },
+    "63j": {
+      "prod (T+M actuel)": {
+        "ic_moyen": 0.0051,
+        "t": 0.21,
+        "mois_ic_positif": 0.5,
+        "ecart_q5_q1_pct": 0.33,
+        "n_mois": 42
+      },
+      "technique seule": {
+        "ic_moyen": 0.0055,
+        "t": 0.32,
+        "mois_ic_positif": 0.524,
+        "ecart_q5_q1_pct": 0.33,
+        "n_mois": 42
+      },
+      "momentum seul": {
+        "ic_moyen": 0.0062,
+        "t": 0.24,
+        "mois_ic_positif": 0.524,
+        "ecart_q5_q1_pct": 0.29,
+        "n_mois": 42
+      },
+      "RSI brut": {
+        "ic_moyen": 0.0038,
+        "t": 0.19,
+        "mois_ic_positif": 0.571,
+        "ecart_q5_q1_pct": 0.42,
+        "n_mois": 42
+      },
+      "12-1 relatif secteur": {
+        "ic_moyen": -0.0034,
+        "t": -0.14,
+        "mois_ic_positif": 0.476,
+        "ecart_q5_q1_pct": 0.21,
+        "n_mois": 42
+      }
+    }
+  }
+}
