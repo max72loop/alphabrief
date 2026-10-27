@@ -11,6 +11,7 @@ from core.providers.price_identity import fetch_identity_and_market
 from core.features.momentum import compute_momentum_12m, compute_relative_momentum
 from core.features.technicals import compute_technicals
 from core.scoring.potential import compute_potential_score
+from core.scoring.secteur import secteur_manuel, secteur_moteur
 from core.providers.fundamentals_yf import fetch_core_fundamentals
 from core.providers.llm_enricher import enrich_with_llm
 from core.scoring.importance import build_importance_items
@@ -58,7 +59,7 @@ def empty_card(ticker: str) -> Dict[str, Any]:
             "gross_margin": None,
             "fcf_margin": None,
             "roe": None,
-            "roic": None,
+            "roa": None,
             "net_debt_to_ebitda": None,
             "interest_coverage": None,
             "share_dilution_3y": None,
@@ -129,6 +130,9 @@ def empty_card(ticker: str) -> Dict[str, Any]:
             "fundamentals_score": None,
             "technicals_score": None,
             "momentum_score": None,
+            "pillars": {},
+            "pillar_weights": {},
+            "fundamentals_convergence": None,
             "score_label": None,
             "importance_ranked_items": [],
             "confidence_score": None,
@@ -252,8 +256,12 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
 
     # Momentum relatif au secteur (post-executor : requiert le secteur de l'identity)
     _cb("Momentum relatif au secteur...")
+    # Le secteur de NOTATION (core/scoring/secteur.py) : correction manuelle de
+    # Max d'abord, sinon yfinance traduit dans la langue des tables. `sector`
+    # reste le libellé brut de la source ; `sector_note` est ce que le moteur lit.
+    sector = secteur_moteur(card["identity"].get("sector"), secteur_manuel(ticker))
+    card["identity"]["sector_note"] = sector
     try:
-        sector = card["identity"].get("sector")
         rel_mom = compute_relative_momentum(ticker, sector)
         if rel_mom:
             card["market"].update({k: v for k, v in rel_mom.items() if v is not None})
@@ -280,7 +288,7 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
             )
             _cb("✓ Analyse IA terminée")
         else:
-            _cb("— Analyse IA (clé non configurée)")
+            _cb("— Analyse IA indisponible")
     except Exception as e:
         logger.error(f"LLM enrichment failed for {ticker}: {e}")
         _cb("⚠ Analyse IA (erreur)")
@@ -295,43 +303,58 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
     confidence = compute_confidence_score(card)
     card["scores"]["confidence_score"] = confidence
 
-    # Ajustement par la confiance — appliqué à chaque sous-score pour que
-    # la décomposition reste cohérente avec le total affiché.
+    # La note est publiée telle que le moteur la calcule.
     #
-    # FIX I1 (audit 2026-05-13) : Le multiplicateur historique `0.5 + 0.5*conf/100`
-    # provoquait une double pénalisation lorsque les fondamentaux étaient
-    # absents : `score_linear` retourne déjà 50 (neutre) sur None, et le facteur
-    # x0.5 transformait ce 50 neutre en un score affiché de ~25 ("Faible").
-    # On relève le plancher de 0.5 → 0.8 pour limiter la sur-pénalisation tout
-    # en gardant le signal "données peu fiables → score modulé légèrement".
-    factor = 0.8 + 0.2 * (confidence or 0) / 100
-    card["scores"]["potential_score"]    = int(round(breakdown["total"]        * factor))
-    card["scores"]["fundamentals_score"] = int(round(breakdown["fundamentals"] * factor))
-    card["scores"]["technicals_score"]   = int(round(breakdown["technicals"]   * factor))
-    card["scores"]["momentum_score"]     = int(round(breakdown["momentum"]     * factor))
+    # Elle a longtemps été rabotée par `factor = 0.8 + 0.2*confiance/100`, la
+    # confiance mesurant la DISPONIBILITÉ DES DONNÉES. Le nombre répondait donc
+    # à deux questions à la fois — « cette société vaut-elle quelque chose » et
+    # « qu'est-ce qu'on en sait » — sans que le lecteur puisse démêler les deux.
+    # L'historique du rabot dit assez qu'il n'a jamais trouvé son réglage : le
+    # plancher est passé de 0.5 à 0.8 (FIX I1) pour cesser de transformer un 50
+    # neutre en « Faible », puis l'étiquette a dû être déplacée d'avant à après
+    # le facteur (FIX I4) parce que la carte affichait le nombre d'après et le
+    # mot d'avant.
+    #
+    # Il était en plus asymétrique — il ne pouvait que baisser, jamais relever —
+    # et les bandes ne font que 4 à 6 points de large : au 2026-09-07 il
+    # déplaçait 4 cartes sur 39 d'une bande entière (NU 61→58 et HOOD 62→59
+    # perdaient « Exceptionnel », ASR 51→47 et 7974.T 51→49 « Modéré »).
+    #
+    # Le garde-fou n'a pas disparu, il a changé de place : il porte désormais
+    # sur l'étiquette (core.scoring.bands.band_for), qui refuse de délivrer un
+    # verdict sous le plancher de couverture. Un nombre, un sens.
+    card["scores"]["potential_score"]    = int(round(breakdown["total"]))
+    card["scores"]["fundamentals_score"] = int(round(breakdown["fundamentals"]))
+    card["scores"]["technicals_score"]   = int(round(breakdown["technicals"]))
+    card["scores"]["momentum_score"]     = int(round(breakdown["momentum"]))
 
-    # Le libellé porte sur le score AFFICHÉ, pas sur le score brut.
+    # Détail du bloc fondamentaux (Quality/Growth/Value/Risk/Analyst). Le moteur
+    # le calculait déjà ; il ne le rendait pas, si bien qu'une note de 62 arrivait
+    # à l'écran sans dire quel pilier la portait. Les poids voyagent avec les
+    # valeurs : ils dépendent de la couverture analyste, donc les recopier en dur
+    # côté écran les ferait mentir un jour sur deux.
+    card["scores"]["pillars"]        = breakdown["pillars"]
+    card["scores"]["pillar_weights"] = breakdown["pillar_weights"]
+    card["scores"]["fundamentals_convergence"] = breakdown["fundamentals_convergence"]
+
+    # Le libellé porte sur le score publié — qui est maintenant le seul qui
+    # existe. C'était tout l'objet du FIX I4 (audit 2026-05-13) : tant que le
+    # facteur de confiance existait, il y avait DEUX nombres (avant et après
+    # rabot) et l'écran pouvait afficher le mot de l'un à côté du chiffre de
+    # l'autre — « HOOD 59 · Exceptionnel » quand Exceptionnel commence à 60,
+    # sept cartes sur trente-huit au 2026-09-03. Le facteur retiré, la
+    # contradiction n'a plus de support possible.
     #
-    # Le FIX I4 (audit 2026-05-13) faisait l'inverse : il étiquetait `breakdown
-    # ["total"]` avant `factor`, pour qu'une société bien notée sur des données
-    # partielles garde son verdict. L'intention était bonne, l'effet visible ne
-    # l'était pas — l'écran affichait le nombre d'après et le mot d'avant, donc
-    # se contredisait dès que la confiance n'était pas à 100 :
-    #
-    #     HOOD  « 59 · Exceptionnel »   alors qu'Exceptionnel commence à 60
-    #     CS.PA « 55 · Fort »           alors que Fort commence à 56
-    #     DPZ   « 42 · Faible »         alors que Faible commence à 44
-    #
-    # Sept des trente-huit cartes étaient dans ce cas au 2026-09-03. Un barème
-    # publié que la carte dément à côté ne vaut pas mieux que les quatre barèmes
-    # contradictoires que bands.py a remplacés : le lecteur ne peut plus le
-    # vérifier. La confiance reste lisible telle quelle dans `confidence`.
+    # Reste à ne pas délivrer de verdict sur des données trouées : c'est
+    # `band_for` qui s'en charge, en rendant la bande « Données insuffisantes »
+    # sous le plancher de couverture. La confiance elle-même reste lisible telle
+    # quelle dans `confidence_score`, à côté de la note et non plus dedans.
     _total = card["scores"]["potential_score"]
-    card["scores"]["score_label"] = _score_label(_total)
     # Bande complète (clé, rang, ton) à côté du libellé : les surfaces d'affichage
     # n'ont plus à redériver un verdict depuis le nombre — c'est exactement ce
     # qui avait fait diverger le front Vercel et Pixel Office du backend.
-    _band = bands.band(_total)
+    _band = bands.band_for(_total, confidence)
+    card["scores"]["score_label"] = _band["label"]
     card["scores"]["score_band"] = _band["key"]
     card["scores"]["score_percentile"] = _band["percentile"]
     _cb("Analyse terminée !")

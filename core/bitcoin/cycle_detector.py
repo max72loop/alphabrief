@@ -9,6 +9,17 @@ Indicateurs utilisés (tous via yfinance, sans clé API) :
   - Conditions de crédit HYG/IEF sur 3m
   - Momentum Euro Stoxx 50 sur 12m / 3m (^STOXX50E)
   - Momentum Nikkei 225 sur 12m / 3m (^N225)
+  - Rotation cycliques/défensives XLY/XLP sur 6m (rotation interne aux
+    actions : un indice peut monter tiré par les défensives en fin de cycle,
+    ce que le momentum brut ne voit pas)
+  - Dollar DXY sur 6m (DX-Y.NYB — conditions financières pour le reste du
+    monde ; seul indicateur qui parle du monde hors US sans passer par une
+    bourse locale)
+  - Anticipations d'inflation TIP/IEF sur 6m (les breakevens tombent avant le
+    PIB en récession ; distingue un ralentissement désinflationniste d'une
+    stagflation, que les autres indicateurs confondent)
+  - Petites / grandes capitalisations IWM/SPY sur 6m (les plus sensibles au
+    crédit : premières à repartir en reprise, premières à lâcher)
 
 Chaque indicateur vote pour une phase avec un poids.
 La phase majoritaire (votes pondérés) est retenue.
@@ -33,6 +44,10 @@ WEIGHTS = {
     'credit':             1,
     'eurostoxx_momentum': 2,
     'nikkei_momentum':    1,
+    'cyclical_defensive': 2,
+    'dollar':             2,
+    'inflation_exp':      2,
+    'small_large':        1,   # US-only, corrélé à XLY/XLP — et rend le total impair (21)
 }
 
 INDICATOR_NAMES = {
@@ -43,6 +58,10 @@ INDICATOR_NAMES = {
     'credit':             'Crédit haut rendement HYG (3m)',
     'eurostoxx_momentum': 'Momentum Euro Stoxx 50 (12m)',
     'nikkei_momentum':    'Momentum Nikkei 225 (12m)',
+    'cyclical_defensive': 'Cycliques / Défensives XLY/XLP (6m)',
+    'dollar':             'Dollar DXY (6m)',
+    'inflation_exp':      "Anticipations d'inflation TIP/IEF (6m)",
+    'small_large':        'Petites / Grandes caps IWM/SPY (6m)',
 }
 
 PHASE_LABELS = {
@@ -193,6 +212,104 @@ def _score_credit(hyg, ief):
         return None, None, None, None
 
 
+def _score_cyclical_defensive(xly, xlp):
+    """Consommation discrétionnaire / biens de base — même logique que le
+    cuivre/or, côté actions. Le ratio monte quand le marché anticipe la
+    croissance, baisse quand il s'en protège, quelle que soit la direction de
+    l'indice."""
+    if xly is None or xlp is None:
+        return None, None, None, None
+    try:
+        common = xly.index.intersection(xlp.index)
+        if len(common) < 60:
+            return None, None, None, None
+        ratio = xly[common] / xlp[common]
+        t6 = round(_momentum(ratio, 6), 1)
+        t3 = _momentum(ratio, 3)
+        if t6 < -10 and t3 > 3:
+            return 'recovery', t6, f'{t6} % / 6m (rebond 3m : +{t3:.1f} %)', 'neutral'
+        if t6 > 5:
+            return 'expansion', t6, f'+{t6} % / 6m', 'positive'
+        elif t6 > 0:
+            return 'slowdown', t6, f'+{t6} % / 6m', 'neutral'
+        elif t6 > -5:
+            return 'slowdown', t6, f'{t6} % / 6m', 'warning'
+        else:
+            return 'recession', t6, f'{t6} % / 6m', 'negative'
+    except Exception:
+        return None, None, None, None
+
+
+def _score_dollar(dxy):
+    """Un dollar qui monte resserre les conditions financières du reste du
+    monde (dette en USD, matières premières) ; un dollar qui baisse = liquidité
+    et appétit pour le risque. Lecture inversée par rapport aux autres
+    momentums."""
+    if dxy is None:
+        return None, None, None, None
+    try:
+        t = round(_momentum(dxy, 6), 1)
+        if t < -4:
+            return 'expansion', t, f'{t} % / 6m — dollar faible', 'positive'
+        elif t < 2:
+            return 'slowdown', t, f'{t:+.1f} % / 6m — stable', 'neutral'
+        elif t < 6:
+            return 'slowdown', t, f'+{t} % / 6m — dollar fort', 'warning'
+        else:
+            return 'recession', t, f'+{t} % / 6m — dollar très fort ⚠', 'negative'
+    except Exception:
+        return None, None, None, None
+
+
+def _score_inflation_exp(tip, ief):
+    """Obligations indexées / nominales de même durée : le ratio suit les
+    anticipations d'inflation. Il monte en reflation (demande forte) et
+    s'effondre en récession, avant le PIB (2008, 2020)."""
+    if tip is None or ief is None:
+        return None, None, None, None
+    try:
+        common = tip.index.intersection(ief.index)
+        if len(common) < 60:
+            return None, None, None, None
+        ratio = tip[common] / ief[common]
+        t = round(_momentum(ratio, 6), 1)
+        if t > 2:
+            return 'expansion', t, f'+{t} % / 6m — reflation', 'positive'
+        elif t > 0:
+            return 'slowdown', t, f'+{t} % / 6m', 'neutral'
+        elif t > -2:
+            return 'slowdown', t, f'{t} % / 6m — désinflation', 'warning'
+        else:
+            return 'recession', t, f'{t} % / 6m — désinflation ⚠', 'negative'
+    except Exception:
+        return None, None, None, None
+
+
+def _score_small_large(iwm, spy):
+    """Petites caps (endettées à taux variable, domestiques) contre S&P 500.
+    Premières à repartir quand le crédit se détend — c'est le signal de
+    reprise le plus net disponible — et premières à lâcher."""
+    if iwm is None or spy is None:
+        return None, None, None, None
+    try:
+        common = iwm.index.intersection(spy.index)
+        if len(common) < 60:
+            return None, None, None, None
+        ratio = iwm[common] / spy[common]
+        t6 = round(_momentum(ratio, 6), 1)
+        t3 = _momentum(ratio, 3)
+        if t6 < -10 and t3 > 3:
+            return 'recovery', t6, f'{t6} % / 6m (rebond 3m : +{t3:.1f} %)', 'neutral'
+        if t6 > 5:
+            return 'expansion', t6, f'+{t6} % / 6m', 'positive'
+        elif t6 > -5:
+            return 'slowdown', t6, f'{t6:+.1f} % / 6m', 'neutral'
+        else:
+            return 'recession', t6, f'{t6} % / 6m', 'negative'
+    except Exception:
+        return None, None, None, None
+
+
 # ─────────────────────────────────────────────
 # Main detection function
 # ─────────────────────────────────────────────
@@ -231,6 +348,11 @@ def detect_economic_phase(force_refresh=False):
         'ief':      'IEF',
         'eurostoxx': '^STOXX50E',
         'nikkei':    '^N225',
+        'xly':       'XLY',
+        'xlp':       'XLP',
+        'dxy':       'DX-Y.NYB',
+        'tip':       'TIP',
+        'iwm':       'IWM',
     }
     raw = {}
     with ThreadPoolExecutor(max_workers=6) as ex:
@@ -247,6 +369,10 @@ def detect_economic_phase(force_refresh=False):
         ('credit',             _score_credit(raw.get('hyg'), raw.get('ief'))),
         ('eurostoxx_momentum', _score_index_momentum(raw.get('eurostoxx'))),
         ('nikkei_momentum',    _score_index_momentum(raw.get('nikkei'))),
+        ('cyclical_defensive', _score_cyclical_defensive(raw.get('xly'), raw.get('xlp'))),
+        ('dollar',             _score_dollar(raw.get('dxy'))),
+        ('inflation_exp',      _score_inflation_exp(raw.get('tip'), raw.get('ief'))),
+        ('small_large',        _score_small_large(raw.get('iwm'), raw.get('SPY'))),
     ]
 
     votes = {'expansion': 0, 'slowdown': 0, 'recession': 0, 'recovery': 0}

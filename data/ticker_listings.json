@@ -1,0 +1,26 @@
+{
+  "equivalences": [
+    {
+      "held": "ASURB.MX",
+      "scored_as": "ASR",
+      "company": "Grupo Aeroportuario del Sureste"
+    },
+    {
+      "held": "BYDDY",
+      "scored_as": "1211.HK",
+      "company": "BYD Company"
+    },
+    {
+      "held": "GOOGL",
+      "scored_as": "GOOG",
+      "company": "Alphabet"
+    },
+    {
+      "held": "RIO",
+      "scored_as": "RIO.AX",
+      "company": "Rio Tinto"
+    }
+  ],
+  "note": "Le symbole détenu et le symbole noté sont deux cotations d'une même société. Fondamentaux identiques ; technicals et momentum viennent de la cotation principale.",
+  "_generated_by": "core/scoring/listings.py --export"
+}

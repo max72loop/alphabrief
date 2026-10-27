@@ -52,6 +52,12 @@ _RETRY_AFTER_CAP_S = 120       # plafond au cas où FMP renvoie une valeur absur
 #   b) quota du plan atteint         → PERMANENT jusqu'au reset ou à un upgrade,
 #      corps « Limit Reach . Please upgrade your plan ».
 #
+# Depuis le 2026-09-08 s'ajoute un cas (c) : HTTP 402 « Payment Required » sur
+# tous les endpoints. C'est (b) sous un autre code, et il ne passait par aucune
+# des deux branches — il tombait dans le `except RequestException` générique,
+# donc dans le backoff complet, exactement ce que ce coupe-circuit existe pour
+# éviter. Traité comme (b) depuis le 2026-09-22.
+#
 # Le client traitait les deux pareil. Résultat au 2026-09-02, où tous les
 # endpoints (y compris `profile`) répondent (b) : chaque ticker brûlait
 # 5+15+45 = 65 s de sommeil par endpoint, soit ~7,5 min pour les 7 appels, avant
@@ -75,8 +81,8 @@ def _looks_like_plan_limit(body: str) -> bool:
     return any(m in low for m in _PLAN_LIMIT_MARKERS)
 
 
-def _trip_plan_breaker(endpoint: str, symbol: str) -> None:
-    """Ouvre le circuit après un 429 « quota du plan »."""
+def _trip_plan_breaker(endpoint: str, symbol: str, cause: str = "429_plan_limit") -> None:
+    """Ouvre le circuit après une réponse « le plan ne permet pas cet appel »."""
     global _plan_exhausted_until, _plan_exhausted_logged
     with _plan_lock:
         _plan_exhausted_until = time.monotonic() + _PLAN_EXHAUSTED_COOLDOWN_S
@@ -87,8 +93,9 @@ def _trip_plan_breaker(endpoint: str, symbol: str) -> None:
             "evt": "fmp_plan_exhausted",
             "endpoint": endpoint,
             "symbol": symbol,
+            "cause": cause,
             "cooldown_s": _PLAN_EXHAUSTED_COOLDOWN_S,
-            "note": "quota du plan atteint — appels FMP court-circuités, "
+            "note": "plan insuffisant — appels FMP court-circuités, "
                     "les fondamentaux passent par yfinance",
         }))
 
@@ -194,6 +201,16 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
                         "endpoint": endpoint,
                         "symbol": symbol,
                     }))
+                    return None
+
+                # 402 « Payment Required » : état de facturation, jamais une
+                # rafale. Depuis le 2026-09-08 c'est la réponse de FMP sur TOUS
+                # les endpoints, à la place du 429 « Limit Reach » — le
+                # coupe-circuit ne voyait donc plus rien et chaque endpoint
+                # repayait 5+15+45 s de backoff avant le repli yfinance, qui
+                # marche. Même traitement que (b) : on rend la main tout de suite.
+                if resp.status_code == 402:
+                    _trip_plan_breaker(endpoint, symbol, cause="402_payment_required")
                     return None
 
                 resp.raise_for_status()

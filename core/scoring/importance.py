@@ -4,6 +4,8 @@ import math
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+from core.scoring.potential import benefice_exceptionnel
+
 
 def _f(x: Any) -> Optional[float]:
     try:
@@ -219,6 +221,16 @@ def build_importance_items(card: Dict[str, Any], limit: int = 10) -> List[Dict[s
         else:
             _add(items, "FCF yield moyen", 55, f"FCF yield ~{fcfy:.1f}% : niveau intermédiaire.", "neutral")
 
+    # Bénéfice exceptionnel : même garde-fou que le moteur. Le P/E TTM et le PEG
+    # ne sont plus des arguments, la fiche le dit une fois au lieu de les vanter.
+    pe_exceptionnel = benefice_exceptionnel(pe, forward_pe, roe)
+    if pe_exceptionnel:
+        _add(items, "Bénéfice exceptionnel probable", 80,
+             f"P/E ~{pe:.1f}x mais forward P/E {'~' + format(forward_pe, '.1f') + 'x' if forward_pe else 'n/d'}"
+             f"{f', ROE ~{roe:.1f}%' if roe is not None and roe < 0 else ''} : "
+             "P/E et PEG écartés de la note.", "neutral")
+        pe = None
+
     # P/E TTM
     if pe is not None:
         if pe <= 0:
@@ -234,7 +246,7 @@ def build_importance_items(card: Dict[str, Any], limit: int = 10) -> List[Dict[s
 
     # PEG Ratio — priorité au pegRatio Yahoo Finance (croissance EPS 5 ans),
     # sinon calcul interne depuis P/E TTM / CAGR CA
-    peg_stored = _f(val.get("peg_ratio"))
+    peg_stored = None if pe_exceptionnel else _f(val.get("peg_ratio"))
     if peg_stored is not None and peg_stored > 0:
         peg = peg_stored
     elif pe is not None and cagr is not None and cagr > 0:

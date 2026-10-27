@@ -38,14 +38,20 @@ def _normalize_dividend_yield(raw_yield: Optional[float]) -> Optional[float]:
 
     WARNING: double-divide risk if upstream already in pct. La fonction
     tente de détecter le format par heuristique mais ce n'est pas fiable
-    à 100%. Si val > 100, on considère que c'est bogué et on retourne 0.0.
+    à 100%.
+
+    Une valeur aberrante rend `None` (« on ne sait pas »), jamais 0.0 (« ne
+    verse pas de dividende ») : depuis que le pilier Valeur conditionne ses
+    composants à la disponibilité, ces deux cas ne mènent plus au même endroit.
+    `None` sort le composant du calcul ; 0.0 y entre comme un fait — l'absence
+    de dividende est une information, une donnée corrompue n'en est pas une.
     """
     if raw_yield is None:
         return None
     val = float(raw_yield)
     # Guard : valeur > 100% impossible en pratique → données corrompues.
     if val > 100.0:
-        return 0.0  # bogus
+        return None  # bogus, et on le dit
     if val > 1.0:
         return val / 100.0
     elif val > 0.20:

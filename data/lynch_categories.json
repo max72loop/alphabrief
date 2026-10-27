@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "key": "slow",
+      "label": "Croissance lente",
+      "emoji": "🐢",
+      "definition": "Grande société mûre qui croît à peine plus vite que l'économie ; on la garde pour le dividende.",
+      "surveiller": [
+        "Le dividende : versé sans interruption, et couvert par les bénéfices.",
+        "La part des bénéfices distribuée : au-delà de ~70 %, le dividende devient fragile.",
+        "Un cours qui a déjà bien monté : peu de potentiel au-delà, on peut alléger."
+      ],
+      "manual_only": false
+    },
+    {
+      "key": "stalwart",
+      "label": "Valeur solide",
+      "emoji": "🏛️",
+      "definition": "Grande société qui croît régulièrement (~10 %/an) ; protège dans les mauvaises passes, rarement un multiple.",
+      "surveiller": [
+        "Le P/E par rapport à son historique : payé trop cher, même une valeur solide stagne.",
+        "Gagner 30 à 50 % puis vendre pour recommencer : Lynch les fait tourner.",
+        "Une diversification hasardeuse qui ralentirait la croissance."
+      ],
+      "manual_only": false
+    },
+    {
+      "key": "fast",
+      "label": "Croissance rapide",
+      "emoji": "🚀",
+      "definition": "Petite ou jeune société qui croît de 20 % ou plus par an ; là sont les multiples, et les chutes.",
+      "surveiller": [
+        "Le PEG : un P/E au-dessus du taux de croissance, c'est payer d'avance.",
+        "Que la croissance se répète ailleurs (nouveaux marchés) au lieu de s'essouffler.",
+        "Le bilan : la croissance financée par la dette casse au premier trou d'air."
+      ],
+      "manual_only": false
+    },
+    {
+      "key": "cyclical",
+      "label": "Cyclique",
+      "emoji": "🔄",
+      "definition": "Bénéfices qui montent et descendent avec l'économie ; tout est dans le moment.",
+      "surveiller": [
+        "Le piège du P/E bas : il est au plus bas au sommet du cycle, quand les bénéfices culminent.",
+        "Les stocks, les prix de vente, les capacités : ils annoncent le retournement.",
+        "La phase du cycle économique déclarée (onglet Marché)."
+      ],
+      "manual_only": false
+    },
+    {
+      "key": "turnaround",
+      "label": "Redressement",
+      "emoji": "🩹",
+      "definition": "Société en difficulté qui peut se relever ; gros gain ou perte totale.",
+      "surveiller": [
+        "La trésorerie face à la dette : de quoi tenir jusqu'au redressement ?",
+        "Le plan : quelles activités coupées, quels coûts réduits, à quelle échéance ?",
+        "Le retour aux bénéfices trimestre après trimestre (onglet Résultats)."
+      ],
+      "manual_only": false
+    },
+    {
+      "key": "asset",
+      "label": "Valeur d'actifs",
+      "emoji": "💎",
+      "definition": "Société assise sur des actifs que le marché ignore (immobilier, participations, trésorerie, déficits reportables).",
+      "surveiller": [
+        "La valeur réelle des actifs face à la capitalisation.",
+        "La dette qui viendrait les grignoter.",
+        "Un déclencheur : vente d'actifs, rachat, activiste."
+      ],
+      "manual_only": true
+    }
+  ],
+  "limite": "Catégorie proposée à partir de la croissance du CA sur 3 ans, des pertes et du secteur. Lynch raisonne sur les bénéfices et la taille : corrige-la quand tu connais mieux la société. « Valeur d'actifs » se pose uniquement à la main.",
+  "_generated_by": "core/lynch/categories.py --export"
+}

@@ -153,6 +153,35 @@ BANDS: List[Dict[str, Any]] = [
 # parallèle. Importé par agents/alphabrief/main.py.
 STRONG_BUY_MIN: int = BANDS[0]["min_score"]
 
+# Plancher de couverture des données.
+#
+# La note ne répond plus qu'à une question : « cette société vaut-elle quelque
+# chose ». Elle ne dit plus rien sur ce qu'on ignore — c'était le rôle du
+# facteur `0.8 + 0.2*confiance/100` retiré de core/generator.py, qui rabotait
+# la note pour un motif étranger à sa définition et déplaçait 4 cartes sur 39
+# d'une bande entière (NU et HOOD perdaient « Exceptionnel »).
+#
+# Le garde-fou passe donc sur l'ÉTIQUETTE, pas sur le nombre : sous ce seuil de
+# confiance, la carte annonce qu'elle ne sait pas assez, au lieu d'habiller une
+# note bâtie sur des trous. La note brute reste lisible à côté.
+#
+# 60 n'est pas un chiffre rond posé au hasard : la distribution réelle des
+# confiances au 2026-09-07 coupe d'elle-même à cet endroit. Les quatre cartes
+# pauvres en données sont à 51, 56, 57 et 59 ; la suivante est à 74, et la
+# médiane à 93,5. Le seuil tombe dans un trou de quinze points, donc aucune
+# carte n'y est à un point près, et il ne concerne que 4 cartes sur 39.
+CONFIDENCE_FLOOR: int = 60
+
+_INSUFFISANT: Dict[str, Any] = {
+    "key": "insuffisant",
+    "label": "Données insuffisantes",
+    "min_score": 0,
+    "percentile": None,
+    "share_pct": None,
+    "tone": "muted",
+    "blurb": "Trop de données manquantes pour situer cette société.",
+}
+
 _UNKNOWN: Dict[str, Any] = {
     "key": "inconnu",
     "label": "N/A",
@@ -179,6 +208,24 @@ def band(score: Optional[float]) -> Dict[str, Any]:
     return dict(BANDS[-1])
 
 
+def band_for(score: Optional[float], confidence: Optional[float]) -> Dict[str, Any]:
+    """Bande tenant compte de la couverture des données.
+
+    C'est le point d'entrée que doivent utiliser les surfaces d'affichage : il
+    garantit qu'une note bâtie sur des trous ne porte jamais un verdict. `band()`
+    reste disponible pour les usages qui n'ont pas la confiance sous la main.
+    """
+    if score is None:
+        return dict(_UNKNOWN)
+    if confidence is not None:
+        try:
+            if float(confidence) < CONFIDENCE_FLOOR:
+                return dict(_INSUFFISANT)
+        except (TypeError, ValueError):
+            pass
+    return band(score)
+
+
 def score_label(score: Optional[float]) -> str:
     """Libellé seul — remplace core.generator._score_label."""
     return band(score)["label"]
@@ -199,6 +246,8 @@ def describe() -> Dict[str, Any]:
     return {
         "bands": [dict(b) for b in BANDS],
         "strong_buy_min": STRONG_BUY_MIN,
+        "confidence_floor": CONFIDENCE_FLOOR,
+        "insufficient_band": dict(_INSUFFISANT),
         "calibration_window_days": CALIBRATION_WINDOW_DAYS,
         "note": (
             "Bornes = percentiles de la distribution réelle du moteur. "

@@ -14,7 +14,7 @@ retirée au lot 1 (2026-07-31).
 - **Base** : **Postgres 16 local**, base `alphabrief`, sur le VPS
 - **Interface** : les cartes AlphaBrief du cockpit Pixel Office (API 127.0.0.1:4300)
 - **Data** : yfinance pour les fondamentaux, FMP hors service — voir « Gotchas »
-- **LLM** : DeepSeek — enrichissement business snapshot
+- **LLM** : Haiku 4.5 via OpenRouter (`OPENROUTER_API_KEY`) — résumé, moats, catalyseurs, risques de la fiche ; Sonnet 5 pour Sage
 
 **Supabase a été abandonné le 2026-08-01.** Un service managé multi-utilisateur
 n'apportait rien à un produit mono-utilisateur et coûtait une clé partagée,
@@ -198,6 +198,28 @@ d'empiler une contradiction.
   expose l'état, `reset_plan_breaker()` le referme après un changement de plan.
   Le health check sonde FMP et publie `plan_exhausted` — volontairement **pas**
   dans `issues`, qui notifierait Telegram toutes les 30 min pour un état stable.
+  **Depuis le 2026-09-08, FMP répond aussi `402 Payment Required`**, et c'est ce
+  code-là qu'il sert au scoring de 5 h. Le coupe-circuit ne regardait que le
+  429 : le 402 tombait dans le `except RequestException` générique, donc dans le
+  backoff complet — exactement ce que ce coupe-circuit existe pour éviter. Le
+  22/09, les 402 couraient de 05:00:02 à 05:43:26 sans que le circuit ne s'ouvre
+  une seule fois : **39 appels d'endpoint × 65 s ≈ 42 min de `time.sleep` par
+  matin**, soit la quasi-totalité de la fenêtre de scoring (05:00 → 05:44,
+  stable sur cinq jours). Corrigé le 2026-09-22 : un 402 ouvre le circuit
+  immédiatement, comme un 429 « Limit Reach ». La leçon vaut au-delà de FMP —
+  **un coupe-circuit câblé sur un code de statut meurt en silence le jour où le
+  fournisseur en change**, et rien ne le dit puisque le repli, lui, marche.
+  Verrouillé par `tests/core/providers/test_fmp_client.py::test_http_402_ouvre_le_coupe_circuit_sans_backoff`,
+  qui vérifie qu'une seule requête part.
+- **Un fournisseur qui tombe se dit UNE fois (2026-09-22).** `plan_exhausted`
+  reste hors de `issues` — un état stable répété toutes les 30 min n'apprend
+  qu'à ignorer les health checks. Mais la BASCULE se signale, à l'aller comme au
+  retour : `main.py::_signaler_bascule_fournisseur` compare l'état à
+  `alphabrief:fournisseur:<nom>` en Redis (FMP, yfinance) et n'envoie une ligne
+  Telegram qu'au changement. **La première observation est muette** : un
+  redéploiement n'annonce pas une panne déjà connue. C'est ce qui manquait le
+  08/09 — l'état n'avait pas changé (FMP était déjà mort), mais sa *signature*
+  si, et personne ne l'a su pendant quatorze jours.
 - **`fundamentals_yf` complète TOUS les tickers, sans condition.** Le nom trompe :
   ce module interroge FMP d'abord, puis `_complete_from_yf` comble tout champ
   resté vide. La complétion ne se limite plus aux tickers internationaux, et
@@ -237,13 +259,83 @@ d'empiler une contradiction.
   `python -m core.cli analyze TICKER` ne fait donc
   PAS apparaître la note dans le cockpit, et réciproquement. Pour alimenter les
   deux, passer par le chemin du daemon (`_save_card` + `_save_score`) en plus.
-- **Le libellé se lit sur le score AFFICHÉ, pas sur le score brut.** Le FIX I4
-  (audit 2026-05-13) étiquetait `breakdown["total"]` avant le facteur de confiance,
-  si bien que la carte montrait le nombre d'après et le mot d'avant : « HOOD 59 ·
-  Exceptionnel » quand Exceptionnel commence à 60. Sept cartes sur 38 étaient dans
-  ce cas au 2026-09-03. Un barème publié que la carte dément ne vaut pas mieux que
-  les quatre barèmes contradictoires que `bands.py` a remplacés. Verrouillé par
+- **Il n'y a plus qu'UN score, et il ne parle que de la société.** Le facteur
+  `0.8 + 0.2*confiance/100` a été retiré de `core/generator.py` le 2026-09-07.
+  Il rabotait la note selon la DISPONIBILITÉ DES DONNÉES, si bien que le même
+  nombre répondait à deux questions — « cette société vaut-elle quelque chose »
+  et « qu'en sait-on » — sans que le lecteur puisse les démêler. Il ne pouvait
+  que baisser, jamais relever, et comme les bandes ne font que 4 à 6 points de
+  large il déplaçait **4 cartes sur 39 d'une bande entière** au 2026-09-07
+  (NU 61→58 et HOOD 62→59 perdaient « Exceptionnel »).
+  Son histoire dit assez qu'il n'a jamais trouvé son réglage : plancher relevé
+  de 0,5 à 0,8 (FIX I1), puis étiquette déplacée d'avant à après le facteur
+  (FIX I4) parce que la carte affichait le nombre d'après et le mot d'avant.
+  **Le garde-fou a changé de place, il n'a pas disparu** : sous
+  `bands.CONFIDENCE_FLOOR` (60), `bands.band_for()` rend la bande
+  « Données insuffisantes » au lieu d'un verdict. Le seuil n'est pas arbitraire :
+  la distribution des confiances coupe d'elle-même là (4 cartes à 51-59, la
+  suivante à 74, médiane 93,5). Toujours verrouillé par
   `tests/test_scoring_smoke.py::test_label_matches_displayed_score`.
+- **Le moteur note sous un secteur TRADUIT, pas sous le libellé yfinance
+  (2026-09-23).** Ses tables (`potential._SECTOR_*`, `momentum._SECTOR_ETFS`)
+  sont en GICS, yfinance parle Morningstar : « Healthcare », « Consumer
+  Cyclical », « Consumer Defensive », « Basic Materials » n'y figuraient pas,
+  donc bornes par défaut et momentum contre le SPY pour ces secteurs.
+  `core/scoring/secteur.py::secteur_moteur` traduit (via `normalize_sector`),
+  et **un secteur `manuel` de `societes` gagne** (CHYM, néobanque rangée en
+  Technology). `generate_card` pose `identity.sector_note`, que lisent
+  `compute_potential_score` et le momentum relatif ; `identity.sector` reste
+  le libellé brut. Piège : « Financials » et « Financial Services » sont DEUX
+  barèmes (bancaire / fintech) ; le GICS les confond, la traduction renvoie
+  donc vers « Financial Services », celui qu'ont toujours eu les financières.
+  Impact mesuré sur les 40 cartes du 23/09 : 8 bougent de ±1-2, une bande
+  change (1211.HK 49 → 50, Faible → Modéré).
+- **Un bénéfice exceptionnel n'entre plus dans la Valeur (2026-09-23).**
+  `potential.benefice_exceptionnel(pe, forward_pe, roe)` : P/E TTM positif et
+  (forward > 2 × TTM, ou ROE < 0). P/E TTM et PEG (y compris le pegRatio Yahoo)
+  sortent du pilier, le forward P/E reste sans comparaison au TTM. Même règle
+  dans `importance.py`, qui affiche « Bénéfice exceptionnel probable » au lieu
+  de « P/E attractif ». CHYM : Valeur 65 → 33, note 60 → 59.
+  Tests : `tests/core/scoring/test_secteur_et_benefice.py`.
+- **`score_band` et `confidence` sont persistés — l'API ne redérive plus rien.**
+  `alphabrief_card.js` recalculait la bande depuis le seul score. Depuis qu'une
+  carte peut être « Données insuffisantes » — un état qu'aucun seuil de score ne
+  permet de retrouver — cela affichait le ton et le blurb de « Faible » à côté du
+  libellé « Données insuffisantes ». Deux colonnes ajoutées à `ticker_scores`, et
+  `bands.py` exporte `insufficient_band` à part (elle n'a pas de borne).
+- **Un composant sans donnée n'entre plus dans un pilier.** Qualité et Risque
+  appliquaient déjà cette règle (FIX I5) ; **Valeur ne l'appliquait pas** — six
+  de ses neuf composants étaient inconditionnels, donc une société dont on
+  ignorait tout de la valorisation recevait Valeur = 50 bâti sur six 50 fantômes,
+  sur le pilier le plus lourd des fondamentaux (32 %). Au 2026-09-07 : 8 cartes
+  sur 39 sans FCF yield, 8 sans EV/EBITDA, 5 sans PEG. `beta` et `debt` étaient
+  les deux derniers inconditionnels de Risque (45 % du pilier). Corrigé le
+  2026-09-07 — chaque pilier a désormais un repli neutre si sa liste finit vide.
+  Corollaire : `_normalize_dividend_yield` rend `None` sur valeur aberrante et
+  non plus `0.0`, sinon une donnée corrompue se déguisait en « ne verse pas de
+  dividende », qui est maintenant un fait qui compte.
+- **`roic` n'a JAMAIS contenu du ROIC — c'était du ROA.** Les deux chemins du
+  provider l'alimentaient avec le rendement des actifs (`returnOnAssetsTTM` côté
+  FMP, `returnOnAssets` côté yfinance) pendant que `compute_roic_score` le notait
+  sur une échelle ROIC (« > 20 % : wide moat probable »). Le ROA étant très
+  inférieur au ROIC dès qu'il y a du levier ou des actifs lourds, le composant
+  démolissait exactement les compounders de qualité — KO stockait 13,3, soit
+  environ la moitié de son ROIC réel. Renommé `roa` / `compute_roa_score` le
+  2026-09-07, paliers redescendus (médiane S&P non financière ≈ 5-7 %), et
+  neutralisé pour les banques et assureurs via `is_financial` comme
+  `ebit_margin`. **Après ce changement il FAUT purger `data/cache/*_fundamentals.json`**
+  (fait) : les payloads en cache portent encore l'ancienne clef.
+- **La confiance doit rester le miroir exact du moteur.** `confidence.py:FEATURES`
+  avait dérivé : ~17 entrées lues par `compute_potential_score` n'y figuraient
+  pas (roa, net_margin, eps_growth, current_ratio, insider/institutional,
+  accruals, altman_z, short_interest, gm_trend, price_to_ocf, sma_50, macd_line,
+  momentum_1m/3m/6m, tous les relative_momentum_*), si bien qu'une carte pouvait
+  annoncer « confiance 96 » en ignorant un tiers de ce que le moteur lisait. Anodin
+  tant que la confiance n'était qu'un rabot ; déterminant maintenant qu'elle
+  commande l'étiquette. Verrouillé dans les deux sens par
+  `tests/core/scoring/test_confidence_couvre_le_moteur.py`, qui lit l'AST de
+  `compute_potential_score` — ne pas « réparer » ce test en y ajoutant une
+  exception, ajouter l'entrée à `FEATURES`.
 - **Le barème de notation a une source de vérité unique** : `core/scoring/bands.py`.
   Tout ce qui étiquette, colore ou alerte sur un score importe d'ici — rien ne
   redéfinit ses propres bornes. Avant, le même score portait quatre verdicts
@@ -254,6 +346,180 @@ d'empiler une contradiction.
   scores sur 90 jours étaient 37 tickers mesurés 75 fois. `--check` compare aux
   percentiles observés, `--export` régénère `data/score_bands.json` que sert
   l'API Pixel Office. La recalibration reste une décision manuelle.
+- **La calibration du barème est un job, plus un fichier oublié.** `scripts/backtest.py`
+  existait mais n'avait tourné qu'une fois, le 2026-05-24 ; sa sortie s'affichait
+  bien dans le cockpit (`BacktestBlock`), en perf ABSOLUE — donc illisible : dans
+  un marché qui monte, toutes les tranches paraissent bonnes. Réécrit le
+  2026-09-07 : perf **en excès de l'ETF du secteur** (le même que le momentum
+  relatif, `_SECTOR_ETFS`), **fenêtres disjointes** (l'ancienne version comptait
+  2748 observations tirées de 47 tickers, soit un N indépendant gonflé d'environ
+  20×), **intervalle bootstrap tiré sur les tickers** et non sur les observations,
+  et découpage sur les **bandes publiées** plutôt que des tranches arbitraires.
+  Le chiffre à retenir est l'écart bande haute − bande basse. Job mensuel
+  `run_backtest` (1er à 4h), `--backtest` en manuel, alerte Telegram si l'écart
+  est négatif. **`scores_history` porte désormais `price` et les trois
+  sous-scores** (SQLite et Postgres) : sans eux, aucune analyse par pilier n'était
+  possible et le backtest re-téléchargeait tout yfinance à chaque exécution.
+  Premier résultat honnête (2026-09-07, 52 tickers, 262 observations) : écart
+  −0,75 pt à 30 j et −11,4 pts à 90 j — mais la bande haute ne compte que 5
+  observations à 90 j, et seule « Fort » a un intervalle entièrement sous zéro.
+  **Lire l'intervalle avant de conclure** ; l'écran affiche « pas encore
+  mesurable » sous 20 observations sur la bande haute.
+  **Mesure à J+7 (2026-09-22, 53 tickers, 8 mois, fenêtres disjointes)** — même
+  règle que le verdict Sage du 19/10, pour que les deux se lisent avec la même
+  règle. Écart haut − bas : **−0,33 pt** (n_haut 68 / n_bas 302). Quatre bandes
+  sur cinq ont un intervalle qui enjambe zéro, donc pas de signal ; la seule
+  exception est **« Exceptionnel » à −0,54 % [−1,36 ; −0,07]**, intervalle
+  entièrement sous zéro sur 68 observations et 16 tickers. À prendre pour ce que
+  c'est : cinq bandes × trois fenêtres testées, une borne haute à −0,07 est
+  fragile, ce n'est pas une découverte. Ce qui tient, c'est le négatif : **à
+  l'échelle où l'on juge Sage, l'échelle de notes ne trie pas.** Reproduire sans
+  rien écrire — `backtest.py::main` écrase `backtest_latest.json`, que le
+  cockpit affiche ; appeler `run([7, 30, 90])` et `afficher()` directement.
+- **Méthode de notation : mesurer avant de changer (2026-09-28).** Trois pièces :
+  · **La moitié prix (T + M) ne trie rien, et le momentum 12-1 non plus.**
+    `scripts/backtest_prix.py` rejoue le VRAI moteur sur des indicateurs
+    recalculés à chaque fin de mois, 2016 → 2026, S&P 500 actuel (402 titres
+    téléchargés sur 500), excès sur l'ETF du secteur. Corrélation de rang
+    moyenne : T+M −0,005 (t −0,3) à 21 j, +0,005 (t +0,2) à 63 j ; 12-1 relatif
+    −0,007 / −0,003. Aucun |t| ≥ 1. Le remplacement prévu (12-1) n'a donc PAS
+    été branché. Biais du survivant assumé (il gonfle le momentum, et même
+    ainsi rien ne sort). Cours en cache : `data/cache/backtest_prix_cours.pkl`.
+  · **Score en ombre** `core/scoring/ombre.py` : une métrique par idée (ROA,
+    1/P/E forward, CAGR CA 3 a, dette nette/EBITDA) classée en percentile DANS
+    son secteur contre `data/ombre_reference.json` (`scripts/reference_ombre.py`,
+    S&P 500 stratifié 18/secteur seed 42), + le 12-1 relatif brut. Calculé par
+    le daemon à chaque scoring, écrit dans `scores_history.ombre_json`, jamais
+    affiché. `_ombre()` avale toute exception : il ne doit jamais bloquer le
+    score de prod. La référence est chargée UNE fois par process — la
+    reconstruire impose un redémarrage du daemon.
+  · **`scores_history.engine_version`** = `potential.ENGINE_VERSION`, à changer
+    à chaque modification qui déplace des notes. `scripts/backtest.py` publie
+    désormais `correlations` (IC de rang par date, moyenné, t) pour le score,
+    les sous-scores, chaque pilier et l'ombre, et `engine_versions`. Règle de
+    décision : un signal sans IC positif à t ≥ 2 ne mérite aucun poids. Les
+    piliers ne sont historisés que depuis le 07/09 : pas de verdict avant
+    plusieurs mois.
+- **Série 3 (2026-09-18) — ce qui est vivant depuis :**
+  · `flux` (apports/retraits) s'écrit depuis la carte de compte du cockpit ;
+    la ligne « Compte » des horizons est **hors apports nets** (voir
+    `pixel-office-api/routes/patrimoine.js::horizonsCompte`). La courbe
+    `nav_daily` reste brute, apports compris — c'est voulu.
+  · Une position se **clôture** (`ouverte=false`) et s'**ajuste** depuis la
+    ligne (`⋯`) : `POST /positions/:id/snapshot` accepte `base_eur`, qui
+    réécrit la `valeur` du snapshot d'ouverture = la base du P&L. Pas de PRU,
+    juste une base que Max tient à jour. Toute écriture invalide le cache de
+    prix live.
+  · **Sage lit `societes.these`** (`sage_advisor._theses`, suffixe « thèse de
+    Max : « … » » sur les lignes détenues et les candidats) et sa règle dit
+    que la thèse prime : il ne propose une vente qu'en nommant ce qui la
+    contredit. Sans thèse, chiffres seuls.
+  · Le Radar du cockpit montre la watchlist entière groupée par bande
+    (`SuiviBlock`, `alphaShared.scoreBandFor(score, confiance)` — sous
+    `confidence_floor`, « Données insuffisantes », jamais « Faible »).
+- **Une alerte = un franchissement de bande (2026-09-18).** `_check_alert`
+  (daemon) compare `bands.band_for(score, confiance)` d'aujourd'hui à celle du
+  dernier relevé (`_get_latest_row`, avec sous-scores) : types `BAND_UP` /
+  `BAND_DOWN`, message « Fort → Modéré · momentum −12 » (le pilier qui a le plus
+  bougé), **sans le ticker**. Plus de seuil local : `alert_score_delta` et
+  `strong_buy_score` ont disparu de `DEFAULT_CONFIG`. « Données insuffisantes »
+  n'est pas une bande, rien ne se déclenche en y entrant/sortant. Rejeu du
+  18/09 : 2 à 10 franchissements/jour sur 43 titres (contre 199 STRONG_BUY
+  accumulés avant). Le rapport de 7h liste « 🔔 Changements de bande », mes
+  titres d'abord, et cite `societes.these` sous un titre détenu qui DESCEND
+  (`_alert_lines`). Les anciens types en base restent affichables tels quels.
+- **La couche IA des fiches a tourné pour la première fois le 2026-09-18.**
+  `llm_enricher.py` visait DeepSeek avec une clé qui n'a jamais existé →
+  `None` silencieux, 0 fiche sur 40 avec un résumé. Désormais OpenRouter +
+  Haiku 4.5, même client que Sage, prompt en français, `segments` /
+  `top_competitors` retirés du contrat. Sortie validée (`_parse`) : invalide →
+  `None` et **pas de cache** (48 h, `utils/cache.py::SECTION_TTL["llm"]`).
+  Persisté dans `ticker_scores.catalysts` / `key_risks` (JSONB, ajoutés après
+  `pillars`, écrits seulement si non vides), servis par `/api/alphabrief/card`
+  (`a_surveiller`), affichés dans la fiche avec les `moat_tags`. Les fiches
+  se remplissent au fil des scorings (cache vide → un appel par ticker le
+  premier matin). Piège vu à `make db-diff` : `nav_daily` (créée le 11/09 par
+  l'API Pixel Office) n'est PAS dans `db/schema.sql` — dérive préexistante,
+  la miroir ne la connaît pas.
+- **Couche « phase de cycle » (2026-09-19) — une grille de lecture, jamais un
+  signal.** `core/cycle/mapping.py` porte la table secteur GICS → phase
+  (Stovall / Fidelity), constante VERSIONNÉE et exportée en `data/cycle_mapping.json`
+  au boot du daemon, comme le barème et les équivalences ; l'API ne redéclare
+  jamais la table. `societes.secteur_gics` (+ `secteur_source`,
+  `secteur_updated_at`, migration `2026_09_19_cycle.sql`) est posé par
+  `core/cycle/secteurs.enregistrer` depuis `writer.write_score`, sous le ticker
+  NOTÉ, et **jamais écrasé** (une correction manuelle → `secteur_source='manuel'`
+  tient). La source réelle est celle de la fiche — FMP étant mort, c'est
+  yfinance (taxonomie Morningstar normalisée en GICS par `normalize_sector`,
+  qui rend `None` sur un libellé inconnu, jamais une devinette). La phase est
+  **DÉCLARÉE** par Max (`cycle_phase_declarations`, journal en ajout seul, datée),
+  pas lue du détecteur de `core/bitcoin/cycle_detector.py` : celui-ci vote sur
+  des prix, les entrées macro du modèle (10 a − 3 m, ISM, chômage, CPI core)
+  ne sont pas branchées. Mêmes clés de phase des deux côtés (`recovery`,
+  `expansion`, `slowdown`, `recession`), libellé « Fin de cycle » pour `slowdown`.
+  Côté cockpit : `positions_dashboard.py` porte `classe` et `secteur_gics` par
+  ligne (liste plate, `alpha_probe.py` d'Alfred en dépend), l'API croise dans
+  `lib/alphabrief_cycle.js` (pure, `validate_cycle_lecture.js`), route
+  `/api/alphabrief/cycle/lecture` + `PUT …/cycle/phase`, composant
+  `CycleLecture.jsx` sous la bande de phase. La limite empirique (Molchanov
+  2024 : 0,16 %/mois ; Stangl 2009 : −2,3 %/an) est affichée en clair, et
+  l'Expansion est marquée « peu informatif ». Tests :
+  `ALPHABRIEF_DSN="dbname=alphabrief_mirror" pytest tests/core/cycle`.
+- **Catégories de Peter Lynch (2026-10-04) — grille de lecture, le score n'en
+  dépend pas.** `core/lynch/categories.py` (pur, `VERSION`, seuils, libellés,
+  « ce que Lynch surveille », export `data/lynch_categories.json` au boot du
+  daemon) et `core/lynch/store.py` (`societes.lynch_categorie/_source/_regle/
+  _updated_at`, migration `2026_10_04_lynch.sql`, appliquée). Règle, premier cas
+  qui s'applique : perte nette ET CA 3 a < 10 % → redressement ; secteur Energy/
+  Materials/Industrials → cyclique ; CA 3 a ≥ 20 % → croissance rapide ; ≥ 5 % →
+  valeur solide ; sinon croissance lente ; CA inconnu → non classée. « Valeur
+  d'actifs » : jamais proposée, posée à la main. **Contrat inverse du secteur** :
+  la règle est RECALCULÉE à chaque `write_score` (la croissance bouge), mais une
+  ligne `lynch_source='manuel'` n'est jamais touchée ; `declarer(t, None)` la rend
+  aux règles. La croissance du CA remplace celle des bénéfices (`earningsGrowth`
+  trimestriel, trop bruité) — la règle affichée le dit. Écrite par Pixel Office
+  via `python -m core.lynch.store --set T CLE | --reset T`. `positions_dashboard.py`
+  porte `lynch_categorie` par ligne (répartition du patrimoine). **Sage : prêt,
+  ÉTEINT** (`SAGE_LYNCH = False`) jusqu'au verdict v2 du 19/10 ; l'allumer passe
+  le prompt en v3. Tests : `pytest tests/core/lynch tests/core/providers/test_sage_lynch.py`
+  (+ `ALPHABRIEF_DSN="dbname=alphabrief_mirror"` pour les écritures).
+- **`societes.these` est vivante depuis le 2026-09-17** — la table dormait
+  depuis le schéma du 31/07. Lue par `GET /api/alphabrief/card` (champs `these`,
+  `these_updated_at`), écrite par `PUT /api/alphabrief/societe` (Pixel Office),
+  saisie dans la fiche Ticker du cockpit, sauvée sans bouton. **Clé = ticker
+  NOTÉ** (`listings.resolve`, GOOGL→GOOG) : une thèse par société, jamais une
+  par cotation — même règle que le score. `notes` et `statut` restent inutilisés.
+- **`ticker_events` a enfin un lecteur (2026-09-17).** Synchronisée à chaque
+  scoring depuis des mois, lue par personne. Désormais : section « 📅 Résultats
+  cette semaine » du rapport de 7h (`_upcoming_earnings`, fenêtre 7 j, détenus
+  d'abord, absente si vide, aussi dans `report_*.json::earnings_week`) et
+  `prochains_resultats` sur chaque ligne de `/api/patrimoine/positions` (le
+  cockpit ne l'affiche que sous 14 j). Les dates yfinance au-delà du prochain
+  trimestre sont souvent estimées — les fenêtres courtes sont là pour ça.
+- **Résultats trimestriels de mes sociétés (2026-09-29).** Table
+  `resultats_trimestriels` (migration `2026_09_29_resultats_trimestriels.sql`,
+  appliquée), une ligne par publication, clé = ticker NOTÉ. Remplie par
+  `core/providers/trimestres_yf.py::sync_detenus` à la fin du scoring du daemon
+  (actions des positions ouvertes seulement), lue par l'onglet « Résultats » de
+  Pixel Office (`/api/alphabrief/resultats`). Verdict = BPA publié contre
+  consensus, `SEUIL_VERDICT_PCT` = ±2 %, calculé en Python et stocké — l'API
+  et l'écran ne le recalculent jamais. Lecture IA (Haiku, même client que
+  `llm_enricher`) écrite UNE fois par publication récente (≤ 100 j), avec la
+  thèse de `societes`. Pièges : les lignes À VENIR d'un ticker sont supprimées
+  puis réécrites à chaque synchro (les dates yfinance lointaines bougent) ;
+  yfinance ne garde que ~5 trimestres de CA, d'où l'upsert en COALESCE sur
+  `ca`/`fin_trimestre`/`ca_un_an_avant`/`resultat_net` et le CA « un an avant »
+  complété depuis la table elle-même ; un consensus de CA à 0 (émetteur
+  semestriel, RIO.AX) = inconnu ; CS.PA et RIO.AX n'ont pas de trimestres chez
+  yfinance (semestriels) ; un BPA attendu proche de 0 donne des surprises
+  > 100 % que l'écran remplace par « publié contre attendu ». Tests :
+  `ALPHABRIEF_DSN="dbname=alphabrief_mirror" pytest tests/core/providers/test_trimestres_yf.py`
+  (le test d'écriture se saute hors miroir).
+- **`courbe` de `/api/patrimoine` = `nav_daily`, plus les dates de saisie
+  (2026-09-17).** L'ancienne série listait les saisies (3 points en un mois) et
+  n'était affichée nulle part. Elle sert maintenant la sparkline sous le total
+  dans Comptes : 90 photos au plus + le point live du jour. `variation_eur`
+  reste l'écart entre deux SAISIES (requête dédiée), ne pas le faire dériver.
 - **Paper trading (TOP10) retiré le 2026-08-22** — jobs daemon, route API et
   section du digest hebdo supprimés. `paper_mvp.py` reste dans le repo : sa
   fonction `_fetch_quote` est réutilisée par le script de prix live des

@@ -1,57 +1,75 @@
+"""Enrichissement qualitatif d'une carte : une phrase, les avantages
+concurrentiels, ce qui pourrait faire bouger le titre.
+
+Histoire (2026-09-18) : ce module visait DeepSeek avec une clé
+`DEEPSEEK_API_KEY` qui n'a JAMAIS existé sur le VPS. `enrich_with_llm` rendait
+`None` en silence (log en `debug`), si bien que 0 fiche sur 40 n'a jamais eu
+de résumé et que `catalysts`/`key_risks` sont restés vides sur toutes les
+cartes — pendant des mois, sans qu'aucune alerte ne le dise. Rebranché sur
+OpenRouter avec le MÊME client que Sage (`sage_advisor.py`) : une seule façon
+d'appeler un modèle dans ce repo, une seule clé, déjà présente.
+
+Le modèle est Haiku 4.5 : la sortie est courte et factuelle, et l'appel tourne
+pour toute la watchlist chaque matin (cache 48 h par ticker dans
+`utils/cache.py`, section `llm`). Sortie EN FRANÇAIS — c'est la langue de la
+fiche. `segments` et `top_competitors` ont été retirés du contrat : jamais
+affichés, jamais persistés.
+"""
 from __future__ import annotations
 
 import json
 import logging
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+MODEL = "anthropic/claude-haiku-4.5"
+MAX_ITEMS = 3
+
 _SYSTEM_PROMPT = (
-    "You are a senior equity research analyst. "
-    "Given structured financial data about a company, you produce a concise qualitative analysis. "
-    "Always respond with valid JSON only — no markdown, no explanation outside the JSON."
+    "Tu es un analyste actions senior. À partir de données financières structurées, "
+    "tu produis une analyse qualitative courte et factuelle, en français. "
+    "Réponds UNIQUEMENT par un JSON valide — pas de markdown, rien en dehors du JSON."
 )
 
 _USER_TEMPLATE = """\
-Company: {name} ({ticker})
-Sector: {sector} | Industry: {industry}
-Market cap: {market_cap}
+Société : {name} ({ticker})
+Secteur : {sector} | Industrie : {industry}
+Capitalisation : {market_cap}
 
-Key financials:
-- Revenue CAGR 3Y: {revenue_cagr_3y}%
-- EBIT margin: {ebit_margin}%
-- Gross margin: {gross_margin}%
-- FCF margin: {fcf_margin}%
-- Net debt / EBITDA: {net_debt_ebitda}x
-- EPS growth: {eps_growth}%
+Chiffres clés :
+- CAGR du CA 3 ans : {revenue_cagr_3y}%
+- Marge EBIT : {ebit_margin}%
+- Marge brute : {gross_margin}%
+- Marge FCF : {fcf_margin}%
+- Dette nette / EBITDA : {net_debt_ebitda}x
+- Croissance du BPA : {eps_growth}%
 
-Valuation:
-- P/E TTM: {pe_ttm}
-- EV/EBITDA: {ev_ebitda}
-- FCF yield: {fcf_yield}%
+Valorisation :
+- P/E TTM : {pe_ttm}
+- EV/EBITDA : {ev_ebitda}
+- Rendement FCF : {fcf_yield}%
 
-Momentum 12M vs market: {rel_momentum_12m}%
+Momentum 12 mois vs marché : {rel_momentum_12m}%
 
-Respond with this exact JSON structure:
+Réponds avec exactement cette structure JSON :
 {{
   "business_snapshot": {{
-    "one_liner": "<one sentence describing what the company does and its market position>",
-    "moat_tags": ["<tag1>", "<tag2>"],
-    "segments": ["<main business segment>"],
-    "top_competitors": ["<competitor1>", "<competitor2>"]
+    "one_liner": "<une phrase : ce que fait la société et sa position sur son marché>",
+    "moat_tags": ["<tag 1>", "<tag 2>"]
   }},
   "events": {{
-    "catalysts": ["<catalyst 1>", "<catalyst 2>", "<catalyst 3>"],
-    "key_risks": ["<risk 1>", "<risk 2>", "<risk 3>"]
+    "catalysts": ["<catalyseur 1>", "<catalyseur 2>", "<catalyseur 3>"],
+    "key_risks": ["<risque 1>", "<risque 2>", "<risque 3>"]
   }}
 }}
 
-Rules:
-- one_liner: max 25 words, factual, neutral tone
-- moat_tags: 2-4 short tags (e.g. "Network effects", "Pricing power", "Switching costs")
-- catalysts and key_risks: max 3 each, specific to this company's current situation
-- Use null for any field you cannot determine confidently
+Règles :
+- one_liner : 25 mots max, factuel, ton neutre, en français
+- moat_tags : 2 à 4 tags courts en français (ex. "Effets de réseau", "Pouvoir de prix", "Coûts de changement")
+- catalysts et key_risks : 3 max chacun, une ligne chacun, SPÉCIFIQUES à la situation actuelle de cette société — jamais de généralité ("volatilité des marchés", "concurrence")
+- null pour tout champ que tu ne peux pas déterminer avec confiance
 """
 
 
@@ -63,20 +81,64 @@ def _fmt(value: Any, suffix: str = "") -> str:
     return f"{value}{suffix}"
 
 
+def _liste(valeurs: Any, maximum: int = MAX_ITEMS) -> List[str]:
+    """Liste de chaînes non vides, tronquée. Tout le reste → []."""
+    if not isinstance(valeurs, list):
+        return []
+    out = [str(v).strip() for v in valeurs if isinstance(v, (str, int, float)) and str(v).strip()]
+    return out[:maximum]
+
+
+def _parse(raw: str) -> Optional[Dict[str, Any]]:
+    """JSON du modèle → structure validée. None si la forme n'y est pas :
+    on préfère une fiche sans IA à une fiche avec un texte de travers, et
+    surtout on ne met PAS en cache 48 h une sortie inutilisable."""
+    raw = (raw or "").strip()
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as e:
+        logger.error(f"LLM : JSON invalide ({e}) — {raw[:120]!r}")
+        return None
+    if not isinstance(data, dict):
+        return None
+    snap = data.get("business_snapshot") or {}
+    events = data.get("events") or {}
+    one_liner = snap.get("one_liner")
+    out = {
+        "business_snapshot": {
+            "one_liner": one_liner.strip() if isinstance(one_liner, str) and one_liner.strip() else None,
+            "moat_tags": _liste(snap.get("moat_tags"), 4),
+        },
+        "events": {
+            "catalysts": _liste(events.get("catalysts")),
+            "key_risks": _liste(events.get("key_risks")),
+        },
+    }
+    if not out["business_snapshot"]["one_liner"] and not out["events"]["catalysts"] and not out["events"]["key_risks"]:
+        logger.error("LLM : réponse sans contenu exploitable")
+        return None
+    return out
+
+
 def enrich_with_llm(card: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """
-    Calls DeepSeek to fill business_snapshot and events fields.
-    Returns None if no API key configured or on failure.
-    """
-    api_key = os.environ.get('DEEPSEEK_API_KEY', '')
+    """Remplit business_snapshot (one_liner, moat_tags) et events (catalysts,
+    key_risks). None si pas de clé, pas de client, ou sortie inexploitable —
+    le scoring continue sans."""
+    api_key = os.environ.get("OPENROUTER_API_KEY", "")
     if not api_key:
-        logger.debug("DEEPSEEK_API_KEY not set — skipping LLM enrichment")
+        # WARNING, pas debug : c'est ce silence qui a caché pendant des mois que
+        # la couche IA ne tournait pas.
+        logger.warning("OPENROUTER_API_KEY absente — fiche sans analyse IA")
         return None
 
     try:
         from openai import OpenAI
     except ImportError:
-        logger.warning("openai package not installed — skipping LLM enrichment")
+        logger.warning("paquet openai absent — fiche sans analyse IA")
         return None
 
     ident = card.get("identity", {})
@@ -105,29 +167,23 @@ def enrich_with_llm(card: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     try:
         client = OpenAI(
             api_key=api_key,
-            base_url="https://api.deepseek.com",
+            base_url="https://openrouter.ai/api/v1",
             timeout=25.0,
         )
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model=MODEL,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
                 {"role": "user", "content": prompt},
             ],
             temperature=0.3,
             max_tokens=600,
+            # Même précaution que Sage : sans ça, un modèle qui raisonne peut
+            # dépenser le budget avant d'écrire le JSON (finish_reason "length").
+            extra_body={"reasoning": {"enabled": False}},
         )
         raw = response.choices[0].message.content or ""
-        # Strip potential markdown code fences
-        raw = raw.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        return json.loads(raw)
-    except json.JSONDecodeError as e:
-        logger.error(f"LLM returned invalid JSON: {e}")
-        return None
+        return _parse(raw)
     except Exception as e:
-        logger.error(f"LLM enrichment error: {e}")
+        logger.error(f"LLM : appel échoué — {e}")
         return None

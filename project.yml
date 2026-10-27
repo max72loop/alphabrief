@@ -11,3 +11,13 @@ agents:
   - name: alphabrief
     script: /root/agents/alphabrief/main.py
     cadence: 30        # secondes — battement de liveness (découplé des jobs scoring/health)
+# Jalons de décision (lus par project_reader → carte + Lucius). Dates ISO.
+checkpoints:
+  - date: "2026-10-12"
+    note: "Verdict thèse 1 d'Arthur (achat BTC sur repli, dry-run) via --bilan."
+  - date: "2026-10-19"
+    note: "Verdict Sage v2 : bilan v1/v2 du carnet (--sage-bilan)."
+  - date: "2026-11-02"
+    note: "Arthur, prolongation unique : zéro entrée au 12/10 → GO (réel, petite mise) ou on coupe."
+  - date: "2027-01-07"
+    note: "Verdict de la note fondamentale en ombre (T1) : si elle trie, elle devient la note."

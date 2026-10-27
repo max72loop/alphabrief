@@ -13,7 +13,7 @@ PSQL_MIRROR := $(PSQL) -d $(MIRROR_DB)
 
 # Le schéma, dans l'ordre. Les deux bases partent des mêmes fichiers : c'est
 # ce qui fait de la miroir une répétition fidèle et non une approximation.
-SCHEMA := $(REPO)/db/schema.sql $(REPO)/migrations/2026_07_31_patrimoine_schema.sql
+SCHEMA := $(REPO)/db/schema.sql $(REPO)/migrations/2026_07_31_patrimoine_schema.sql $(REPO)/migrations/2026_09_19_cycle.sql $(REPO)/migrations/2026_09_29_resultats_trimestriels.sql $(REPO)/migrations/2026_10_04_lynch.sql $(REPO)/migrations/2026_10_20_or.sql
 
 help:
 	@echo "db-apply    applique le schema sur la VRAIE base (idempotent, ne detruit rien)"

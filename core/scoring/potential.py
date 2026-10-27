@@ -3,6 +3,12 @@ from __future__ import annotations
 import math
 from typing import Any, Dict, Optional
 
+# Version de la FORMULE, historisée avec chaque score (`scores_history.engine_version`).
+# À changer à chaque modification qui déplace des notes : sans elle, l'historique
+# mélange des barèmes différents et le backtest les juge ensemble. Valeur = date
+# du dernier changement de méthode (secteur traduit + bénéfice exceptionnel).
+ENGINE_VERSION = "2026-09-23"
+
 
 def clamp(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
@@ -41,6 +47,20 @@ def score_linear_inverse(value: Optional[float], lo: float, hi: float, default: 
     if value >= hi:
         return 0.0
     return 100.0 * (1.0 - (value - lo) / (hi - lo))
+
+
+def benefice_exceptionnel(pe: Optional[float], forward_pe: Optional[float], roe: Optional[float]) -> bool:
+    """Le P/E TTM repose-t-il sur un bénéfice ponctuel (fiscal, cession) ?
+
+    Deux signatures : les analystes attendent plus de deux fois moins de
+    bénéfice (forward > 2 × TTM), ou le P/E est positif alors que le ROE ne
+    l'est pas. Partagée par le moteur et par `importance.py`, pour que la fiche
+    ne vante pas un « P/E attractif » que la note a écarté.
+    """
+    return pe is not None and pe > 0 and (
+        (forward_pe is not None and forward_pe > 2 * pe)
+        or (roe is not None and roe < 0)
+    )
 
 
 def compute_peg_score(peg: Optional[float]) -> float:
@@ -1234,37 +1254,51 @@ def compute_current_ratio_score(current_ratio: Optional[float]) -> float:
         return 82.0   # Cash très élevé (légèrement sous-optimal mais pas risqué)
 
 
-def compute_roic_score(roic: Optional[float]) -> float:
+def compute_roa_score(roa: Optional[float]) -> float:
     """
-    Score basé sur le ROIC (Return on Invested Capital / ROA).
+    Score basé sur le ROA (Return on Assets).
 
-    Mesure l'efficacité avec laquelle l'entreprise utilise son capital total
-    (equity + dette) pour générer du profit. Contrairement au ROE, il n'est
-    pas biaisé par le levier financier.
+    Mesure le profit dégagé par euro d'actif au bilan.
+
+    Cette fonction s'appelait `compute_roic_score` et notait sur une échelle
+    ROIC (« > 20 % : wide moat probable ») une valeur qui n'a JAMAIS été du
+    ROIC : les deux chemins du provider l'alimentent avec le rendement des
+    actifs (`returnOnAssetsTTM` côté FMP, `returnOnAssets` côté yfinance). Le
+    ROA est structurellement bien inférieur au ROIC dès qu'il y a du levier ou
+    des actifs lourds, si bien que le composant démolissait exactement les
+    compounders de qualité que le reste du moteur travaille à traiter
+    équitablement — KO stocke 13,3, soit environ la moitié de son ROIC réel, et
+    récoltait « Bon » là où le capital investi dit « Excellent ».
+
+    Calculer un vrai ROIC demanderait le NOPAT et le capital investi, que
+    `Ticker.info` ne porte pas de façon fiable : c'est une source de données à
+    ajouter, pas une correction de barème. On dit donc ce qu'on mesure, et on
+    note sur l'échelle correspondante (médiane S&P non financière ≈ 5-7 %).
 
     Seuils :
-    - ≤ 0%  : Actifs non rentables (perte)          → score faible
-    - 1-5%  : Rendement insuffisant                 → 25-45
-    - 5-10% : Correct                               → 50-65
-    - 10-15%: Bon                                   → 70-80
-    - 15-20%: Très bon                              → 82-90
-    - > 20% : Excellent (wide moat probable)        → 92-98
+    - ≤ 0 %  : actifs non rentables (perte)
+    - 0-2 %  : très faible
+    - 2-4 %  : sous la moyenne
+    - 4-7 %  : dans la moyenne du marché
+    - 7-11 % : bon
+    - 11-16 %: très bon
+    - > 16 % : excellent (structure d'actifs légère, marges fortes)
     """
-    if roic is None:
+    if roa is None:
         return 50.0
-    if roic <= 0:
+    if roa <= 0:
         return 15.0  # Actifs générant des pertes
-    if roic <= 3:
+    if roa <= 2:
         return 30.0
-    if roic <= 6:
+    if roa <= 4:
         return 48.0
-    if roic <= 10:
+    if roa <= 7:
         return 63.0
-    if roic <= 15:
+    if roa <= 11:
         return 78.0
-    if roic <= 20:
+    if roa <= 16:
         return 88.0
-    return 96.0  # ROIC > 20% = avantage compétitif fort
+    return 96.0  # ROA > 16 % = rentabilité des actifs remarquable
 
 
 def compute_institutional_ownership_score(inst_pct: Optional[float]) -> float:
@@ -1550,18 +1584,30 @@ def compute_momentum_quality_score(momentum_12m: Optional[float], volatility_1y:
     return 12.0       # Effondrement progressif
 
 
-def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
+def compute_potential_score(card: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Score 0-100, déterministe. Retourne un dict avec 4 clés :
+    Score 0-100, déterministe. Retourne un dict avec 7 clés :
       - total          : score global
       - fundamentals   : bloc "entreprise" (Quality, Growth, Value, Risk, Analyst)
       - technicals     : indicateurs techniques (RSI, SMA, MACD, position 52w)
       - momentum       : momentum absolu + relatif + qualité
+      - pillars        : détail du bloc fundamentals, {quality, growth, value,
+                         risk, analyst} — `analyst` vaut None quand la couverture
+                         analyste manque et que le pilier n'entre donc pas dans
+                         le calcul
+      - pillar_weights : poids normalisés EFFECTIVEMENT appliqués à ces piliers
+                         (ils diffèrent selon la présence des analystes)
+      - fundamentals_convergence : points ajoutés ou retirés au bloc fundamentals
+                         par le bonus/malus de convergence
 
     Pondération finale : 50 % fundamentals, 25 % technicals, 25 % momentum.
     À l'intérieur du bloc fundamentals, les piliers gardent leurs poids
     historiques normalisés (Q/G/V/R/An ≈ 18/13/25/10/12) pour préserver la
     hiérarchie des signaux.
+
+    ⚠ `pillars` est PRÉ-bonus de convergence : la moyenne pondérée des piliers ne
+    retombe pas sur `fundamentals`, l'écart est exactement
+    `fundamentals_convergence` (au clamp 0-100 près sur les cas extrêmes).
     """
     identity = card.get("identity", {})
     fin = card.get("financials", {})
@@ -1571,7 +1617,10 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
 
     # Détection secteur financier (banques, assurance, gestion d'actifs)
     # Yahoo Finance utilise "Financial Services" ; MSCI/S&P utilisent "Financials"
-    sector = identity.get("sector") or ""
+    # `sector_note` (posé par generate_card, core/scoring/secteur.py) parle la
+    # langue des tables ; `sector` brut ne sert que pour une carte construite
+    # à la main, sans passer par le générateur.
+    sector = identity.get("sector_note") or identity.get("sector") or ""
     industry = identity.get("industry") or ""
 
     # Amélioration Coinbase : `is_financial` est désormais industry-aware.
@@ -1636,9 +1685,14 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
     share_dilution = to_float(fin.get("share_dilution_3y"))
     dilution_score = compute_share_dilution_score(share_dilution)
 
-    # ROIC (Return on Invested Capital / ROA)
-    roic = to_float(fin.get("roic"))
-    roic_score = compute_roic_score(roic)
+    # ROA (Return on Assets) — voir compute_roa_score : ce champ s'appelait
+    # `roic` mais n'a jamais porté autre chose que le rendement des actifs.
+    # Non comparable pour les banques et assureurs, dont le bilan est l'outil
+    # de production : neutralisé comme ebit_margin et fcf_margin plus haut.
+    roa = to_float(fin.get("roa"))
+    if is_financial:
+        roa = None
+    roa_score = compute_roa_score(roa)
 
     # Net Profit Margin (marge nette après impôts et intérêts)
     net_margin = to_float(fin.get("net_margin"))
@@ -1661,8 +1715,8 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
         quality_components.append(("cash_conv", cash_conv_score, 0.15, cash_conv_fcf))
     if share_dilution is not None:
         quality_components.append(("dilution", dilution_score, 0.12, share_dilution))
-    if roic is not None:
-        quality_components.append(("roic", roic_score, 0.14, roic))
+    if roa is not None:
+        quality_components.append(("roa", roa_score, 0.14, roa))
     if net_margin is not None:
         quality_components.append(("net_margin", net_margin_score, 0.12, net_margin))
 
@@ -1757,6 +1811,19 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
 
     # P/E TTM (inverse) - calibré selon le secteur (Amélioration 2)
     pe = to_float(val.get("pe_ttm"))
+    forward_pe = to_float(val.get("forward_pe"))
+
+    # Bénéfice exceptionnel (2026-09-23). Un gain ponctuel — fiscal, cession —
+    # écrase le P/E TTM et fait passer la société pour bradée. CHYM le 23/09 :
+    # P/E 5,6x avec un ROE négatif, forward P/E 17,8x ; le moteur en tirait
+    # « P/E attractif » ET « PEG attractif » (0,19), soit 27 % du pilier Valeur
+    # sur un seul chiffre faux (signatures : `benefice_exceptionnel`).
+    # Même règle qu'une donnée absente : P/E TTM et PEG (qui en dérive, y
+    # compris le pegRatio Yahoo) sortent du pilier, le forward P/E reste mais
+    # n'est plus comparé à un TTM qui ne veut rien dire.
+    pe_exceptionnel = benefice_exceptionnel(pe, forward_pe, roe)
+    if pe_exceptionnel:
+        pe = None
     pe_score = compute_pe_score_sector_aware(pe, sector)
 
     # EV/EBITDA (inverse) — calibré selon le secteur
@@ -1775,13 +1842,12 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
 
     # PEG ratio — priorité au pegRatio Yahoo Finance (basé sur croissance EPS 5 ans),
     # sinon fallback calculé depuis P/E TTM / CAGR CA
-    peg_ratio = to_float(val.get("peg_ratio"))
+    peg_ratio = None if pe_exceptionnel else to_float(val.get("peg_ratio"))
     if peg_ratio is None and pe is not None and rev_cagr is not None and rev_cagr > 0:
         peg_ratio = pe / rev_cagr
     peg_score = compute_peg_score(peg_ratio)
 
-    # Forward P/E
-    forward_pe = to_float(val.get("forward_pe"))
+    # Forward P/E (lu plus haut, avec le garde-fou du bénéfice exceptionnel)
     forward_pe_sc = compute_forward_pe_score(forward_pe, pe)
 
     # Dividend Yield (avec payout ratio pour soutenabilité)
@@ -1793,15 +1859,35 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
     ev_sales = to_float(val.get("ev_sales_ttm"))
     ev_sales_score = compute_ev_sales_score_sector_aware(ev_sales, sector)
 
-    # Value composite : pondération dynamique
-    value_components = [
-        ("fcf", fcf_score, 0.16),
-        ("pe", pe_score, 0.13),
-        ("ev_ebitda", ev_ebitda_score, 0.14),
-        ("pb", pb_score, 0.09),
-        ("peg", peg_score, 0.14),
-        ("div", div_score, 0.10),
-    ]
+    # Value composite : pondération dynamique.
+    #
+    # Ces six composants étaient INCONDITIONNELS, contrairement à ceux de
+    # Quality (FIX I5) et de Risk : une donnée absente entrait quand même, à
+    # plein poids, avec le 50 neutre que rendent les scorers sur None. Une
+    # société dont on ignore tout de la valorisation obtenait donc Valeur = 50
+    # bâti sur six 50 fantômes — indiscernable d'une société réellement
+    # valorisée à son prix, sur le pilier le plus lourd des fondamentaux (32 %).
+    # Ce n'était pas marginal : au 2026-09-07, 8 cartes sur 39 n'avaient pas de
+    # FCF yield, 8 pas d'EV/EBITDA, 5 pas de PEG, 5 pas de P/E.
+    #
+    # Même règle pour tout le monde : un composant n'entre que si son entrée
+    # existe, et les poids sont renormalisés sur ce qui reste.
+    value_components: list[tuple[str, float, float]] = []
+    if fcf_yield is not None:
+        value_components.append(("fcf", fcf_score, 0.16))
+    if pe is not None:
+        value_components.append(("pe", pe_score, 0.13))
+    # `ev_ebitda_score` est neutralisé à 50 pour les banques (l'EBITDA n'y veut
+    # rien dire) : c'est une neutralisation VOULUE, pas une donnée manquante,
+    # donc elle garde son poids — comme `is_financial` le fait déjà ailleurs.
+    if ev_ebitda is not None or is_financial:
+        value_components.append(("ev_ebitda", ev_ebitda_score, 0.14))
+    if pb is not None:
+        value_components.append(("pb", pb_score, 0.09))
+    if peg_ratio is not None:
+        value_components.append(("peg", peg_score, 0.14))
+    if div_yield is not None:
+        value_components.append(("div", div_score, 0.10))
     if forward_pe is not None:
         value_components.append(("fwd_pe", forward_pe_sc, 0.13))
     if ev_sales is not None:
@@ -1814,8 +1900,14 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
     if p_ocf is not None and p_ocf > 0:
         value_components.append(("p_ocf", p_ocf_score, 0.10))
 
+    # Repli : plus aucun composant n'étant garanti, la liste peut finir vide.
+    # Même contrat que Quality (`else: quality = 50.0`) — neutre assumé, et la
+    # confiance dira que la carte est creuse.
     total_vw = sum(w for _, _, w in value_components)
-    value = sum(s * w / total_vw for _, s, w in value_components)
+    if total_vw > 0:
+        value = sum(s * w / total_vw for _, s, w in value_components)
+    else:
+        value = 50.0
 
     # Volatilité 1Y — extraite ici pour alimenter à la fois le momentum quality score
     # et le composite de risque (évite une extraction dupliquée plus loin).
@@ -1950,11 +2042,16 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
     current_ratio = to_float(fin.get("current_ratio"))
     current_ratio_score = compute_current_ratio_score(current_ratio)
 
-    # Risk composite : pondération dynamique
-    risk_components = [
-        ("beta", beta_score, 0.20, beta),
-        ("debt", debt_score, 0.25, net_debt_ebitda),
-    ]
+    # Risk composite : pondération dynamique.
+    #
+    # `beta` et `debt` étaient les deux derniers composants inconditionnels du
+    # pilier — soit 45 % de Risk qui pouvait être entièrement fabriqué à partir
+    # de deux 50 neutres. Alignés sur les six autres.
+    risk_components: list[tuple[str, float, float, Any]] = []
+    if beta is not None:
+        risk_components.append(("beta", beta_score, 0.20, beta))
+    if net_debt_ebitda is not None:
+        risk_components.append(("debt", debt_score, 0.25, net_debt_ebitda))
     if interest_cov is not None:
         risk_components.append(("interest_cov", interest_cov_score, 0.20, interest_cov))
     if vol_1y is not None:
@@ -1978,7 +2075,10 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
         risk_components.append(("altman_z", altman_z_sc, 0.18, altman_z))
 
     total_rw = sum(w for _, _, w, _ in risk_components)
-    risk_score = sum(s * w / total_rw for _, s, w, _ in risk_components)
+    if total_rw > 0:
+        risk_score = sum(s * w / total_rw for _, s, w, _ in risk_components)
+    else:
+        risk_score = 50.0
 
     # === BLOC FONDAMENTAUX ===
     # Poids internes (normalisés pour sommer à 1.0) — hérités de la pondération
@@ -2001,6 +2101,23 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
         ]
     _total_fw = sum(w for _, w in fund_components)
     fundamentals = sum(s * w / _total_fw for s, w in fund_components)
+
+    # Piliers exposés au dehors — ils étaient calculés puis jetés, si bien que la
+    # carte pouvait dire « Fondamentaux 62 » sans jamais dire si c'était la Value
+    # ou la Quality qui portait. Les poids sont RENVOYÉS et non recopiés en dur
+    # ailleurs : ils changent selon `has_analyst`, et l'écran doit montrer ceux qui
+    # ont réellement servi. Valeurs PRÉ-bonus de convergence (cf. bloc suivant).
+    _PILLAR_NAMES = ["quality", "growth", "value", "risk", "analyst"]
+    _pillar_values = [quality, growth, value, risk_score, analyst if has_analyst else None]
+    pillar_scores = {
+        name: (int(round(v)) if v is not None else None)
+        for name, v in zip(_PILLAR_NAMES, _pillar_values)
+    }
+    pillar_weights = {
+        name: round(w / _total_fw, 4)
+        for name, (_, w) in zip(_PILLAR_NAMES, fund_components)
+    }
+    fundamentals_raw = fundamentals
 
     # === BONUS/MALUS DE CONVERGENCE PROPORTIONNEL ===
     # Appliqué au bloc fondamentaux uniquement : l'alignement Quality/Growth/Value/Risk
@@ -2025,6 +2142,11 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
         intensity = min(avg_excess / 35.0, 1.0)
         fundamentals = fundamentals - _MAX_CONV * strength * (0.5 + 0.5 * intensity)
 
+    # Écart imputable au SEUL bonus/malus de convergence, mesuré avant le clamp
+    # final (sinon un fondamental à 103 ramené à 100 se lirait comme de la
+    # convergence, ce qu'il n'est pas).
+    _conv_delta = fundamentals - fundamentals_raw
+
     # === COMBINAISON FINALE 50 / 25 / 25 ===
     fundamentals = clamp(fundamentals, 0.0, 100.0)
     technicals   = clamp(technical,    0.0, 100.0)
@@ -2036,4 +2158,11 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, int]:
         "fundamentals": int(round(fundamentals)),
         "technicals":   int(round(technicals)),
         "momentum":     int(round(mom_clamped)),
+        # Détail du bloc fondamentaux. `pillars` est PRÉ-bonus de convergence :
+        # la moyenne pondérée des piliers ne retombe donc PAS sur `fundamentals`,
+        # l'écart est exactement `fundamentals_convergence`. Renvoyer cet écart
+        # plutôt que de laisser le lecteur constater un « bug » de quelques points.
+        "pillars":        pillar_scores,
+        "pillar_weights": pillar_weights,
+        "fundamentals_convergence": round(_conv_delta, 2),
     }

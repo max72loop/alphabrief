@@ -24,9 +24,11 @@ from core.providers import fmp_client
 @pytest.fixture(autouse=True)
 def _reset_cache_and_counter():
     fmp_client.clear_cache()
+    fmp_client.reset_plan_breaker()   # sinon un test qui ouvre le circuit fait taire les suivants
     fmp_client._call_count = 0
     yield
     fmp_client.clear_cache()
+    fmp_client.reset_plan_breaker()
 
 
 @pytest.fixture(autouse=True)
@@ -77,11 +79,37 @@ def test_http_429_retries_then_gives_up(caplog):
     assert any("fmp_failed_429" in r.message for r in caplog.records)
 
 
-def test_http_402_returns_none():
-    # 402 leve raise_for_status -> RequestException -> retries -> None
-    with patch.object(fmp_client.requests, "get", return_value=_resp(402)):
-        out = fmp_client.fmp_get("quote", {"symbol": "AAPL"}, cache=False)
-    assert out is None
+def test_http_402_ouvre_le_coupe_circuit_sans_backoff(caplog):
+    """402 « Payment Required » = état de facturation, pas une rafale.
+
+    Avant le 2026-09-22 il tombait dans le `except RequestException` générique
+    et repayait les 4 tentatives (5+15+45 s) sur chaque endpoint, alors que le
+    repli yfinance était disponible immédiatement.
+    """
+    caplog.set_level("ERROR")
+    fmp_client.reset_plan_breaker()
+    try:
+        with patch.object(fmp_client.requests, "get", return_value=_resp(402)) as g:
+            out = fmp_client.fmp_get("quote", {"symbol": "AAPL"}, cache=False)
+        assert out is None
+        assert g.call_count == 1                  # une seule tentative, pas quatre
+        assert fmp_client.plan_exhausted() is True
+        assert any('"cause": "402_payment_required"' in r.message for r in caplog.records)
+    finally:
+        fmp_client.reset_plan_breaker()
+
+
+def test_402_court_circuite_les_appels_suivants():
+    """Une fois le circuit ouvert, plus aucun appel HTTP ne part."""
+    fmp_client.reset_plan_breaker()
+    try:
+        with patch.object(fmp_client.requests, "get", return_value=_resp(402)) as g:
+            fmp_client.fmp_get("income-statement", {"symbol": "AAPL"}, cache=False)
+            fmp_client.fmp_get("balance-sheet-statement", {"symbol": "AAPL"}, cache=False)
+            fmp_client.fmp_get("ratios-ttm", {"symbol": "MSFT"}, cache=False)
+        assert g.call_count == 1   # seul le premier appel touche le réseau
+    finally:
+        fmp_client.reset_plan_breaker()
 
 
 def test_empty_list_response_logs_and_returns_empty(caplog):

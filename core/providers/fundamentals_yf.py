@@ -436,11 +436,12 @@ def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
     except Exception:
         pass
 
-    # ROIC (via key-metrics)
+    # ROA (via key-metrics). Le champ s'est longtemps appelé `roic` alors qu'il
+    # a toujours porté le rendement des ACTIFS — voir compute_roa_score.
     try:
         roa = _get(met, "returnOnAssetsTTM")
         if roa is not None:
-            out["financials"]["roic"] = _safe_pct(roa)
+            out["financials"]["roa"] = _safe_pct(roa)
     except Exception:
         pass
 
@@ -593,7 +594,7 @@ def _complete_from_yf(ticker: str, out: Dict[str, Any]) -> None:
     put_fin("gross_margin", _safe_pct(_f(info.get("grossMargins"))))
     put_fin("net_margin", _safe_pct(_f(info.get("profitMargins"))))
     put_fin("roe", _safe_pct(_f(info.get("returnOnEquity"))))
-    put_fin("roic", _safe_pct(_f(info.get("returnOnAssets"))))
+    put_fin("roa", _safe_pct(_f(info.get("returnOnAssets"))))
     put_fin("eps_growth", _safe_pct(_f(info.get("earningsGrowth"))))
     put_fin("current_ratio", _f(info.get("currentRatio")))
     put_fin("payout_ratio", _safe_pct(_f(info.get("payoutRatio"))))

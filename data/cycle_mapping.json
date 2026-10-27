@@ -1,0 +1,113 @@
+{
+  "version": "2026-09-19",
+  "sectors": [
+    {
+      "key": "Consumer Discretionary",
+      "label": "Consommation discrétionnaire",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Financials",
+      "label": "Financières",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Real Estate",
+      "label": "Immobilier",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Industrials",
+      "label": "Industrielles",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Information Technology",
+      "label": "Technologie",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Communication Services",
+      "label": "Communication",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Energy",
+      "label": "Énergie",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Materials",
+      "label": "Matériaux",
+      "nature": "cyclique"
+    },
+    {
+      "key": "Health Care",
+      "label": "Santé",
+      "nature": "defensif"
+    },
+    {
+      "key": "Consumer Staples",
+      "label": "Consommation de base",
+      "nature": "defensif"
+    },
+    {
+      "key": "Utilities",
+      "label": "Services aux collectivités",
+      "nature": "defensif"
+    }
+  ],
+  "phases": [
+    {
+      "key": "recovery",
+      "label": "Reprise",
+      "macro": "Taux bas, le crédit repart, marges en expansion.",
+      "leaders": [
+        "Consumer Discretionary",
+        "Financials",
+        "Real Estate",
+        "Industrials"
+      ],
+      "faible_discrimination": false
+    },
+    {
+      "key": "expansion",
+      "label": "Expansion",
+      "macro": "Croissance modérée mais installée, politique neutre, profits sains.",
+      "leaders": [
+        "Information Technology",
+        "Communication Services",
+        "Industrials",
+        "Consumer Discretionary"
+      ],
+      "faible_discrimination": true
+    },
+    {
+      "key": "slowdown",
+      "label": "Fin de cycle",
+      "macro": "Surchauffe, inflation au-dessus de la tendance, le crédit se resserre.",
+      "leaders": [
+        "Energy",
+        "Materials",
+        "Health Care",
+        "Consumer Staples"
+      ],
+      "faible_discrimination": false
+    },
+    {
+      "key": "recession",
+      "label": "Récession",
+      "macro": "Contraction, performance globale négative.",
+      "leaders": [
+        "Consumer Staples",
+        "Health Care",
+        "Utilities",
+        "Communication Services"
+      ],
+      "faible_discrimination": false
+    }
+  ],
+  "limite": "Modèle faiblement validé : sur 15 cycles (1948-2022), dater parfaitement les phases ne rapporte que 0,16 % par mois ajusté du risque avant frais (Molchanov, IJFE 2024) ; Stangl et al. (2009) mesurent 2,3 % de sous-performance annuelle contre le S&P 500 sur 1948-2007. Grille de lecture, pas un signal.",
+  "mid_cycle_note": "Expansion : phase la plus longue du cycle et dispersion entre secteurs la plus faible — l'écart d'exposition y est peu informatif.",
+  "_generated_by": "core/cycle/mapping.py --export"
+}

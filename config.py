@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent
-load_dotenv(Path('/root/.env'))       # clés globales (FMP, DeepSeek)
+load_dotenv(Path('/root/.env'))       # clés globales (FMP, OpenRouter)
 load_dotenv(BASE_DIR / '.env')        # surcharges locales
 
 
@@ -19,7 +19,7 @@ class Config:
     FMP_API_KEY = os.environ.get('FMP_API_KEY', '')
     # Base : Postgres local, joint par socket Unix. Aucun secret à porter ici —
     # voir core/storage/db.py. Surcharge possible via ALPHABRIEF_DSN.
-    # LLM (DeepSeek — compatible OpenAI SDK)
-    DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')
-    LLM_MODEL = 'deepseek-chat'
-    LLM_BASE_URL = 'https://api.deepseek.com'
+    # LLM : OpenRouter, clé OPENROUTER_API_KEY de /root/.env, lue directement par
+    # core/providers/llm_enricher.py et sage_advisor.py (même client). Les
+    # anciennes constantes DeepSeek ont été retirées le 2026-09-18 : la clé
+    # n'a jamais existé, personne ne les lisait.

@@ -47,6 +47,16 @@
     }
   ],
   "strong_buy_min": 60,
+  "confidence_floor": 60,
+  "insufficient_band": {
+    "key": "insuffisant",
+    "label": "Données insuffisantes",
+    "min_score": 0,
+    "percentile": null,
+    "share_pct": null,
+    "tone": "muted",
+    "blurb": "Trop de données manquantes pour situer cette société."
+  },
   "calibration_window_days": 90,
   "note": "Bornes = percentiles de la distribution réelle du moteur. Le score ne se distribue pas sur [0, 100] : lire le rang, pas la note.",
   "_generated_by": "core/scoring/bands.py --export"
