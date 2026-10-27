@@ -113,15 +113,23 @@ def _croissance_yf(ticker: str) -> Optional[float]:
 # ── Actions diluées trimestrielles ──────────────────────────────────────────
 def _actions_yf(ticker: str) -> tuple[List[Optional[float]], List[str], Optional[str]]:
     """(actions, dates de clôture, devise de publication) — du plus récent au plus ancien."""
+    # Deux lectures séparées : un émetteur semestriel (RIO.AX) n'a pas de relevé
+    # trimestriel, et la devise de publication doit survivre à cette absence.
     try:
         import yfinance as yf
         t = yf.Ticker(ticker)
+    except Exception:
+        return [], [], None
+    try:
         devise = (t.info or {}).get("financialCurrency")
+    except Exception:
+        devise = None
+    try:
         q = t.quarterly_income_stmt
         label = "Diluted Average Shares" if "Diluted Average Shares" in q.index else "Basic Average Shares"
         return [_num(v) for v in q.loc[label].tolist()], [str(c.date()) for c in q.columns], devise
     except Exception:
-        return [], [], None
+        return [], [], devise
 
 
 def change(de: Optional[str], vers: Optional[str]) -> Optional[float]:
@@ -147,7 +155,7 @@ def _ipo_date(ticker: str) -> Optional[str]:
     return None
 
 
-_FORMAT = 2   # version du contenu en cache : un cache d'un format antérieur est ignoré
+_FORMAT = 3   # version du contenu en cache : un cache d'un format antérieur est ignoré
 
 
 def fetch_rendement(ticker: str, devise_cotation: Optional[str] = None) -> Dict[str, Any]:

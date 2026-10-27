@@ -296,18 +296,21 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
         if benefice_exceptionnel(to_float(pe_ttm), to_float(val.get("forward_pe")), to_float(fin.get("roe"))):
             pe_ttm = None   # même garde-fou que le pilier Valeur
         # FCF publié dans une autre devise que la cotation (TSM : FCF en TWD,
-        # capitalisation en USD → « FCF yield » de 45 % au lieu de ~1,4 %). Le
-        # yield de la prime est recalculé dans la devise de la capitalisation ;
-        # sans cours de change, il reste inconnu plutôt que faux.
-        # ⚠ `valuation.fcf_yield_ttm`, lu par le pilier Valeur, porte encore
-        # l'erreur — correction à part, elle déplace des notes.
-        fcf_yield = val.get("fcf_yield_ttm")
+        # capitalisation en USD → « FCF yield » de 45 % au lieu de ~1,4 %). Les
+        # deux chemins de fundamentals_yf calculent fcf_absolute ÷ capitalisation
+        # sans conversion : on recalcule ici, dans la devise de la capitalisation,
+        # AVANT la notation — le pilier Valeur et la prime lisent la même valeur
+        # (correction du 2026-10-27, validée par Max). Sans cours de change, le
+        # yield devient inconnu plutôt que faux ; la valeur d'origine reste dans
+        # `fcf_yield_ttm_brut` pour la traçabilité.
         pub = rd.get("devise_publication")
         conversion = None
         if pub and devise and pub.upper() != devise.upper():
             fx, fcf_abs, mcap = to_float(rd.get("fx_publication")), to_float(fin.get("fcf_absolute")), to_float(card["identity"].get("market_cap"))
-            fcf_yield = (fcf_abs * fx / mcap * 100.0) if fx and fcf_abs is not None and mcap else None
+            val["fcf_yield_ttm_brut"] = val.get("fcf_yield_ttm")
+            val["fcf_yield_ttm"] = (fcf_abs * fx / mcap * 100.0) if fx and fcf_abs is not None and mcap else None
             conversion = {"de": pub, "vers": devise, "fx": fx}
+        fcf_yield = val.get("fcf_yield_ttm")
         taux = taux_10y() or {}
         card["rendement"] = calculer_prime(
             taux_10y=taux.get("taux"),
