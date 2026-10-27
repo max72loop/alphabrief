@@ -200,11 +200,14 @@ d'empiler une contradiction.
   `investmentsInPropertyPlantAndEquipment` prenait le flux d'exploitation pour du FCF
   quand FMP laisse ce champ à 0 (IREN : +2,10 Md$ lus pour −2,23 Md$ réels).
   Tests : `tests/core/providers/test_fundamentals_fcf.py`.
-- **⚠ Devise de publication ≠ devise de cotation : `fcf_yield_ttm` est FAUX** pour
-  TSM (FCF en TWD ÷ capitalisation en USD → 44,8 % au lieu de ~1,4 %), et
-  probablement les cotations HK/AX publiées en CNY/USD. La prime de rendement
-  convertit (`rendement.change`, `conversion_fcf`), le pilier Valeur NON : à
-  corriger à part, ça déplace des notes.
+- **Devise de publication ≠ devise de cotation (corrigé le 2026-10-27).** Les deux
+  chemins de `fundamentals_yf` calculent `fcf_absolute ÷ capitalisation` sans
+  conversion : TSM 44,3 % au lieu de 1,4 % (TWD/USD), ASR 67,4 % au lieu de 3,6 %
+  (MXN/USD), RIO.AX (USD/AUD), titres HK (CNY/HKD). `generate_card` recalcule
+  `valuation.fcf_yield_ttm` dans la devise de la capitalisation AVANT la notation
+  (valeur d'origine dans `fcf_yield_ttm_brut`, détail dans `rendement.conversion_fcf`).
+  TSM 65 → 61, ASR 56 → 54 (Fort → Modéré). **Reste à vérifier** : les ratios
+  calculés par FMP sur EV (EV/EBITDA, EV/Sales) pour les mêmes cotations.
 - **Prime de rendement et dilution par an (2026-10-27).** `core/scoring/prime.py`
   (prime = FCF yield [+ croissance CA consensus si ≥ 10 %, plafonnée 15] − 10 ans
   US ; banques/assureurs sur l'earnings yield ; vert ≥ +2, rouge < −1, n/a si FCF
