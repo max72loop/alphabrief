@@ -146,6 +146,17 @@ def test_avant_ipo_bloque_aussi_le_repli_annuel():
     assert d["avant_ipo_3y"] is True and d["dilution_3y"] is None
 
 
+def test_serie_trop_courte_ne_laisse_pas_le_repli_annuel_passer_l_ipo():
+    # CRWV réel (27/10) : 11 trimestres seulement chez FMP, IPO le 2025-03-28. Sans
+    # T−12, le repli annuel donnait +33,8 %/an sur une période d'avant la cotation.
+    serie = [100] * 11
+    dates = ["2026-06-30", "2026-03-31", "2025-12-31", "2025-09-30", "2025-06-30", "2025-03-31",
+             "2024-12-31", "2024-09-30", "2024-06-30", "2024-03-31", "2023-12-31"]
+    d = calculer_dilution(serie, dilution_3y_annuelle_total=139.0, dates=dates, ipo_date="2025-03-28")
+    assert d["avant_ipo_3y"] is True and d["dilution_3y"] is None
+    assert d["retenue"] == pytest.approx(0.0)                      # seul le 1 an, propre, compte
+
+
 def test_historique_court_et_repli_annuel():
     d = calculer_dilution([110, 108, 106, 104, 100])               # 5 trimestres : 1 an seulement
     assert d["dilution_1y"] == pytest.approx(10.0) and d["dilution_3y"] is None

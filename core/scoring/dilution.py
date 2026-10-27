@@ -76,12 +76,20 @@ def _fenetre(serie: List[Optional[float]], n: int) -> tuple[Optional[float], boo
 
 
 def _avant_ipo(dates: Optional[List[Any]], n: int, ipo_date: Any) -> bool:
-    """La fenêtre T0 → T−n commence-t-elle avant le premier trimestre complet coté ?"""
-    if not dates or not ipo_date or len(dates) <= n or not dates[n]:
+    """La fenêtre T0 → T−n commence-t-elle avant le premier trimestre complet coté ?
+
+    Sans le trimestre T−n dans la série (CRWV n'en a que 11 chez FMP), le début
+    de fenêtre est T0 − n trimestres : c'est lui que le repli sur les comptes
+    annuels couvrirait, et il ne doit pas réintroduire l'avant-cotation.
+    """
+    if not dates or not ipo_date or not dates[0]:
         return False
     try:
-        debut = date.fromisoformat(str(dates[n])[:10])
         ipo = date.fromisoformat(str(ipo_date)[:10])
+        if len(dates) > n and dates[n]:
+            debut = date.fromisoformat(str(dates[n])[:10])
+        else:
+            debut = date.fromisoformat(str(dates[0])[:10]) - timedelta(days=round(n * 91.3))
     except ValueError:
         return False
     return debut < ipo + DELAI_IPO
