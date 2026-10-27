@@ -13,7 +13,7 @@ retirée au lot 1 (2026-07-31).
 - **Backend** : Python (lib de scoring importée par le daemon — voir « Runtime »)
 - **Base** : **Postgres 16 local**, base `alphabrief`, sur le VPS
 - **Interface** : les cartes AlphaBrief du cockpit Pixel Office (API 127.0.0.1:4300)
-- **Data** : yfinance pour les fondamentaux, FMP hors service — voir « Gotchas »
+- **Data** : FMP (de nouveau servi, plan limité aux cotations US — voir « Gotchas ») puis yfinance en complément
 - **LLM** : Haiku 4.5 via OpenRouter (`OPENROUTER_API_KEY`) — résumé, moats, catalyseurs, risques de la fiche ; Sonnet 5 pour Sage
 
 **Supabase a été abandonné le 2026-08-01.** Un service managé multi-utilisateur
@@ -188,7 +188,35 @@ d'empiler une contradiction.
 
 ## Gotchas
 
-- **FMP est mort, yfinance est la source réelle** (constaté le 2026-09-02).
+- **FMP est revenu, limité aux cotations US (constaté le 2026-10-27).** `profile`,
+  `treasury-rates`, `analyst-estimates`, comptes trimestriels répondent ; un symbole
+  hors US (1211.HK, IWDA.AS…) répond **402 « Premium Query Parameter »**. Ce 402-là
+  ne concerne QUE ce symbole : `fmp_client` le mémorise par symbole
+  (`_premium_symbols`) sans ouvrir le coupe-circuit — avant le 27/10, le premier
+  ticker étranger coupait FMP pour toute la watchlist pendant 1 h. Verrouillé par
+  `test_402_premium_ne_coupe_que_ce_symbole`. Le paragraphe suivant (FMP mort) est
+  l'historique de septembre ; le coupe-circuit reste utile si le plan retombe.
+- **FCF = `freeCashFlow` de FMP (2026-10-27).** L'ancien calcul OCF +
+  `investmentsInPropertyPlantAndEquipment` prenait le flux d'exploitation pour du FCF
+  quand FMP laisse ce champ à 0 (IREN : +2,10 Md$ lus pour −2,23 Md$ réels).
+  Tests : `tests/core/providers/test_fundamentals_fcf.py`.
+- **⚠ Devise de publication ≠ devise de cotation : `fcf_yield_ttm` est FAUX** pour
+  TSM (FCF en TWD ÷ capitalisation en USD → 44,8 % au lieu de ~1,4 %), et
+  probablement les cotations HK/AX publiées en CNY/USD. La prime de rendement
+  convertit (`rendement.change`, `conversion_fcf`), le pilier Valeur NON : à
+  corriger à part, ça déplace des notes.
+- **Prime de rendement et dilution par an (2026-10-27).** `core/scoring/prime.py`
+  (prime = FCF yield [+ croissance CA consensus si ≥ 10 %, plafonnée 15] − 10 ans
+  US ; banques/assureurs sur l'earnings yield ; vert ≥ +2, rouge < −1, n/a si FCF
+  ≤ 0) — **EN OMBRE** : `card.rendement`, `ombre_json.prime`,
+  `ticker_scores.rendement` (migration `2026_10_27_rendement.sql`), jamais dans la
+  note. `core/scoring/dilution.py` (actions diluées trimestrielles, 1 an / 3 ans
+  annualisés, chute > 25 %/trimestre = événement sans bonus, fenêtre d'avant IPO
+  + 90 j écartée, pire des deux fenêtres) → `financials.dilution_an`, qui entre
+  dans la note (pilier Qualité, pénalité > 3 %/an, bonus léger 60 sur rachats).
+  `ENGINE_VERSION = "2026-10-27"`. Données : `core/providers/rendement.py`, cache
+  `rendement` 24 h, ≈ 2 appels FMP par ticker et par jour + 1 pour le taux.
+- **FMP est mort, yfinance est la source réelle** (constaté le 2026-09-02 — historique, voir ci-dessus).
   Tous les endpoints répondent `429 "Limit Reach . Please upgrade your plan"`,
   `profile` compris. Ce n'est pas une rafale mais le quota du plan, donc
   permanent : le backoff 5/15/45 ne pouvait jamais aboutir et brûlait 65 s par
