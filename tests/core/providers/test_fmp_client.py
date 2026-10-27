@@ -112,6 +112,27 @@ def test_402_court_circuite_les_appels_suivants():
         fmp_client.reset_plan_breaker()
 
 
+def _resp_premium() -> MagicMock:
+    r = _resp(402)
+    r.text = ("Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' "
+              "is not available under your current subscription")
+    return r
+
+
+def test_402_premium_ne_coupe_que_ce_symbole():
+    """402 « Premium Query Parameter » = ce symbole est hors plan (cotation hors US),
+    pas un état de facturation. Constaté le 2026-10-27 sur 1211.HK et IWDA.AS : le
+    traiter comme le 402 générique coupait FMP pour toute la watchlist."""
+    ok = [{"symbol": "AAPL"}]
+    with patch.object(fmp_client.requests, "get", side_effect=[_resp_premium(), _resp(200, ok)]) as g:
+        assert fmp_client.fmp_get("income-statement", {"symbol": "1211.HK"}, cache=False) is None
+        assert fmp_client.plan_exhausted() is False
+        assert fmp_client.fmp_get("income-statement", {"symbol": "AAPL"}, cache=False) == ok
+        # Le symbole refusé n'est plus redemandé dans ce process.
+        assert fmp_client.fmp_get("analyst-estimates", {"symbol": "1211.HK"}, cache=False) is None
+    assert g.call_count == 2
+
+
 def test_empty_list_response_logs_and_returns_empty(caplog):
     caplog.set_level("INFO")
     with patch.object(fmp_client.requests, "get", return_value=_resp(200, [])):

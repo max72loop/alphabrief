@@ -48,7 +48,11 @@ FEATURES = [
     ("financials", "roe", 0.7),
     ("financials", "roa", 0.7),
     ("financials", "net_margin", 0.6),
-    ("financials", "share_dilution_3y", 0.6),
+    # Dilution (2026-10-27) : le moteur lit `dilution_an`, et retombe sur
+    # `share_dilution_3y` sans lui. Le poids d'origine (0,6) est partagé, pour
+    # ne pas déplacer les confiances existantes.
+    ("financials", "dilution_an", 0.3),
+    ("financials", "share_dilution_3y", 0.3),
     ("financials", "gross_margin_trend", 0.6),
     ("financials", "accruals_ratio", 0.6),
     ("financials", "fcf_absolute", 0.5),

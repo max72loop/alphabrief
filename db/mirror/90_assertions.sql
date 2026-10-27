@@ -200,6 +200,49 @@ BEGIN
     END IF;
     RAISE NOTICE 'OK 11c total = 600 et repartition inchangee malgre l''or au niveau position';
 
+    -- ── 12. Prime de rendement et photo des poches (2026-10-27) ─
+    INSERT INTO ticker_scores (ticker, score_total, score_fundamentals, score_technicals, score_momentum)
+    VALUES ('__TEST__', 50, 50, 50, 50);
+    SELECT COUNT(*) INTO n FROM ticker_scores WHERE ticker = '__TEST__' AND rendement IS NULL;
+    IF n <> 1 THEN
+        RAISE EXCEPTION 'ECHEC 12 : une note sans rendement devrait laisser la colonne a NULL';
+    END IF;
+    RAISE NOTICE 'OK 12a rendement absent = NULL (la prod sans prime reste valide)';
+
+    UPDATE ticker_scores SET rendement = '{"prime": 2.3, "flag": "vert", "dilution": {"dilution_1y": 4.1}}'::jsonb
+     WHERE ticker = '__TEST__';
+    SELECT COUNT(*) INTO n FROM ticker_scores
+     WHERE ticker = '__TEST__' AND rendement->>'flag' = 'vert' AND (rendement->>'prime')::numeric = 2.3
+       AND (rendement #>> '{dilution,dilution_1y}')::numeric = 4.1;
+    IF n <> 1 THEN
+        RAISE EXCEPTION 'ECHEC 12 : rendement JSONB mal relu';
+    END IF;
+    RAISE NOTICE 'OK 12b rendement JSONB : flag, prime et dilution relus';
+
+    INSERT INTO poche_daily (date, classe, valeur_eur) VALUES ('2026-10-27', 'actions', 1000);
+    INSERT INTO poche_daily (date, classe, valeur_eur, estime_eur) VALUES ('2026-10-27', 'actions', 1010, 10)
+    ON CONFLICT (date, classe) DO UPDATE SET valeur_eur = EXCLUDED.valeur_eur, estime_eur = EXCLUDED.estime_eur;
+    SELECT COUNT(*) INTO n FROM poche_daily WHERE date = '2026-10-27' AND classe = 'actions'
+       AND valeur_eur = 1010 AND estime_eur = 10 AND source = 'pixel_office';
+    IF n <> 1 THEN
+        RAISE EXCEPTION 'ECHEC 12 : une photo par jour et par classe (upsert)';
+    END IF;
+    RAISE NOTICE 'OK 12c poche_daily : une photo par jour et par classe, estime et source relus';
+
+    BEGIN
+        INSERT INTO poche_daily (date, classe, valeur_eur) VALUES ('2026-10-27', 'obligations', 5);
+        RAISE EXCEPTION 'ECHEC 12 : une classe hors modele a ete acceptee dans poche_daily';
+    EXCEPTION WHEN check_violation THEN
+        RAISE NOTICE 'OK 12d poche_daily : classe hors des quatre rejetee';
+    END;
+
+    BEGIN
+        INSERT INTO poche_daily (date, classe, valeur_eur) VALUES ('2026-10-28', 'crypto', NULL);
+        RAISE EXCEPTION 'ECHEC 12 : une photo sans valeur a ete acceptee';
+    EXCEPTION WHEN not_null_violation THEN
+        RAISE NOTICE 'OK 12e poche_daily : valeur obligatoire';
+    END;
+
     -- ── Nettoyage ──────────────────────────────────────────
     DELETE FROM snapshots WHERE support_id IN (SELECT id FROM supports WHERE nom='__test__')
                              OR position_id IN (SELECT id FROM positions WHERE actif IN ('TEST','TESTXAU'));
@@ -208,6 +251,8 @@ BEGIN
     DELETE FROM societes  WHERE ticker = '__TEST__';
     DELETE FROM cycle_phase_declarations;
     DELETE FROM resultats_trimestriels WHERE ticker = '__TEST__';
+    DELETE FROM ticker_scores WHERE ticker = '__TEST__';
+    DELETE FROM poche_daily WHERE date = '2026-10-27';
 
     RAISE NOTICE '---';
     RAISE NOTICE 'TOUTES LES ASSERTIONS PASSENT';

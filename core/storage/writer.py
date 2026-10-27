@@ -26,6 +26,23 @@ from core.storage import db
 logger = logging.getLogger(__name__)
 
 
+_colonnes: Dict[tuple, bool] = {}
+
+
+def _a_colonne(table: str, colonne: str) -> bool:
+    """La colonne existe-t-elle sur la base visée ? Lu une fois par process."""
+    cle = (table, colonne)
+    if cle not in _colonnes:
+        try:
+            _colonnes[cle] = db.query_one(
+                "SELECT 1 AS ok FROM information_schema.columns WHERE table_name = %s AND column_name = %s",
+                (table, colonne),
+            ) is not None
+        except Exception:
+            _colonnes[cle] = False
+    return _colonnes[cle]
+
+
 def write_score(ticker: str, card: Dict[str, Any]) -> bool:
     """
     Upsert le score dans ticker_scores et insert dans score_history.
@@ -132,6 +149,13 @@ def write_score(ticker: str, card: Dict[str, Any]) -> bool:
         val = events.get(col)
         if isinstance(val, list) and val:
             row[col] = Jsonb(val)
+
+    # Prime de rendement + dilution par an (2026-10-27, migration
+    # 2026_10_27_rendement.sql). Écrite seulement si la colonne existe : tant que
+    # la migration n'est pas passée sur une base, le scoring y tourne comme avant.
+    rendement = card.get("rendement") or {}
+    if rendement and _a_colonne("ticker_scores", "rendement"):
+        row["rendement"] = Jsonb({**rendement, "dilution": card.get("dilution") or {}})
 
     try:
         cols = list(row.keys())

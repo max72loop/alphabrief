@@ -124,4 +124,16 @@ def score_ombre(card: Dict[str, Any], reference: Optional[Dict[str, Dict[str, li
         "fondamentaux": round(sum(presentes) / len(presentes), 1) if len(presentes) >= 2 else None,
         "detail": detail,
         "m121_rel": momentum_12_1_relatif(card.get("market", {}) or {}),
+        # Prime de rendement contre le 10 ans (2026-10-27) — EN OMBRE par décision
+        # de Max : historisée ici pour que le backtest mesure son pouvoir de tri
+        # avant qu'elle ne pèse quoi que ce soit. Sa version voyage avec elle
+        # (`prime-N`), celle de l'ombre ne change pas : la série `fondamentaux`
+        # reste comparable d'un jour à l'autre.
+        "prime": _prime(card.get("rendement") or {}),
     }
+
+
+def _prime(r: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    if not r:
+        return None
+    return {k: r.get(k) for k in ("version", "prime", "flag", "base", "rendement", "taux_10y", "prime_ey")}

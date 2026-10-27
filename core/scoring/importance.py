@@ -199,16 +199,22 @@ def build_importance_items(card: Dict[str, Any], limit: int = 10) -> List[Dict[s
             _add(items, "Accruals très élevés (drapeau rouge)", 90,
                  f"Accruals ratio ~{accruals_ratio:.1f}% : forte inflation comptable possible — anomalie de Sloan.", "negative")
 
-    # Share Dilution
-    if share_dilution is not None:
-        if share_dilution <= -5:
-            _add(items, "Rachats d'actions massifs", 80, f"Dilution 3Y ~{share_dilution:.1f}% : retour de cash aux actionnaires.", "positive")
-        elif share_dilution <= -2:
-            _add(items, "Rachats d'actions", 65, f"Dilution 3Y ~{share_dilution:.1f}% : nombre d'actions en baisse.", "positive")
+    # Dilution — en %/an depuis le 2026-10-27, mêmes paliers que
+    # potential.compute_share_dilution_score (pénalité au-delà de 3 %/an).
+    dil_an = _f(fin.get("dilution_an"))
+    if dil_an is not None:
+        if dil_an <= -1:
+            _add(items, "Rachats nets", 55, f"Actions en baisse de ~{-dil_an:.1f} %/an sur 1 et 3 ans.", "positive")
+        elif dil_an > 10:
+            _add(items, "Financement en actions massif", 85, f"Dilution ~{dil_an:.1f} %/an : chaque action pèse moins chaque année.", "negative")
+        elif dil_an > 3:
+            _add(items, "Dilution au-delà de 3 %/an", 65, f"Dilution ~{dil_an:.1f} %/an.", "negative")
+    elif share_dilution is not None:
+        # Carte sans le calcul par an (construite à la main) : lecture 3 ans d'origine.
+        if share_dilution <= -2:
+            _add(items, "Rachats d'actions", 55, f"Dilution 3Y ~{share_dilution:.1f}% : nombre d'actions en baisse.", "positive")
         elif share_dilution >= 10:
             _add(items, "Forte dilution actionnaires", 80, f"Dilution 3Y ~{share_dilution:.1f}% : dilution importante.", "negative")
-        elif share_dilution >= 5:
-            _add(items, "Dilution modérée", 60, f"Dilution 3Y ~{share_dilution:.1f}% : émission d'actions.", "negative")
 
     # === VALUE ===
 

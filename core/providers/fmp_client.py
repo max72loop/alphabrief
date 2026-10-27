@@ -76,6 +76,14 @@ _plan_lock = threading.Lock()
 _PLAN_LIMIT_MARKERS = ("limit reach", "upgrade your plan", "exceeded your rate limit")
 
 
+# Symboles refusés par le plan (402 « Premium Query Parameter »), process-wide.
+_premium_symbols: set = set()
+
+
+def _is_symbol_premium(body: Any) -> bool:
+    return isinstance(body, str) and "Premium Query Parameter" in body
+
+
 def _looks_like_plan_limit(body: str) -> bool:
     low = (body or "").lower()
     return any(m in low for m in _PLAN_LIMIT_MARKERS)
@@ -116,6 +124,7 @@ def reset_plan_breaker() -> None:
     with _plan_lock:
         _plan_exhausted_until = 0.0
         _plan_exhausted_logged = False
+    _premium_symbols.clear()
 
 
 def _throttle() -> None:
@@ -165,6 +174,9 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
     # backoff. On rend la main tout de suite, l'appelant complètera via yfinance.
     if _breaker_open():
         return None
+    # Symbole hors plan, déjà refusé dans ce process : inutile de redemander.
+    if symbol in _premium_symbols:
+        return None
 
     for attempt in range(_MAX_RETRIES):
         with _fmp_gate:
@@ -209,6 +221,15 @@ def fmp_get(endpoint: str, params: Optional[Dict[str, str]] = None, cache: bool 
                 # coupe-circuit ne voyait donc plus rien et chaque endpoint
                 # repayait 5+15+45 s de backoff avant le repli yfinance, qui
                 # marche. Même traitement que (b) : on rend la main tout de suite.
+                # 402 « Premium Query Parameter » (constaté le 2026-10-27) : CE
+                # symbole n'est pas couvert par le plan (cotations hors US :
+                # 1211.HK, IWDA.AS…), le reste l'est. Ouvrir le coupe-circuit ici
+                # coupait FMP pour TOUTE la watchlist dès le premier ticker
+                # étranger. On mémorise le refus pour ce symbole seulement.
+                if resp.status_code == 402 and _is_symbol_premium(getattr(resp, "text", "")):
+                    _premium_symbols.add(symbol)
+                    logger.info(json.dumps({"evt": "fmp_symbol_premium", "endpoint": endpoint, "symbol": symbol}))
+                    return None
                 if resp.status_code == 402:
                     _trip_plan_breaker(endpoint, symbol, cause="402_payment_required")
                     return None

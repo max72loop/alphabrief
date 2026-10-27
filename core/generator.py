@@ -10,7 +10,10 @@ from typing import Any, Dict, Optional
 from core.providers.price_identity import fetch_identity_and_market
 from core.features.momentum import compute_momentum_12m, compute_relative_momentum
 from core.features.technicals import compute_technicals
-from core.scoring.potential import compute_potential_score
+from core.scoring.potential import compute_potential_score, benefice_exceptionnel, est_banque_ou_assurance, to_float
+from core.scoring.prime import calculer_prime
+from core.scoring.dilution import calculer_dilution
+from core.providers.rendement import fetch_rendement, taux_10y
 from core.scoring.secteur import secteur_manuel, secteur_moteur
 from core.providers.fundamentals_yf import fetch_core_fundamentals
 from core.providers.llm_enricher import enrich_with_llm
@@ -63,6 +66,7 @@ def empty_card(ticker: str) -> Dict[str, Any]:
             "net_debt_to_ebitda": None,
             "interest_coverage": None,
             "share_dilution_3y": None,
+            "dilution_an": None,     # %/an retenu pour la note (core/scoring/dilution.py)
             "payout_ratio": None,
             "fcf_absolute": None,
             "net_income": None,
@@ -125,6 +129,10 @@ def empty_card(ticker: str) -> Dict[str, Any]:
             "catalysts": [],
             "key_risks": [],
         },
+        # Prime de rendement (core/scoring/prime.py) et dilution par an
+        # (core/scoring/dilution.py), posées par generate_card. Vides = non calculées.
+        "rendement": {},
+        "dilution": {},
         "scores": {
             "potential_score": None,
             "fundamentals_score": None,
@@ -267,6 +275,56 @@ def generate_card(ticker: str, progress_callback=None) -> Dict[str, Any]:
             card["market"].update({k: v for k, v in rel_mom.items() if v is not None})
     except Exception as e:
         logger.error(f"Error computing relative momentum for {ticker}: {e}")
+
+    # Prime de rendement et dilution (2026-10-27). Une valorisation basse ne suffit
+    # plus quand le 10 ans US paie ~5 % : on compare le rendement au taux sans
+    # risque (core/scoring/prime.py) et on lit la dilution par an sur 1 et 3 ans
+    # (core/scoring/dilution.py). La dilution entre dans la note (pilier Qualité) ;
+    # la prime reste EN OMBRE — affichée et historisée, sans poids dans la note.
+    _cb("Rendement contre le taux 10 ans...")
+    try:
+        devise = card["identity"].get("currency") or None
+        rd = fetch_rendement(ticker, devise)
+        dil = calculer_dilution(rd.get("actions_q") or [], card["financials"].get("share_dilution_3y"),
+                                dates=rd.get("actions_dates"), ipo_date=rd.get("ipo_date"))
+        dil["source"] = rd.get("actions_source") if dil.get("source") == "trimestriel" else dil.get("source")
+        card["dilution"] = dil
+        card["financials"]["dilution_an"] = dil["retenue"]
+
+        fin, val = card["financials"], card["valuation"]
+        pe_ttm = val.get("pe_ttm")
+        if benefice_exceptionnel(to_float(pe_ttm), to_float(val.get("forward_pe")), to_float(fin.get("roe"))):
+            pe_ttm = None   # même garde-fou que le pilier Valeur
+        # FCF publié dans une autre devise que la cotation (TSM : FCF en TWD,
+        # capitalisation en USD → « FCF yield » de 45 % au lieu de ~1,4 %). Le
+        # yield de la prime est recalculé dans la devise de la capitalisation ;
+        # sans cours de change, il reste inconnu plutôt que faux.
+        # ⚠ `valuation.fcf_yield_ttm`, lu par le pilier Valeur, porte encore
+        # l'erreur — correction à part, elle déplace des notes.
+        fcf_yield = val.get("fcf_yield_ttm")
+        pub = rd.get("devise_publication")
+        conversion = None
+        if pub and devise and pub.upper() != devise.upper():
+            fx, fcf_abs, mcap = to_float(rd.get("fx_publication")), to_float(fin.get("fcf_absolute")), to_float(card["identity"].get("market_cap"))
+            fcf_yield = (fcf_abs * fx / mcap * 100.0) if fx and fcf_abs is not None and mcap else None
+            conversion = {"de": pub, "vers": devise, "fx": fx}
+        taux = taux_10y() or {}
+        card["rendement"] = calculer_prime(
+            taux_10y=taux.get("taux"),
+            fcf_yield=fcf_yield,
+            fcf_ttm=fin.get("fcf_absolute"),
+            forward_pe=val.get("forward_pe"),
+            pe_ttm=pe_ttm,
+            croissance_ca=rd.get("croissance_ca"),
+            financiere=est_banque_ou_assurance(sector, card["identity"].get("industry")),
+        )
+        card["rendement"].update(
+            taux_date=taux.get("date"), taux_source=taux.get("source"),
+            croissance_source=rd.get("croissance_source"),
+            conversion_fcf=conversion,
+        )
+    except Exception as e:
+        logger.error(f"Rendement/dilution indisponibles pour {ticker}: {e}")
 
     # LLM enrichment (business snapshot + events)
     _cb("Analyse IA en cours...")

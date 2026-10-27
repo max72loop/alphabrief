@@ -19,6 +19,9 @@ SECTION_TTL: Dict[str, float] = {
     "technicals":   1.0,
     "llm":          48.0,
     "momentum":     2.0,
+    # Prime de rendement (taux 10 ans, consensus, actions trimestrielles) : un
+    # relevé par jour suffit, et chaque ticker coûte 2 appels FMP.
+    "rendement":    24.0,
 }
 
 
@@ -35,6 +38,11 @@ def _is_poisoned(section: str, data: Dict[str, Any]) -> bool:
             return True
         merged = {**fin, **val}
         if merged and all(v is None for v in merged.values()):
+            return True
+    if section == "rendement" and "actions_q" in data:
+        # Ni consensus ni série d'actions : les deux sources ont échoué, on
+        # retentera au prochain scoring plutôt que de figer un vide 24 h.
+        if data.get("croissance_ca") is None and not data.get("actions_q"):
             return True
     return False
 

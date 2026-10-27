@@ -6,8 +6,8 @@ from typing import Any, Dict, Optional
 # Version de la FORMULE, historisée avec chaque score (`scores_history.engine_version`).
 # À changer à chaque modification qui déplace des notes : sans elle, l'historique
 # mélange des barèmes différents et le backtest les juge ensemble. Valeur = date
-# du dernier changement de méthode (secteur traduit + bénéfice exceptionnel).
-ENGINE_VERSION = "2026-09-23"
+# du dernier changement de méthode (dilution par an sur 1 et 3 ans, 2026-10-27).
+ENGINE_VERSION = "2026-10-27"
 
 
 def clamp(x: float, lo: float, hi: float) -> float:
@@ -47,6 +47,27 @@ def score_linear_inverse(value: Optional[float], lo: float, hi: float, default: 
     if value >= hi:
         return 0.0
     return 100.0 * (1.0 - (value - lo) / (hi - lo))
+
+
+_FINANCIAL_SECTORS = {"Financial Services", "Financials"}
+
+
+def est_banque_ou_assurance(sector: Optional[str], industry: Optional[str]) -> bool:
+    """Banques et assureurs : bilan = outil de production, marges et FCF non
+    comparables. Les bourses et plateformes (Coinbase, CME…) n'en sont pas.
+    Partagé avec core/scoring/prime.py (le flag y passe à l'earnings yield)."""
+    industry_lower = (industry or "").lower()
+    bank_or_insurance = (
+        "bank" in industry_lower
+        or "insurance" in industry_lower
+        or "mortgage" in industry_lower
+        or industry_lower in {
+            "asset management",
+            "financial conglomerates",
+            "savings & cooperative banks",
+        }
+    )
+    return (sector or "") in _FINANCIAL_SECTORS and bank_or_insurance
 
 
 def benefice_exceptionnel(pe: Optional[float], forward_pe: Optional[float], roe: Optional[float]) -> bool:
@@ -702,30 +723,27 @@ def compute_interest_coverage_score(interest_coverage: Optional[float]) -> float
         return 10.0  # EBIT ne couvre pas les intérêts
 
 
-def compute_share_dilution_score(dilution_pct: Optional[float]) -> float:
+def compute_share_dilution_score(dilution_pct_an: Optional[float]) -> float:
     """
-    Score basé sur la dilution des actionnaires sur 3 ans (en %).
-    - Négatif (rachat d'actions) = très positif
-    - 0-3% = neutre
-    - 3-10% = dilution modérée
-    - > 10% = forte dilution
+    Score de la dilution des actionnaires, EN % PAR AN (2026-10-27).
+
+    Avant : paliers sur le total de 3 exercices, avec un rachat noté jusqu'à 90.
+    Désormais (demande de Max) : la dilution pénalise au-delà de 3 %/an, un rachat
+    net ne vaut qu'un bonus léger — racheter n'est pas créer de la valeur, diluer
+    en détruit. L'entrée est la PIRE des fenêtres 1 an / 3 ans propres
+    (core/scoring/dilution.py), donc un rachat doit tenir sur les deux.
     """
-    if dilution_pct is None:
+    if dilution_pct_an is None:
         return 50.0
-    if dilution_pct <= -5:
-        return 90.0  # Rachat massif d'actions
-    elif dilution_pct <= -2:
-        return 80.0  # Rachat significatif
-    elif dilution_pct <= 0:
-        return 70.0  # Léger rachat ou stable
-    elif dilution_pct <= 3:
-        return 55.0  # Dilution minime
-    elif dilution_pct <= 7:
-        return 40.0  # Dilution modérée
-    elif dilution_pct <= 15:
-        return 25.0  # Forte dilution
-    else:
-        return 10.0  # Dilution massive
+    if dilution_pct_an <= -1:
+        return 60.0  # Rachats nets : bonus léger
+    if dilution_pct_an <= 3:
+        return 50.0  # Stable ou dilution tolérée (rémunération en actions)
+    if dilution_pct_an <= 6:
+        return 35.0  # Dilution au-delà de 3 %/an : pénalité
+    if dilution_pct_an <= 10:
+        return 20.0  # Forte dilution
+    return 10.0      # Financement en actions massif
 
 
 def compute_volatility_score(volatility_pct: Optional[float]) -> float:
@@ -1630,19 +1648,7 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, Any]:
     # En revanche, les bourses et plateformes d'échange au sein de "Financial Services"
     # (Coinbase, CME, NASDAQ…) génèrent des revenus de commissions comme une tech :
     # leurs marges SONT significatives et doivent être scorées normalement.
-    _FINANCIAL_SECTORS = {"Financial Services", "Financials"}
-    industry_lower = industry.lower()
-    _is_bank_or_insurance = (
-        "bank" in industry_lower
-        or "insurance" in industry_lower
-        or "mortgage" in industry_lower
-        or industry_lower in {
-            "asset management",
-            "financial conglomerates",
-            "savings & cooperative banks",
-        }
-    )
-    is_financial = sector in _FINANCIAL_SECTORS and _is_bank_or_insurance
+    is_financial = est_banque_ou_assurance(sector, industry)
 
     # === QUALITY (20%) ===
     # EBIT margin (qualité opérationnelle)
@@ -1681,8 +1687,14 @@ def compute_potential_score(card: Dict[str, Any]) -> Dict[str, Any]:
     cash_conv_ni = to_float(fin.get("net_income"))
     cash_conv_score = compute_cash_conversion_score(cash_conv_fcf, cash_conv_ni)
 
-    # Share Dilution 3Y
-    share_dilution = to_float(fin.get("share_dilution_3y"))
+    # Dilution, en %/an (2026-10-27) : la pire des fenêtres 1 an / 3 ans propres,
+    # posée par le générateur (core/scoring/dilution.py). Repli pour une carte
+    # construite sans lui : le total 3 ans des comptes annuels, annualisé.
+    share_dilution = to_float(fin.get("dilution_an"))
+    if share_dilution is None:
+        _d3 = to_float(fin.get("share_dilution_3y"))
+        if _d3 is not None and _d3 > -100:
+            share_dilution = ((1 + _d3 / 100.0) ** (1 / 3) - 1.0) * 100.0
     dilution_score = compute_share_dilution_score(share_dilution)
 
     # ROA (Return on Assets) — voir compute_roa_score : ce champ s'appelait
