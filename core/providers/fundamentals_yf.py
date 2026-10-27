@@ -180,11 +180,24 @@ def fetch_core_fundamentals(ticker: str) -> Dict[str, Any]:
     try:
         cf0 = cf[0] if cf else {}
         ocf = _get(cf0, "netCashProvidedByOperatingActivities")
-        capex = _get(cf0, "investmentsInPropertyPlantAndEquipment")
         mcap = _get(profile, "marketCap")
 
-        if ocf is not None and capex is not None:
+        # FCF : le `freeCashFlow` de FMP d'abord, sinon OCF + `capitalExpenditure`.
+        # Jusqu'au 2026-10-27 on lisait `investmentsInPropertyPlantAndEquipment`,
+        # que FMP laisse à 0 pour certaines sociétés : IREN (exercice au 30/06/2026)
+        # y a 0 et 4,33 Md$ dans `capitalExpenditure` — le « FCF » valait alors le
+        # flux d'exploitation seul, +2,10 Md$, pour un FCF réel de −2,23 Md$.
+        fcf_fmp = _get(cf0, "freeCashFlow")
+        capex = _get(cf0, "capitalExpenditure")
+        if capex is None:
+            capex = _get(cf0, "investmentsInPropertyPlantAndEquipment")
+        fcf = None
+        if fcf_fmp is not None:
+            fcf = float(fcf_fmp)
+        elif ocf is not None and capex is not None:
             fcf = float(ocf) + float(capex)  # capex est négatif dans FMP
+
+        if fcf is not None:
             out["financials"]["fcf_absolute"] = fcf
 
             if revenue and revenue > 0:
